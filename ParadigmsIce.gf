@@ -2,9 +2,6 @@
 
 --1 Icelandic Lexical Paradigms
 --
--- Comment taken from Aarne Rantas English code:
--- Aarne Ranta 2003--2005
---
 -- This is an API for the user of the resource grammar 
 -- for adding lexical items. It gives functions for forming
 -- expressions of open categories: nouns, adjectives, verbs.
@@ -22,7 +19,7 @@
 -- regular cases. Then we give a worst-case function $mkC$, which serves as an
 -- escape to construct the most irregular words of type $C$.
 -- However, this function should only seldom be needed: we have a
--- separate module [``IrregIce`` ../../english/IrregIce.gf], 
+-- separate module [``IrregIce`` ../../icelandic/IrregIce.gf], 
 -- which covers irregular verbss.
 
 resource ParadigmsIce = open 
@@ -33,8 +30,6 @@ resource ParadigmsIce = open
   CatIce
   in {
 	--2 Parameters 
-
-
 
 	oper
 		-- To abstract over gender names, we define the following identifiers.	
@@ -81,6 +76,10 @@ resource ParadigmsIce = open
 				hesturinn hestinn hestinum hestsins
 				hestar hestaAcc hestum hestaGen 
 				hestarnir hestana hestunum hestanna g) ;
+
+			-- Given Nom.Sg., Nom.Pl, and Gender.
+			mkN : (_,_ : Str) -> Gender -> N =
+				\bóndi,bændur,g -> lin N (regN bóndi bændur g) ;
 		} ;
 
 		--2 Adjectives

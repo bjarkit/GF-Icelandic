@@ -70,4 +70,6 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		A = ResIce.A;
 
 		N = ResIce.N;
+
+		PN = {s : Case => Str ; g : Gender} ;
 }
