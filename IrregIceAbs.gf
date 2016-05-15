@@ -1,0 +1,1 @@
+abstract IrregIceAbs = Cat ** {}
