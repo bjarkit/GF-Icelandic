@@ -151,4 +151,68 @@ resource ParadigmsIce = open
 		accusative = Acc ;
 		dative = Dat ;
 		genitive = Gen ;
+
+		vowel : pattern Str = #("a" | "á" | "e" | "é" | "i" | "í" | "o" | "ó" | "u" | "ú" | "y" | "ý" | "æ" | "ö") ;
+
+		consonant : pattern Str = #("b" | "d" | "ð" | "f" | "g" | "h" | "j" | "k" | "l" | "m" | "n" | "p" | "r" | "s" | "t" | "v" | "x" | "þ") ;
+
+		-- For pattern matching nouns to suffix the definate article.
+		-- The suffix , "-inn","-in","-ið", loses the "-i-" when the noun ends with
+		-- "-a", "-i", "-u", and most cases of "-é".
+		noIVowel : pattern Str = #("a" | "i" | "u" | "é") ;
+		
+		regN : (_,_ : Str) -> Gender -> N = \nomSg,nomPl,Gender -> case <nomSg,nomPl,Gender> of {
+			-- Weak Nouns --
+
+			-- aug-a , augu-u
+			<baseSg + "a",basePl + "u",Neutr>	=> mkNoun nomSg nomSg nomSg nomSg 
+								(nomSg + "ð") (nomSg + "ð") (nomSg + "nu") (nomSg + "ns") 
+								nomPl nomPl (nomPl + "m") (basePl + "na")
+								(nomPl + "n") (nomPl + "n") (nomPl + "num") (basePl +"nanna") Neutr ;
+			-- tím-i , tíma-ar
+			<baseSg + "i",basePl + "ar",Masc>	=> mkNoun nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
+								(nomSg + "nn") (baseSg + "ann") (baseSg + "anum") (baseSg + "ans")
+								nomPl (basePl + "a") (basePl + "um") (basePl + "a") -- some nouns have the suffix -n-a
+								(nomPl + "nir") (basePl + "ana") (basePl + "num") (basePl + "anna") Masc ;
+			-- bónd-i , bænd-ur
+			<baseSg + "i", basePl + "ur",Masc>	=> mkNoun nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
+								(nomSg + "nn") (baseSg + "ann") (baseSg + "anum") (baseSg + "ans")
+								nomPl nomPl (basePl + "um") (basePl + "a")
+								(basePl + "urnir") (basePl + "urnir") (basePl + "num") (basePl + "anna") Masc ;
+			-- lij-a , lij-ur
+			<baseSg + "a", basePl + "ur",Fem>	=> mkNoun nomSg (baseSg + "u") (baseSg + "u") (baseSg + "u")
+								(nomPl + "n") (baseSg + "una") (baseSg + "unni") (baseSg + "unnar")
+								nomPl nomPl (basePl + "um") (basePl + "a")
+								(basePl + "rinar") (basePl + "rinar") (basePl + "num") (basePl + "anna") Fem ;
+			-- æf-i , æf-ir
+			<baseSg + "i", basePl + "ir",Fem> 	=> mkNoun nomSg nomSg nomSg nomSg
+								(nomSg + "n") (nomSg + "na") (nomSg + "nni") (nomSg + "nnar")
+								nomPl nomPl (basePl + "um") (basePl + "a")
+								(nomPl + "nar") (nomPl + "nar") (basePl + "num") (basePl + "anna") Fem ;
+			-- lyg-i , lyg-ar
+			<baseSg + "i", basePl + "ar",Fem>	=> mkNoun nomSg nomSg nomSg nomSg
+								(nomSg + "n") (nomSg + "na") (nomSg + "nni") (nomSg + "nnar")
+								nomPl nomPl (basePl + "um") (basePl + "a")
+								(nomPl + "nar") (nomPl + "nar") (basePl + "num") (basePl + "anna") Fem ;
+			-- Strong Nouns --
+
+			-- kvæð-i- , kvæði-i-
+			-- some words take -j-um and -j-a in Dat.Pl. 
+			-- and Gen.Pl. instead of just -um and 
+			-- -a, e.g., rík-i- , rík-i-.
+			<baseSg + "i", basePl + "i",Neutr>	=> mkNoun nomSg nomSg nomSg (nomSg + "s")
+								(nomSg + "ð") (nomSg + "ð") (nomSg + "nu") (nomSg + "ins")
+								nomPl nomPl (basePl + "um") (basePl + "a")
+								(nomPl + "n") (nomPl + "n") (basePl + "num") (basePl + "anna") Neutr ;
+			-- hreið-ur , hreið-ur
+			<baseSg + "ur", basePl + "ur",Neutr>	=> mkNoun nomSg nomSg (baseSg + "ri") (nomSg + "s")
+								(baseSg + "rið") (baseSg + "rið") (baseSg + "rinu") (nomSg + "sins")
+								nomPl nomPl (basePl + "rum") (basePl + "ra")
+								(basePl + "rin") (basePl + "rin") (basePl + "runum") (basePl + "ranna") Neutr ;
+			-- borð- , borð-
+			<_ , _,Neutr>				=> mkNoun nomSg nomSg (nomSg + "i") (nomSg + "s")
+								(nomSg + "ið") (nomSg + "ið") (nomSg + "inu") (nomSg + "sins")
+								nomPl nomPl (nomPl + "um") (nomPl + "a")
+								(nomPl + "in") (nomPl + "in") (nomPl + "unum") (nomPl + "anna") Neutr 
+		} ;
 } ;
