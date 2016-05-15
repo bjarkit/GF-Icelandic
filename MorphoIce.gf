@@ -38,32 +38,32 @@ resource MorphoIce = open Prelude, (Predef=Predef), ResIce in {
 			-- Weak Nouns --
 
 			-- aug-a , augu-u
-			<baseSg + "a",basePl + "u",Neutr>	=> mkN nomSg nomSg nomSg nomSg 
+			<baseSg + "a",basePl + "u",Neutr>	=> mkNoun nomSg nomSg nomSg nomSg 
 								(nomSg + "ð") (nomSg + "ð") (nomSg + "nu") (nomSg + "ns") 
 								nomPl nomPl (nomPl + "m") (basePl + "na")
-								(nomPl + "n") (nomPl + "n") (nomPl + "num") (base +"nanna") Neutr ;
+								(nomPl + "n") (nomPl + "n") (nomPl + "num") (basePl +"nanna") Neutr ;
 			-- tím-i , tíma-ar
-			<baseSg + "i",basePl + "ar",Masc>	=> mkN nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
+			<baseSg + "i",basePl + "ar",Masc>	=> mkNoun nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
 								(nomSg + "nn") (baseSg + "ann") (baseSg + "anum") (baseSg + "ans")
 								nomPl (basePl + "a") (basePl + "um") (basePl + "a") -- some nouns have the suffix -n-a
 								(nomPl + "nir") (basePl + "ana") (basePl + "num") (basePl + "anna") Masc ;
 			-- bónd-i , bænd-ur
-			<baseSg + "i", basePl + "ur",Masc>	=> mkN nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
+			<baseSg + "i", basePl + "ur",Masc>	=> mkNoun nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
 								(nomSg + "nn") (baseSg + "ann") (baseSg + "anum") (baseSg + "ans")
 								nomPl nomPl (basePl + "um") (basePl + "a")
 								(basePl + "urnir") (basePl + "urnir") (basePl + "num") (basePl + "anna") Masc ;
 			-- lij-a , lij-ur
-			<baseSg + "a", basePl + "ur",Fem>	=> mkN nomSg (baseSg + "u") (baseSg + "u") (baseSg + "u") (baseSg + "u")
+			<baseSg + "a", basePl + "ur",Fem>	=> mkNoun nomSg (baseSg + "u") (baseSg + "u") (baseSg + "u")
 								(nomPl + "n") (baseSg + "una") (baseSg + "unni") (baseSg + "unnar")
 								nomPl nomPl (basePl + "um") (basePl + "a")
 								(basePl + "rinar") (basePl + "rinar") (basePl + "num") (basePl + "anna") Fem ;
 			-- æf-i , æf-ir
-			<baseSg + "i", basePl + "ir",Fem> 	=> mkN nomSg nomSg nomSg nomSg
+			<baseSg + "i", basePl + "ir",Fem> 	=> mkNoun nomSg nomSg nomSg nomSg
 								(nomSg + "n") (nomSg + "na") (nomSg + "nni") (nomSg + "nnar")
 								nomPl nomPl (basePl + "um") (basePl + "a")
 								(nomPl + "nar") (nomPl + "nar") (basePl + "num") (basePl + "anna") Fem ;
 			-- lyg-i , lyg-ar
-			<baseSg + "i", basePl + "ar",Fem>	=> mkN nomSg nomSg nomSg nomSg
+			<baseSg + "i", basePl + "ar",Fem>	=> mkNoun nomSg nomSg nomSg nomSg
 								(nomSg + "n") (nomSg + "na") (nomSg + "nni") (nomSg + "nnar")
 								nomPl nomPl (basePl + "um") (basePl + "a")
 								(nomPl + "nar") (nomPl + "nar") (basePl + "num") (basePl + "anna") Fem 
@@ -71,10 +71,10 @@ resource MorphoIce = open Prelude, (Predef=Predef), ResIce in {
 
 			-- kvæð-i- , kvæði-i-
 			-- some words take -j-um and -j-a in Dat.Pl. and Gen.Pl. instead of just -um and -a, e.g., rík-i- , rík-i-.
-			--<baseSg + "i", baseSg + "i",Neutr>	=> mkN nomSg nomSg nomSg (nomSg + "s")
+			--<baseSg + "i", baseSg + "i",Neutr>	=> mkNoun nomSg nomSg nomSg (nomSg + "s")
 			--					(nomSg + "ð") (nomSg + "ð")
 			-- borð- , borð-
-			--<_,_,Neutr>				=> mkN nomSg nomSg (nomSg + "i") (nomSg + "s")
+			--<_,_,Neutr>				=> mkNoun nomSg nomSg (nomSg + "i") (nomSg + "s")
 			--					(nomSg + "ið")
 		} ;
 
