@@ -222,4 +222,49 @@ resource ParadigmsIce = open
 								nomPl nomPl (basePl + "rum") (basePl + "ra")
 								(nomPl + "nar") (nomPl + "nar") (basePl + "runum") (basePl + "ranna") Fem
 		} ;
+
+		reg3N : (_,_,_ : Str) -> Gender -> N = \nomSg,genSg,nomPl,g -> case <nomSg,genSg,nomPl,g> of {
+			-- Strong Nouns -- 
+			
+			-- steik- , steik-ar , steik-ur
+			<_,_ + "ar",basePl + "ur",Fem>		=> mkNoun nomSg nomSg nomSg genSg
+								(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (genSg + "innar")
+								nomPl nomPl (basePl + "um") (basePl + "a")
+								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ;
+			-- sæng- , sæng-ur , sæng-ur
+			<_,_ + "ur", basePl + "ur",Fem>		=> mkNoun nomSg nomSg nomSg genSg
+								(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (genSg + "innar")
+								nomPl nomPl (basePl + "um") (basePl + "a")
+								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ;
+			-- kerl-ing- , kerl-ing-ar , kerl-ing-ar
+			<_ + "ing", _ + "ing" + "ar", basePl + "ar",Fem>	=> mkNoun nomSg (nomSg + "u") (nomSg + "u") genSg
+										(nomSg + "in") (nomSg + "una") (nomSg + "unni") (genSg + "innar")
+										nomPl nomPl (basePl + "um") (basePl + "a")
+										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ;
+			-- lif-ur , lif-r-ar , lif-r-ar
+			<_ + "ur",baseSg + "r" + "ar", basePl + "ar",Fem>	=> mkNoun nomSg nomSg nomSg genSg
+										(baseSg + "rin") (baseSg + "rina") (baseSg + "rinni") (genSg + "innar")
+										nomPl nomPl (basePl + "um") (basePl + "a")
+										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ;
+			-- æð-ur , æð-ar , æð-ar
+			<_ + "ur" , baseSg + "ar" , basePl + "ar", Fem>		=> mkNoun nomSg (baseSg + "i") (baseSg + "i") genSg
+										(baseSg + "in") (baseSg + "ina") (baseSg + "innni") (genSg + "innar")
+										nomPl nomPl (basePl + "um") (basePl + "a")
+										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ;
+			-- heið-i , heið-ar , heið-ar
+			<_ + "i" , baseSg + "ar" , basePl + "ar", Fem>		=> mkNoun nomSg nomSg nomSg genSg
+										(baseSg + "in") (baseSg + "ina") (baseSg + "inni") (genSg + "innar")
+										nomPl nomPl (basePl + "um") (basePl + "a")
+										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ;
+
+			-- á- , á-r , á-r - not sure if á (e. river) is the only word that behaves like this or not..
+
+			-- stöð- , stöð-v-ar , stöð-v-ar 
+			-- skel- , skel-j-ar , skel-j-ar
+			-- kinn- , kinn-ar , kinn-ar
+			<_ , baseSg + "ar", basePl + "ar", Fem>			=> mkNoun nomSg nomSg nomSg genSg
+										(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (genSg + "innar")
+										nomPl nomPl (basePl + "um") (basePl + "a")
+										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem 
+		} ;
 } ;
