@@ -220,7 +220,12 @@ resource ParadigmsIce = open
 			<baseSg + "ir", basePl + "ur",Fem>	=> mkNoun nomSg (baseSg + "ur") (baseSg + "ur") (baseSg + "ur")
 								(nomSg + "in") (baseSg + "rina") (baseSg + "rinni") (baseSg + "rinnar")
 								nomPl nomPl (basePl + "rum") (basePl + "ra")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "runum") (basePl + "ranna") Fem
+								(nomPl + "nar") (nomPl + "nar") (basePl + "runum") (basePl + "ranna") Fem ;
+			-- hest-ur , hest-ar
+			<baseSg + "ur" , basePl + "ar",Masc>	=> mkNoun nomSg baseSg (baseSg + "i") (baseSg + "s")
+								(nomSg + "inn") (baseSg + "inn") (baseSg + "inum") (baseSg + "sins")
+								nomPl (basePl + "a") (baseSg + "um") (baseSg + "a")
+								(nomPl + "nir") (basePl + "ana") (basePl + "unum") (basePl + "anna") Masc
 		} ;
 
 		reg3N : (_,_,_ : Str) -> Gender -> N = \nomSg,genSg,nomPl,g -> case <nomSg,genSg,nomPl,g> of {
