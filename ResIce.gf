@@ -107,7 +107,7 @@ resource ResIce = ParamX ** open Prelude in {
 			isPre : Bool -- is this needed in Icelandic?
 		} ; 
 
-		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Bool -> A =
+		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Bool -> A =
 			\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
 			sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
 			sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
@@ -116,7 +116,17 @@ resource ResIce = ParamX ** open Prelude in {
 			plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
 			weakSgMascNom,weakSgMascAccDatGen,
 			weakSgFemNom,weakSgFemAccDatGen,
-			weakSgNeut,weakPl,b -> {
+			weakSgNeut,weakPl,
+			comSgMascNom,comSgNeutrNom,comPl,
+			supSgMascNom,supSgMascAcc,supSgMascDat,supSgMascGen,
+			supSgFemNom,supSgFemAcc,supSgFemDat,supSgFemGen,
+			supSgNeutNom,supSgNeutAcc,supSgNeutDat,supSgNeutGen,
+			supPlMascNom,supPlMascAcc,supPlMascDat,supPlMascGen,
+			supPlFemNom,supPlFemAcc,supPlFemDat,supPlFemGen,
+			supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
+			supWeakSgMascNom,supWeakSgMascAccDatGen,
+			supWeakSgFemNom,supWeakSgFemAccDatGen,
+			supWeakSgNeut,supWeakPl,b -> {
 				s = table {
 					APosit Weak Sg Masc	=> caseList weakSgMascNom weakSgMascAccDatGen weakSgMascAccDatGen weakSgMascAccDatGen ;
 					APosit Weak Sg Fem 	=> caseList weakSgFemNom weakSgFemAccDatGen weakSgFemAccDatGen weakSgFemAccDatGen ;
@@ -128,21 +138,20 @@ resource ResIce = ParamX ** open Prelude in {
 					APosit Strong Pl Masc	=> caseList plMascNom plMascAcc plMascDat plMascGen ;
 					APosit Strong Pl Fem	=> caseList plFemNom plFemAcc plFemDat plFemGen ;
 					APosit Strong Pl Neutr	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ;
-					
-					ACompar Sg Masc		=> caseList weakPl weakPl weakPl weakPl ;  
-					ACompar Sg Fem		=> caseList weakPl weakPl weakPl weakPl ;  
-					ACompar Sg Neutr	=> caseList weakPl weakPl weakPl weakPl ;  
-					ACompar Pl _		=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Weak Sg Masc	=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Weak Sg Fem	=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Weak Sg Neutr	=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Weak Pl _	=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Strong Sg Masc	=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Strong Sg Fem 	=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Strong Sg Neutr => caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Strong Pl Masc  => caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Strong Pl Fem  	=> caseList weakPl weakPl weakPl weakPl ;  
-					ASuperl Strong Pl Neutr	=> caseList weakPl weakPl weakPl weakPl
+					ACompar Sg Masc		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ;
+					ACompar Sg Fem		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ;
+					ACompar Sg Neutr	=> caseList comSgNeutrNom comSgNeutrNom comSgNeutrNom comSgNeutrNom ;
+					ACompar Pl _		=> caseList comPl comPl comPl comPl ;
+					ASuperl Weak Sg Masc	=> caseList supWeakSgMascNom supWeakSgMascAccDatGen supWeakSgMascAccDatGen supWeakSgMascAccDatGen ;
+					ASuperl Weak Sg Fem 	=> caseList supWeakSgFemNom supWeakSgFemAccDatGen supWeakSgFemAccDatGen supWeakSgFemAccDatGen ;
+					ASuperl Weak Sg Neutr	=> caseList supWeakSgNeut supWeakSgNeut supWeakSgNeut supWeakSgNeut ;
+					ASuperl Weak Pl _ 	=> caseList supWeakPl supWeakPl supWeakPl supWeakPl ;
+					ASuperl Strong Sg Masc	=> caseList supSgMascNom supSgMascAcc supSgMascDat supSgMascGen ;
+					ASuperl Strong Sg Fem	=> caseList supSgFemNom supSgFemAcc supSgFemDat supSgFemGen ;
+					ASuperl Strong Sg Neutr	=> caseList supSgNeutNom supSgNeutAcc supSgNeutDat supSgNeutGen ;
+					ASuperl Strong Pl Masc	=> caseList supPlMascNom supPlMascAcc supPlMascDat supPlMascGen ;
+					ASuperl Strong Pl Fem	=> caseList supPlFemNom supPlFemAcc supPlFemDat supPlFemGen ;
+					ASuperl Strong Pl Neutr	=> caseList supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen
 				} ;
 				isPre = b
 		} ;
