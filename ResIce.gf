@@ -48,6 +48,13 @@ resource ResIce = ParamX ** open Prelude in {
 
 		Declension = Weak | Strong ;
 
+		AForm = 
+			  APosit Declension Number Gender 
+			| ACompar Number Gender  -- the comparative has only the weak declension
+			| ASuperl Declension Number Gender
+			;
+		
+
 	--------------------------------------------
 	--TYPE DEFINITIONS + WORST-CASE CONSTRUCTORS
 	--------------------------------------------
@@ -96,8 +103,8 @@ resource ResIce = ParamX ** open Prelude in {
 		-- For $Adjectives$
 
 		A : Type = {
-			s : Declension => Number => Gender => Case => Str ; 
-			isPre : Bool
+			s : AForm => Case => Str ;
+			isPre : Bool -- is this needed in Icelandic?
 		} ; 
 
 		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Bool -> A =
@@ -111,29 +118,34 @@ resource ResIce = ParamX ** open Prelude in {
 			weakSgFemNom,weakSgFemAccDatGen,
 			weakSgNeut,weakPl,b -> {
 				s = table {
-					Weak 	=> table {
-						Sg 	=> table {
-							Masc	=> caseList weakSgMascNom weakSgMascAccDatGen weakSgMascAccDatGen weakSgMascAccDatGen ;
-							Fem	=> caseList weakSgFemNom weakSgFemAccDatGen weakSgFemAccDatGen weakSgFemAccDatGen ;
-							Neutr	=> caseList weakSgNeut weakSgNeut weakSgNeut weakSgNeut
-						};
-						Pl	=> \\_=> caseList weakPl weakPl weakPl weakPl 
-					};
-					Strong	=> table {
-						Sg	=> table {
-							Masc	=> caseList sgMascNom sgMascAcc sgMascDat sgMascGen ;
-							Fem	=> caseList sgFemNom sgFemAcc sgFemDat sgFemGen ;
-							Neutr	=> caseList sgNeutNom sgNeutAcc sgNeutDat sgNeutGen
-						};
-						Pl	=> table {
-							Masc	=> caseList plMascNom plMascAcc plMascDat plMascGen ;
-							Fem	=> caseList plFemNom plFemAcc plFemDat plFemGen ;
-							Neutr	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen
-						}
-					}
-				};
+					APosit Weak Sg Masc	=> caseList weakSgMascNom weakSgMascAccDatGen weakSgMascAccDatGen weakSgMascAccDatGen ;
+					APosit Weak Sg Fem 	=> caseList weakSgFemNom weakSgFemAccDatGen weakSgFemAccDatGen weakSgFemAccDatGen ;
+					APosit Weak Sg Neutr	=> caseList weakSgNeut weakSgNeut weakSgNeut weakSgNeut ;
+					APosit Weak Pl _ 	=> caseList weakPl weakPl weakPl weakPl ;
+					APosit Strong Sg Masc	=> caseList sgMascNom sgMascAcc sgMascDat sgMascGen ;
+					APosit Strong Sg Fem	=> caseList sgFemNom sgFemAcc sgFemDat sgFemGen ;
+					APosit Strong Sg Neutr	=> caseList sgNeutNom sgNeutAcc sgNeutDat sgNeutGen ;
+					APosit Strong Pl Masc	=> caseList plMascNom plMascAcc plMascDat plMascGen ;
+					APosit Strong Pl Fem	=> caseList plFemNom plFemAcc plFemDat plFemGen ;
+					APosit Strong Pl Neutr	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ;
+					
+					ACompar Sg Masc		=> caseList weakPl weakPl weakPl weakPl ;  
+					ACompar Sg Fem		=> caseList weakPl weakPl weakPl weakPl ;  
+					ACompar Sg Neutr	=> caseList weakPl weakPl weakPl weakPl ;  
+					ACompar Pl _		=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Weak Sg Masc	=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Weak Sg Fem	=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Weak Sg Neutr	=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Weak Pl _	=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Strong Sg Masc	=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Strong Sg Fem 	=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Strong Sg Neutr => caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Strong Pl Masc  => caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Strong Pl Fem  	=> caseList weakPl weakPl weakPl weakPl ;  
+					ASuperl Strong Pl Neutr	=> caseList weakPl weakPl weakPl weakPl
+				} ;
 				isPre = b
-		};
+		} ;
 
 		-- For $Verb$.
 

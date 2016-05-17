@@ -5,7 +5,7 @@ concrete AdjectiveIce of Adjective = CatIce ** open ResIce, Prelude in {
 		-- ad-adjective to an existing adjective phrase:
 		--AdA -> AP -> AP
 		AdAP ad ap = { 
-			s = \\n,g,d,c => ad.s ++ ap.s ! n ! g ! d ! c;
+			s = \\af,c => ad.s ++ ap.s ! af ! c ;
 			isPre = ap.isPre
 		};
 

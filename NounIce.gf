@@ -69,7 +69,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		--AP -> CN -> CN - big house
 		AdjCN ap cn = { 
 			noun = \\n,c,b => cn.noun ! n ! c ! b ;
-			adj = \\n,c,d => ap.s ! d ! n ! cn.g ! c ;
+			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ;
 			g = cn.g ;
 			isPre = ap.isPre
 		} ;
