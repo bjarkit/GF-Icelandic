@@ -80,6 +80,12 @@ resource ParadigmsIce = open
 			-- Given Nom.Sg., Nom.Pl, and Gender.
 			mkN : (_,_ : Str) -> Gender -> N =
 				\bóndi,bændur,g -> lin N (regN bóndi bændur g) ;
+
+
+			-- Given Nom.Sg, Gen.Sg, Nom.Pl, and Gender.
+			mkN : (_,_,_ : Str) -> Gender -> N =
+				\steik,steikar,steikur,g -> lin N (reg3N steik steikar steikur g) ;
+
 		} ;
 
 		--2 Adjectives
@@ -87,7 +93,7 @@ resource ParadigmsIce = open
 		mkA = overload {
 
 			-- The theoretical worst case
-			mkA : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Bool -> A =
+			mkA : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Bool -> A =
 				\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
 				sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
 				sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
@@ -96,17 +102,37 @@ resource ParadigmsIce = open
 				plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
 				weakSgMascNom,weakSgMascAccDatGen,
 				weakSgFemNom,weakSgFemAccDatGen,
-				weakSgNeut,weakPl,b -> 
-				lin A (mkAdjective 
-				sgMascNom sgMascAcc sgMascDat sgMascGen
-				sgFemNom sgFemAcc sgFemDat sgFemGen
-				sgNeutNom sgNeutAcc sgNeutDat sgNeutGen
-				plMascNom plMascAcc plMascDat plMascGen
-				plFemNom plFemAcc plFemDat plFemGen
-				plNeutNom plNeutAcc plNeutDat plNeutGen
-				weakSgMascNom weakSgMascAccDatGen
-				weakSgFemNom weakSgFemAccDatGen
-				weakSgNeut weakPl b) ;
+				weakSgNeut,weakPl,
+				comSgMascNom,comSgNeutrNom,comPl,
+				supSgMascNom,supSgMascAcc,supSgMascDat,supSgMascGen,
+				supSgFemNom,supSgFemAcc,supSgFemDat,supSgFemGen,
+				supSgNeutNom,supSgNeutAcc,supSgNeutDat,supSgNeutGen,
+				supPlMascNom,supPlMascAcc,supPlMascDat,supPlMascGen,
+				supPlFemNom,supPlFemAcc,supPlFemDat,supPlFemGen,
+				supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
+				supWeakSgMascNom,supWeakSgMascAccDatGen,
+				supWeakSgFemNom,supWeakSgFemAccDatGen,
+				supWeakSgNeut,supWeakPl,b -> 
+				lin A (mkAdjective
+				sgMascNom sgMascAcc sgMascDat sgMascGen 
+				sgFemNom sgFemAcc sgFemDat sgFemGen 
+				sgNeutNom sgNeutAcc sgNeutDat sgNeutGen 
+				plMascNom plMascAcc plMascDat plMascGen 
+				plFemNom plFemAcc plFemDat plFemGen 
+				plNeutNom plNeutAcc plNeutDat plNeutGen 
+				weakSgMascNom weakSgMascAccDatGen 
+				weakSgFemNom weakSgFemAccDatGen 
+				weakSgNeut weakPl 
+				comSgMascNom comSgNeutrNom comPl 
+				supSgMascNom supSgMascAcc supSgMascDat supSgMascGen 
+				supSgFemNom supSgFemAcc supSgFemDat supSgFemGen 
+				supSgNeutNom supSgNeutAcc supSgNeutDat supSgNeutGen 
+				supPlMascNom supPlMascAcc supPlMascDat supPlMascGen 
+				supPlFemNom supPlFemAcc supPlFemDat supPlFemGen 
+				supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen 
+				supWeakSgMascNom supWeakSgMascAccDatGen 
+				supWeakSgFemNom supWeakSgFemAccDatGen 
+				supWeakSgNeut supWeakPl b) ;
 		} ;
 
 		--2 Verbs
@@ -160,6 +186,8 @@ resource ParadigmsIce = open
 		-- The suffix , "-inn","-in","-ið", loses the "-i-" when the noun ends with
 		-- "-a", "-i", "-u", and most cases of "-é".
 		noIVowel : pattern Str = #("a" | "i" | "u" | "é") ;
+
+		-- For regN and reg3N, it might be "better" to change all occurances of base to stem. idk
 		
 		regN : (_,_ : Str) -> Gender -> N = \nomSg,nomPl,Gender -> case <nomSg,nomPl,Gender> of {
 			-- Weak Nouns --
