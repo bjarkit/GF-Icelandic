@@ -56,21 +56,22 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			d = Strong
 		} ;
 
-		--Build a common noun by elevating a noun:
-		--N -> CN
-		UseN n = {
+		-- Build a common noun by elevating a noun:
+		-- UseN N -> CN ; UseN2 N2 -> CN
+		UseN, UseN2 = \n -> {
 			noun = n.s ;
 			adj = \\_,_,_ => [] ;
 			g = n.g ;
 			isPre = True
 		} ;
 
-		--Build a new common noun by adding an adjective phrase to an existing common noun:
-		--AP -> CN -> CN - big house
+		-- Build a new common noun by adding an adjective phrase to an existing common noun:
+		-- AP -> CN -> CN - big house
 		AdjCN ap cn = { 
 			noun = \\n,c,b => cn.noun ! n ! c ! b ;
 			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ;
 			g = cn.g ;
 			isPre = ap.isPre
 		} ;
+
 }
