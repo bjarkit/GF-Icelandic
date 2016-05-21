@@ -45,10 +45,9 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 	
 		-- NP -> RS -> NP
 		RelNP np rs = np ** {
-			rc =  embedInCommas rs.s  -- untill relative, relative pronouns, and relative clauses are implemented
+			rc =  embedInCommas (rs.s ! np.a)
 		} ;
 
-		-- Determiners can form noun phrases directly.
 		-- Det -> NP 
 		DetNP det = {
 			s = \\c => det.s ! Neutr ! c ;
@@ -59,7 +58,15 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- Quant -> Num -> Det - these five
 		DetQuant quant num = {
-			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! Nom ;
+			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! c ;
+			n = num.n ;
+			b = quant.b ;
+			d = quant.d
+		} ;
+
+		-- Quant -> Num -> Ord -> Det
+		DetQuantOrd quant num ord = {
+			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! c ++ ord.s ! c ;
 			n = num.n ;
 			b = quant.b ;
 			d = quant.d

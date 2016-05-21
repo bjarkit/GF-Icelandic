@@ -3,48 +3,56 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
   flags optimize=all_subs ;
 
 	lincat
-		Pol = {s : Str ; b : Bool};
+		Pol = {s : Str ; b : Bool} ;
 
 		-- Tensed/Untensed
 
-		S = {s : Str};
+		S = {s : Str} ;
+		RS = {
+			s : Agr => Str ;
+			c : Case
+		} ;
 
 		-- Sentence
 
-		Cl = {s : ResIce.Tense => Bool => Str};
+		Cl = {s : ResIce.Tense => Bool => Str} ;
 
 		-- Verb
 
-		VP = ResIce.VP;
+		VP = ResIce.VP ;
 		Comp = {s : Agr => Str} ; 
 
 		-- Adjective
 
-		AP = ResIce.A;
+		AP = ResIce.A ;
 
 		-- Noun
 
 		NP =  ResIce.NP ;
 		
 		CN = {
-			noun : Number => Species => Case => Str;
-			adj :  Number => Case => Declension => Str;
-			g : Gender;
+			noun : Number => Species => Case => Str ;
+			adj :  Number => Case => Declension => Str ;
+			g : Gender ;
 			isPre : Bool
-		};
+		} ;
 
 		Det = {
 			s : Gender => Case => Str ;
 			n : Number ; 
 			b : ResIce.Species ; 
 			d : ResIce.Declension
-		};
+		} ;
 
 		Num  = {
 			s : Case => Str ; 
 			n : Number ; 
 			hasCard : Bool
 		} ;
+
+		Ord = {
+			s : Case => Str
+		} ; 
 
 		Pron = {
 			s : Case => Str ; 
@@ -59,17 +67,17 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		} ;
 
 		-- Structural
-		Conj = {s : Str ; n : Number};
+		Conj = {s : Str ; n : Number} ;
 
 		-- Open lexical classes, e.g. Lexicon
 
 		V = ResIce.V;
 
-		V2 = V ** {c : Case};
+		V2 = V ** {c : Case} ;
 
-		A = ResIce.A;
+		A = ResIce.A ;
 
-		N = ResIce.N;
+		N = ResIce.N ;
 
 		N2 = ResIce.N ** {c2 : Str} ;
 
