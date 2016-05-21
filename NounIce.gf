@@ -3,10 +3,11 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 	flags optimize=all_subs ;
 
 	lin
+
 		-- Noun phrases
 
 		--Build a noun phrase from a determiner and a common noun 
-		--Det -> CN -> NP - the man
+		--Det -> CN -> NP
 		DetCN det cn = {
 			s = \\c => case det.b of {
 				Def => det.s ! cn.g ! c ++ cn.adj ! det.n ! c ! det.d ++ cn.noun ! det.n ! det.b ! c ;
@@ -15,25 +16,35 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			a = Ag cn.g det.n P3
 		} ;
 
-		-- Determiners can form noun phrases directly.
-
-		-- Det -> NP - these five
-		DetNP det = {
-			s = \\c => det.s ! Neutr ! c ;
-			a = Ag Neutr det.n P3
-		} ;
-
-		-- Determiners
-
-
-		-- PN -> NP - John
+		-- PN -> NP
 		UsePN pn = {
 			s = \\c => pn.s ! c ;
 			a = Ag pn.g Sg P3
 		} ;
 
-    		-- Pron -> NP - he
+    		-- Pron -> NP 
 		UsePron p = p ;
+
+		-- NP -> V2  -> NP
+		PPartNP np v2 = {
+			s = \\c => case np.a of {
+				Ag _ n p	=> np.s ! c ++ v2.s ! VPast n p 
+			} ;
+			a = np.a
+		} ;
+
+		-- Determiners can form noun phrases directly.
+		-- Det -> NP 
+		DetNP det = {
+			s = \\c => det.s ! Neutr ! c ;
+			a = Ag Neutr det.n P3
+		} ;
+
+
+		-- Determiners
+
+
+
 
 		-- Quant -> Num -> Det - these five
 		DetQuant quant num = {
