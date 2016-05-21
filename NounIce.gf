@@ -35,7 +35,12 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- París í dag
 		-- NP -> Adv -> NP
 		AdvNP np adv = np ** {
-			adv = adv.s  -- until adverbs are further defined
+			adv = np.adv ++ adv.s
+		} ;
+
+		-- NP -> Adv -> NP
+		ExtAdvNP np adv = np ** {
+			adv = np.adv ++ embedInCommas adv.s
 		} ;
 
 		-- Determiners can form noun phrases directly.
