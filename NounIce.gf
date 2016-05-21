@@ -42,6 +42,11 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		ExtAdvNP np adv = np ** {
 			adv = np.adv ++ embedInCommas adv.s
 		} ;
+	
+		-- NP -> RS -> NP
+		RelNP np rs = np ** {
+			rc =  embedInCommas rs.s  -- untill relative, relative pronouns, and relative clauses are implemented
+		} ;
 
 		-- Determiners can form noun phrases directly.
 		-- Det -> NP 
