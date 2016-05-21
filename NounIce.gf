@@ -3,7 +3,6 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 	flags optimize=all_subs ;
 
 	lin
-
 		-- Noun phrases
 
 		--Build a noun phrase from a determiner and a common noun 
@@ -33,6 +32,12 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			a = np.a
 		} ;
 
+		-- París í dag
+		-- NP -> Adv -> NP
+		AdvNP np adv = np ** {
+			adv = adv.s  -- until adverbs are further defined
+		} ;
+
 		-- Determiners can form noun phrases directly.
 		-- Det -> NP 
 		DetNP det = {
@@ -40,11 +45,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			a = Ag Neutr det.n P3
 		} ;
 
-
 		-- Determiners
-
-
-
 
 		-- Quant -> Num -> Det - these five
 		DetQuant quant num = {
