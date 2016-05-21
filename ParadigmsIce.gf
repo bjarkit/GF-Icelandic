@@ -429,7 +429,7 @@ resource ParadigmsIce = open
 							(base + "asta") -- superlative weak Sg.Neutr.
 							(base + "ustu") False) ; -- superlative weak Pl.
 
-		<_ + "inn" , base + "in")>		=> lin A (mkAdjective
+		<_ + "inn" , base + "in">		=> lin A (mkAdjective
 							(base + "inn") (base + "inn") (base + "num") (base + "ins") -- strong Sg.Masc.
 							(base + "in")  (base + "na") (base + "inni") (base + "innar") -- strong Sg.Fem.
 							(base + "ið") (base + "ið") (base + "nu") (base + "ins") -- strong Sg.Netur.
