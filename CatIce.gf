@@ -53,7 +53,7 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		} ;
 
 		Quant = {
-			s  : Number => Gender => Case => Str ; 
+			s : Number => Gender => Case => Str ; 
 			b : ResIce.Species ; -- for nouns, indication if the suffixed article is used or not.
 			d : ResIce.Declension -- for adjectives, indication if the weak or strong form of the adjective is used.
 		} ;
