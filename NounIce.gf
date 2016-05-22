@@ -150,7 +150,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- N2 -> NP -> CN
 		ComplN2 n2 np = {
-			noun = \\n,s,c => n2.s ! n ! s ! c ++ np.s ! c ;
+			noun = \\n,s,c => n2.s ! n ! s ! c ++ np.s ! Acc ;
 			adj = \\_,_,_ => [] ;
 			g = n2.g ;
 			isPre = True 
@@ -158,7 +158,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- N3 -> NP -> N2
 		ComplN3 n3 np = {
-			s = \\n,s,c => n3.s ! n ! s ! c ++ n3.c2 ++ np.s ! c ;
+			s = \\n,s,c => n3.s ! n ! s ! c ++ n3.c2 ++ np.s ! Dat ;
 			g = n3.g ;
 			c2 = n3.c3
 	
