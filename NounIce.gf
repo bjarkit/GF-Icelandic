@@ -32,7 +32,6 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			a = np.a
 		} ;
 
-		-- París í dag
 		-- NP -> Adv -> NP
 		AdvNP np adv = np ** {
 			adv = np.adv ++ adv.s
@@ -56,9 +55,9 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- Determiners
 
-		-- Quant -> Num -> Det - these five
+		-- Quant -> Num -> Det
 		DetQuant quant num = {
-			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! c ;
+			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! g ! c ;
 			n = num.n ;
 			b = quant.b ;
 			d = quant.d
@@ -66,13 +65,22 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- Quant -> Num -> Ord -> Det
 		DetQuantOrd quant num ord = {
-			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! c ++ ord.s ! c ;
+			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! g ! c ++ ord.s ! c ;
 			n = num.n ;
 			b = quant.b ;
 			d = quant.d
 		} ;
 
-		-- Quant - hinn(-inn)/hin(-in)/hið/(-ið)
+		-- Num - [no numeral, but marked as singular]
+		NumSg = {s = \\g,c => []; n = Sg ; hasCard = False} ;
+
+		-- Num - [no numeral, but marked as plural]
+		NumPl = {s = \\g,c => []; n = Pl ; hasCard = False} ;
+
+		-- Card -> Num 
+		NumCard n = n ** {hasCard = True} ;
+
+		-- Quant 
 		DefArt = {
 			s = table {
 				Sg => table {
@@ -90,7 +98,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			d = Weak
 		} ;
 
-		-- Quant - a/an
+		-- Quant
 		IndefArt = {
 			s = \\_,_,_ => [] ;
 			b = Indef ;

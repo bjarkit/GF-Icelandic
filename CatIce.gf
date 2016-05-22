@@ -45,7 +45,7 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		} ;
 
 		Num  = {
-			s : Case => Str ; 
+			s : Gender => Case => Str ; 
 			n : Number ; 
 			hasCard : Bool
 		} ;
@@ -54,9 +54,13 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 			s : Case => Str
 		} ; 
 
+		Card = {
+			s : Gender => Case => Str ; 
+			n : Number
+		} ;
+
 		Pron = {
 			s : Case => Str ; 
-			--sp : Case => Str ; 
 			a : Agr
 		} ;
 
