@@ -115,6 +115,28 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			d = Strong
 		} ;
 
+		-- CN -> NP
+		MassNP cn = {
+			s = \\c =>  cn.adj ! Sg ! c ! Strong ++ cn.noun ! Sg ! Indef ! c ;
+			a =  Ag cn.g Sg P3
+		} ;
+
+		-- Pron -> Quant
+		-- FIXME :
+		-- 1 :
+		-- In regards to the declension
+		-- not sure if it should be
+		-- mitt (rauða hús (indef))  or (rauða húsið (Def)) mitt
+		-- (it could also be (húsið(Def)) mitt (rauða))
+		-- atm it is mitt (rauða hús(Indef)) 
+		-- 2 :
+		-- How should gender be treated in this?
+		PossPron p = {
+			s = \\_,_,c => p.s ! c ;
+			b = Indef ;
+			d = Weak 
+		} ;
+
 		-- Build a common noun by elevating a noun:
 		-- UseN N -> CN ; UseN2 N2 -> CN
 		UseN, UseN2 = \n -> {
@@ -128,7 +150,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- AP -> CN -> CN - big house
 		AdjCN ap cn = { 
 			noun = \\n,c,b => cn.noun ! n ! c ! b ;
-			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ;
+			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ; -- FIXME : Degree hardcoded
 			g = cn.g ;
 			isPre = ap.isPre
 		} ;
