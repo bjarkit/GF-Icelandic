@@ -137,7 +137,9 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			d = Weak 
 		} ;
 
-		-- Build a common noun by elevating a noun:
+
+		-- Common Noun
+
 		-- UseN N -> CN ; UseN2 N2 -> CN
 		UseN, UseN2 = \n -> {
 			noun = n.s ;
@@ -146,13 +148,47 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			isPre = True
 		} ;
 
-		-- Build a new common noun by adding an adjective phrase to an existing common noun:
-		-- AP -> CN -> CN - big house
+		-- N2 -> NP -> CN
+		ComplN2 n2 np = {
+			noun = \\n,s,c => n2.s ! n ! s ! c ++ np.s ! c ;
+			adj = \\_,_,_ => [] ;
+			g = n2.g ;
+			isPre = True 
+		} ;
+
+		-- N3 -> NP -> N2
+		ComplN3 n3 np = {
+			s = \\n,s,c => n3.s ! n ! s ! c ++ n3.c2 ++ np.s ! c ;
+			g = n3.g ;
+			c2 = n3.c3
+	
+		} ;
+
+		-- N3 -> N2
+		Use2N3 n3 = {
+			s = \\n,s,c => n3.s ! n ! s ! c ;
+			g = n3.g ;
+			c2 = n3.c2
+		} ;
+
+		-- N3 -> N2
+		Use3N3 n3 = {
+			s = \\n,s,c => n3.s ! n ! s ! c ;
+			g = n3.g ;
+			c2 = n3.c3
+		} ;
+
+		-- AP -> CN -> CN 
 		AdjCN ap cn = { 
 			noun = \\n,c,b => cn.noun ! n ! c ! b ;
-			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ; -- FIXME : Degree hardcoded
+			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ;
 			g = cn.g ;
 			isPre = ap.isPre
 		} ;
 
+		-- CN -> RS -> CN
+		RelCN cn rs = cn ** {rc = \\n => embedInCommas (rs.s ! Ag cn.g n P3) } ;
+
+		-- CN -> Adv -> CN
+		AdvCN cn adv = cn ** { adv = adv.s } ;
 }
