@@ -80,6 +80,16 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- Card -> Num 
 		NumCard n = n ** {hasCard = True} ;
 
+		-- AdN -> Card -> Card
+		AdNum adn num = {
+				s = \\g,c => adn.s ++ num.s ! g ! c ;
+				n = num.n
+		} ;
+
+		-- A -> Ord 
+		--  FIXME : Hardcoded Strong declension and Sg.Masc for now
+		OrdSuperl a = { s = \\c => a.s ! ASuperl Strong Sg Masc ! c } ;
+
 		-- Quant 
 		DefArt = {
 			s = table {
