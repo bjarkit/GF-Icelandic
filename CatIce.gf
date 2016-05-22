@@ -34,6 +34,8 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 			noun : Number => Species => Case => Str ;
 			adj :  Number => Case => Declension => Str ;
 			g : Gender ;
+			rc : Number => Str ;
+			adv : Str ;
 			isPre : Bool
 		} ;
 

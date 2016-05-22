@@ -12,23 +12,28 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 				Def => det.s ! cn.g ! c ++ cn.adj ! det.n ! c ! det.d ++ cn.noun ! det.n ! det.b ! c ;
 				Indef => cn.adj ! det.n ! c ! det.d ++ cn.noun ! det.n ! det.b ! c 
 			} ;
+			rc = cn.rc ! det.n ;
+			adv = cn.adv ;
 			a = Ag cn.g det.n P3
 		} ;
 
 		-- PN -> NP
 		UsePN pn = {
 			s = \\c => pn.s ! c ;
+			rc, adv = [] ;
 			a = Ag pn.g Sg P3
 		} ;
 
     		-- Pron -> NP 
-		UsePron p = p ;
+		UsePron p = p ** {rc, adv = [] };
 
 		-- NP -> V2  -> NP
 		PPartNP np v2 = {
 			s = \\c => case np.a of {
 				Ag _ n p	=> np.s ! c ++ v2.s ! VPast n p 
 			} ;
+			rc = np.rc ;
+			adv = np.adv ;
 			a = np.a
 		} ;
 
@@ -50,7 +55,9 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- Det -> NP 
 		DetNP det = {
 			s = \\c => det.s ! Neutr ! c ;
+			rc, adv  = [] ;
 			a = Ag Neutr det.n P3
+			
 		} ;
 
 		-- Determiners
@@ -118,6 +125,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- CN -> NP
 		MassNP cn = {
 			s = \\c =>  cn.adj ! Sg ! c ! Strong ++ cn.noun ! Sg ! Indef ! c ;
+			rc = cn.rc ! Sg ;
+			adv = cn.adv ;
 			a =  Ag cn.g Sg P3
 		} ;
 
@@ -145,6 +154,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			noun = n.s ;
 			adj = \\_,_,_ => [] ;
 			g = n.g ;
+			rc = \\_ => [] ;
+			adv = [] ;
 			isPre = True
 		} ;
 
@@ -153,6 +164,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			noun = \\n,s,c => n2.s ! n ! s ! c ++ np.s ! Acc ;
 			adj = \\_,_,_ => [] ;
 			g = n2.g ;
+			rc = \\_ => np.rc ;
+			adv = np.adv ;
 			isPre = True 
 		} ;
 
@@ -183,6 +196,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			noun = \\n,c,b => cn.noun ! n ! c ! b ;
 			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ;
 			g = cn.g ;
+			rc = \\n => cn.rc ! n ;
+			adv = cn.adv ;
 			isPre = ap.isPre
 		} ;
 

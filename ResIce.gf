@@ -79,6 +79,8 @@ resource ResIce = ParamX ** open Prelude in {
 
 		NP : Type = {
 			s : Case => Str;
+			rc : Str ;
+			adv : Str ;
 			a : Agr
 		} ;
 
@@ -103,7 +105,7 @@ resource ResIce = ParamX ** open Prelude in {
 		-- For $Adjectives$
 
 		A : Type = {
-			s : AForm => Case => Str ;
+			s : AForm => Case => Str ; -- FIXME : this is a bit awkwardly done atm
 			isPre : Bool -- is this needed in Icelandic?
 		} ; 
 
@@ -200,5 +202,7 @@ resource ResIce = ParamX ** open Prelude in {
 				<TPerf,Ag _ n p,True> => aux.s ! VPres n p ++ v.s ! V1Part;
 				<TPerf,Ag _ n p,False> => aux.s ! VPres n p ++ "ekki" ++  v.s ! V1Part
 		};
+
+
 
 }
