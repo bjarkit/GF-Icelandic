@@ -207,8 +207,6 @@ resource ParadigmsIce = open
 		-- "-a", "-i", "-u", and most cases of "-é".
 		noIVowel : pattern Str = #("a" | "i" | "u" | "é") ;
 
-		-- For regN and reg3N, it might be "better" to change all occurances of base to stem. idk
-		
 		regN : (_,_ : Str) -> Gender -> N = \nomSg,nomPl,Gender -> case <nomSg,nomPl,Gender> of {
 			-- Weak Nouns --
 
@@ -483,4 +481,20 @@ resource ParadigmsIce = open
 		-- but com for the comparative Sg.Masc.Nom.
 		-- irregA : (_,_,_ : Str) -> \mas,fem,com -> case <mas,fem> of {
 		--}
+
+
+		-- 3 Determiners and quantifiers
+
+		mkOrd : Str -> Ord = \sjötti -> 
+			let
+				sjött = init sjötti
+			in lin Ord { s = table {
+				Sg	=> table {
+						Masc	=> caseList sjötti (sjött + "a") (sjött + "a") (sjött + "a") ;
+						Fem	=> caseList (sjött + "a") (sjött + "u") (sjött + "u") (sjött + "u") ;
+						Neutr	=> caseList (sjött + "a") (sjött + "a") (sjött + "a") (sjött + "a") 
+				} ;
+				Pl	=> \\_,_	=> sjött + "u"
+			} 
+		} ;
 } ;

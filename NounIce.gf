@@ -72,7 +72,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- Quant -> Num -> Ord -> Det
 		DetQuantOrd quant num ord = {
-			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! g ! c ++ ord.s ! c ;
+			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! g ! c ++ ord.s ! num.n ! g ! c ;
 			n = num.n ;
 			b = quant.b ;
 			d = quant.d
@@ -95,7 +95,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- A -> Ord 
 		--  FIXME : Hardcoded Strong declension and Sg.Masc for now
-		OrdSuperl a = { s = \\c => a.s ! ASuperl Strong Sg Masc ! c } ;
+		OrdSuperl a = { s = \\n,g,c => a.s ! ASuperl Strong n g ! c } ;
 
 		-- Quant 
 		DefArt = {

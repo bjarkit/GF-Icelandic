@@ -53,7 +53,7 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		} ;
 
 		Ord = {
-			s : Case => Str
+			s : Number => Gender => Case => Str
 		} ; 
 
 		Card = {
