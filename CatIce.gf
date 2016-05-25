@@ -83,6 +83,7 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		V2 = V ** {c : Case} ;
 
 		A = ResIce.A ;
+		A2 = ResIce.A ** {c2 : Str} ;
 
 		N = ResIce.N ;
 
