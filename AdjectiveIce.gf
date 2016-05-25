@@ -16,6 +16,11 @@ concrete AdjectiveIce of Adjective = CatIce ** open ResIce, Prelude in {
 			s = \\n,g,d,c => a2.s ! APosit d n g ! c ++ a2.c2 ++ np.s ! Dat
 		} ;
 
+		-- A2 -> AP
+		UseA2 a2 = {
+			s = \\n,g,d,c => a2.s ! APosit d n g ! c
+		} ;
+
 		-- A -> AP
 		UseComparA a = {
 			s = \\n,g,d,c => a.s ! ACompar n g ! c
