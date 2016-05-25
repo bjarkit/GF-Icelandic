@@ -24,7 +24,7 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 
 		-- Adjective
 
-		AP = ResIce.A ;
+		AP = { s : Number => Gender => Declension => Case => Str } ;
 
 		-- Noun
 
@@ -35,8 +35,7 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 			adj :  Number => Case => Declension => Str ;
 			g : Gender ;
 			rc : Number => Str ;
-			adv : Str ;
-			isPre : Bool
+			adv : Str
 		} ;
 
 		Det = {
@@ -51,6 +50,8 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 			n : Number ; 
 			hasCard : Bool
 		} ;
+
+		Numeral = { s : Str } ;
 
 		Ord = {
 			s : Number => Gender => Case => Str

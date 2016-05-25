@@ -97,7 +97,7 @@ resource ParadigmsIce = open
 		mkA = overload {
 
 			-- The theoretical worst case
-			mkA : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Bool -> A =
+			mkA : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
 				\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
 				sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
 				sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
@@ -116,7 +116,7 @@ resource ParadigmsIce = open
 				supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
 				supWeakSgMascNom,supWeakSgMascAccDatGen,
 				supWeakSgFemNom,supWeakSgFemAccDatGen,
-				supWeakSgNeut,supWeakPl,b -> 
+				supWeakSgNeut,supWeakPl -> 
 				lin A (mkAdjective
 				sgMascNom sgMascAcc sgMascDat sgMascGen 
 				sgFemNom sgFemAcc sgFemDat sgFemGen 
@@ -136,7 +136,7 @@ resource ParadigmsIce = open
 				supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen 
 				supWeakSgMascNom supWeakSgMascAccDatGen 
 				supWeakSgFemNom supWeakSgFemAccDatGen 
-				supWeakSgNeut supWeakPl b) ;
+				supWeakSgNeut supWeakPl ) ;
 
 
 			-- Given the positive strong Sg.Masc.Nom. and Sg.Fem.Nom.
@@ -349,7 +349,7 @@ resource ParadigmsIce = open
 							(baseA + "rasti") (baseA + "rasta") -- superlative weak Sg.Masc.
 							(baseA + "rasta") (baseÖ + "rustu") -- superlative weak Sg.Fem.
 							(baseA + "rasta") -- superlative weak Sg.Neutr.
-							(baseÖ + "rustu") False) ;-- superlative weak Pl.
+							(baseÖ + "rustu") ) ;-- superlative weak Pl.
 		-- 1 Adjectives ending in -ur in the Sg.Masc.Nom.
 		<baseA + "ur", baseÖ> 		=> lin A (mkAdjective
 							(baseA + "ur") (baseA + "an") (baseÖ + "um") (baseA + "s") -- strong Sg.Masc.
@@ -372,7 +372,7 @@ resource ParadigmsIce = open
 							(baseA + "asti") (baseA + "asta") -- superlative weak Sg.Masc.
 							(baseA + "asta") (baseÖ + "ustu") -- superlative weak Sg.Fem.
 							(baseA + "asta") -- superlative weak Sg.Neutr.
-							(baseÖ + "ustu") False); -- superlative weak Pl.
+							(baseÖ + "ustu") ); -- superlative weak Pl.
 		
 		-- 5 Adjectives having stems that end in -r, -s, (consonant +) -n 
 		<baseA + "r", baseÖ + "r">		=> sameStem mas fem ;
@@ -401,7 +401,7 @@ resource ParadigmsIce = open
 							(base + "jasti") (base + "jasta") -- superlative weak Sg.Masc.
 							(base + "jasta") (base + "justu") -- superlative weak Sg.Fem.
 							(base + "jasta") -- superlative weak Sg.Neutr.
-							(base + "justu") False) ; -- superlative weak Pl.
+							(base + "justu") ) ; -- superlative weak Pl.
 
 		-- 3 Adjectives having stem vowels -á, -ó, -ú 
 		<base + "r", _ + ("á" | "ó" | "ú")>	=> lin A (mkAdjective
@@ -425,7 +425,7 @@ resource ParadigmsIce = open
 							(base + "asti") (base + "asta") -- superlative weak Sg.Masc.
 							(base + "asta") (base + "ustu") -- superlative weak Sg.Fem.
 							(base + "asta") -- superlative weak Sg.Neutr.
-							(base + "ustu") False) ; -- superlative weak Pl.
+							(base + "ustu") ) ; -- superlative weak Pl.
 
 		<_ + "inn" , base + "in">		=> lin A (mkAdjective
 							(base + "inn") (base + "inn") (base + "num") (base + "ins") -- strong Sg.Masc.
@@ -448,7 +448,7 @@ resource ParadigmsIce = open
 							(base + "nasti") (base + "nasta") -- superlative weak Sg.Masc.
 							(base + "nasta") (base + "nustu") -- superlative weak Sg.Fem.
 							(base + "nasta") -- superlative weak Sg.Neutr.
-							(base + "nustu") False)  -- superlative weak Pl.
+							(base + "nustu") )  -- superlative weak Pl.
 		} ;
 
 		sameStem : (_,_ : Str) -> A = \baseA,baseÖ-> lin A (mkAdjective 
@@ -472,7 +472,7 @@ resource ParadigmsIce = open
 			(baseA + "asti") (baseA + "asta") -- superlative weak Sg.Masc.
 			(baseA + "asta") (baseÖ + "ustu") -- superlative weak Sg.Fem.
 			(baseA + "asta") -- superlative weak Sg.Neutr.
-			(baseÖ + "ustu") False) ;-- superlative weak Pl.
+			(baseÖ + "ustu") ) ;-- superlative weak Pl.
 
 		-- A helper function that can take in and list out all cases in the positive degree would be nice.
 

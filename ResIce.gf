@@ -105,11 +105,10 @@ resource ResIce = ParamX ** open Prelude in {
 		-- For $Adjectives$
 
 		A : Type = {
-			s : AForm => Case => Str ; -- FIXME : this is a bit awkwardly done atm
-			isPre : Bool -- is this needed in Icelandic?
+			s : AForm => Case => Str
 		} ; 
 
-		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Bool -> A =
+		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
 			\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
 			sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
 			sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
@@ -128,7 +127,7 @@ resource ResIce = ParamX ** open Prelude in {
 			supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
 			supWeakSgMascNom,supWeakSgMascAccDatGen,
 			supWeakSgFemNom,supWeakSgFemAccDatGen,
-			supWeakSgNeut,supWeakPl,b -> {
+			supWeakSgNeut,supWeakPl -> {
 				s = table {
 					APosit Weak Sg Masc	=> caseList weakSgMascNom weakSgMascAccDatGen weakSgMascAccDatGen weakSgMascAccDatGen ;
 					APosit Weak Sg Fem 	=> caseList weakSgFemNom weakSgFemAccDatGen weakSgFemAccDatGen weakSgFemAccDatGen ;
@@ -154,8 +153,7 @@ resource ResIce = ParamX ** open Prelude in {
 					ASuperl Strong Pl Masc	=> caseList supPlMascNom supPlMascAcc supPlMascDat supPlMascGen ;
 					ASuperl Strong Pl Fem	=> caseList supPlFemNom supPlFemAcc supPlFemDat supPlFemGen ;
 					ASuperl Strong Pl Neutr	=> caseList supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen
-				} ;
-				isPre = b
+				}
 		} ;
 
 		-- For $Verb$.

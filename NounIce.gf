@@ -95,7 +95,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- A -> Ord 
 		--  FIXME : Hardcoded Strong declension and Sg.Masc for now
-		OrdSuperl a = { s = \\n,g,c => a.s ! ASuperl Strong n g ! c } ;
+		--OrdSuperl a = { s = \\n,g,c => a.s ! ASuperl Strong n g ! c } ;
 
 		-- Quant 
 		DefArt = {
@@ -155,8 +155,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			adj = \\_,_,_ => [] ;
 			g = n.g ;
 			rc = \\_ => [] ;
-			adv = [] ;
-			isPre = True
+			adv = []
 		} ;
 
 		-- N2 -> NP -> CN
@@ -165,8 +164,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			adj = \\_,_,_ => [] ;
 			g = n2.g ;
 			rc = \\_ => np.rc ;
-			adv = np.adv ;
-			isPre = True 
+			adv = np.adv 
 		} ;
 
 		-- N3 -> NP -> N2
@@ -194,11 +192,10 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- AP -> CN -> CN 
 		AdjCN ap cn = { 
 			noun = \\n,c,b => cn.noun ! n ! c ! b ;
-			adj = \\n,c,d => ap.s ! APosit d n cn.g ! c ;
+			adj = \\n,c,d => ap.s ! n ! cn.g ! d ! c ;
 			g = cn.g ;
 			rc = \\n => cn.rc ! n ;
-			adv = cn.adv ;
-			isPre = ap.isPre
+			adv = cn.adv 
 		} ;
 
 		-- CN -> RS -> CN
