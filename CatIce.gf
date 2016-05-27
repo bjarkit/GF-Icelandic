@@ -31,8 +31,7 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		NP =  ResIce.NP ;
 		
 		CN = {
-			noun : Number => Species => Case => Str ;
-			adj :  Number => Case => Declension => Str ;
+			s : Number => Species => Declension => Case => Str ;
 			g : Gender ;
 			rc : Number => Str ;
 			adv : Str

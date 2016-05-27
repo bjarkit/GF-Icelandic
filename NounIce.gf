@@ -9,8 +9,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		--Det -> CN -> NP
 		DetCN det cn = {
 			s = \\c => case det.b of {
-				Def => det.s ! cn.g ! c ++ cn.adj ! det.n ! c ! det.d ++ cn.noun ! det.n ! det.b ! c ;
-				Indef => cn.adj ! det.n ! c ! det.d ++ cn.noun ! det.n ! det.b ! c 
+				Def => det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c ;
+				Indef => cn.s ! det.n ! det.b ! det.d ! c
 			} ;
 			rc = cn.rc ! det.n ;
 			adv = cn.adv ;
@@ -124,7 +124,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- CN -> NP
 		MassNP cn = {
-			s = \\c =>  cn.adj ! Sg ! c ! Strong ++ cn.noun ! Sg ! Indef ! c ;
+			s = \\c => cn.s ! Sg ! Indef ! Strong ! c ;
 			rc = cn.rc ! Sg ;
 			adv = cn.adv ;
 			a =  Ag cn.g Sg P3
@@ -150,18 +150,16 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- Common Noun
 
 		-- UseN N -> CN ; UseN2 N2 -> CN
-		UseN, UseN2 = \n -> {
-			noun = n.s ;
-			adj = \\_,_,_ => [] ;
-			g = n.g ;
+		UseN, UseN2 = \noun -> {
+			s = \\n,s,_,c => noun.s ! n ! s ! c ;
+			g = noun.g ;
 			rc = \\_ => [] ;
 			adv = []
 		} ;
 
 		-- N2 -> NP -> CN
 		ComplN2 n2 np = {
-			noun = \\n,s,c => n2.s ! n ! s ! c ++ np.s ! Acc ;
-			adj = \\_,_,_ => [] ;
+			s = \\n,s,_,c => n2.s ! n ! s ! c ++ np.s ! Acc ;
 			g = n2.g ;
 			rc = \\_ => np.rc ;
 			adv = np.adv 
@@ -191,8 +189,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- AP -> CN -> CN 
 		AdjCN ap cn = { 
-			noun = \\n,c,b => cn.noun ! n ! c ! b ;
-			adj = \\n,c,d => ap.s ! n ! cn.g ! d ! c ;
+			s = \\n,s,d,c => ap.s ! n ! cn.g ! d ! c ++ cn.s ! n ! s ! d ! c ;
 			g = cn.g ;
 			rc = \\n => cn.rc ! n ;
 			adv = cn.adv 
