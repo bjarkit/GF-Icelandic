@@ -39,16 +39,18 @@ resource ResIce = ParamX ** open Prelude in {
 
 		Mood = Indicative | Subjunctive ;
 
+		Voice = Active | Middle ;--| Passive -> just aux (að vera - to be) + past participle
+
 		PForm = PWeak Number Gender Case | PStrong Number Gender Case ;
 
 		VForm =
 			VInf
-			| VPres Mood Number Person
-			| VPast Mood Number Person
-			| VImp Number
+			| VPres Voice Mood Number Person
+			| VPast Voice Mood Number Person
+			| VImp Voice Number
 			| VPresPart -- It doesn really inflect, i.e. same form in all cases, genders and number
 			| VPastPart PForm -- inflects also in weak/strong, number, genders and cases, is sometimes used as an adjective
-			| VSup
+			| VSup Voice
 			;
 
 	--2 For $Adjective$
@@ -169,41 +171,52 @@ resource ResIce = ParamX ** open Prelude in {
 			s : VForm => Str
 		} ;
 
+		mkVoice : Voice -> Str -> Str = \v,s ->
+			case v of {
+				Active 	=> s ;
+				Middle	=> case s of {
+					base + "ur"	=> base + "st" ;
+					base + "r"	=> base + "st" ;
+					base + "ð"	=> base + "st" ;
+					base + "ðu"	=> base + "stu" 
+				}
+		} ;
+
 		mkVerb : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x30 : Str) -> V =
 			\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
 			fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
 			fljúgðu,fljúgið,fljúgandi,floginn,flogið -> {
 				s = table {
-					VInf			=> fljúga ;
-					VPres Indicative Sg P1	=> flýg ;
-					VPres Indicative Sg P2	=> flýgur2 ;
-					VPres Indicative Sg P3	=> flýgur3 ;
-					VPres Indicative Pl P1	=> fljúgum ;
-					VPres Indicative Pl P2	=> fljúgið ;
-					VPres Indicative Pl P3	=> fljúga ;
-					VPast Indicative Sg P1	=> flaug1 ;
-					VPast Indicative Sg P2	=> flaugst ;
-					VPast Indicative Sg P3	=> flaug2 ;
-					VPast Indicative Pl P1	=> flugum ;
-					VPast Indicative Pl P2	=> fluguð ;
-					VPast Indicative Pl P3	=> flugu ;
-					VPres Subjunctive Sg P1	=> fljúgi1 ;
-					VPres Subjunctive Sg P2	=> fljúgir ;
-					VPres Subjunctive Sg P3	=> fljúgi3 ;
-					VPres Subjunctive Pl P1	=> fljúgumS ;
-					VPres Subjunctive Pl P2	=> fljúgiðS ;
-					VPres Subjunctive Pl P3	=> fljúgi ;
-					VPast Subjunctive Sg P1	=> flygi1 ;
-					VPast Subjunctive Sg P2	=> flygir ;
-					VPast Subjunctive Sg P3	=> flygi2 ;
-					VPast Subjunctive Pl P1	=> flygjum ;
-					VPast Subjunctive Pl P2	=> flygjuð ;
-					VPast Subjunctive Pl P3	=> flygju ;
-					VImp Sg			=> fljúgðu ;
-					VImp Pl			=> fljúgið ;
-					VPresPart		=> fljúgandi ;
-					VPastPart _		=> floginn ; -- atm
-					VSup			=> flogið
+					VInf				=> fljúga ;
+					VPres v Indicative Sg P1	=> mkVoice v flýg ;
+					VPres v Indicative Sg P2	=> mkVoice v flýgur2 ;
+					VPres v Indicative Sg P3	=> mkVoice v flýgur3 ;
+					VPres v Indicative Pl P1	=> mkVoice v fljúgum ;
+					VPres v Indicative Pl P2	=> mkVoice v fljúgið ;
+					VPres v Indicative Pl P3	=> mkVoice v fljúga ;
+					VPast v Indicative Sg P1	=> mkVoice v flaug1 ;
+					VPast v Indicative Sg P2	=> mkVoice v flaugst ;
+					VPast v Indicative Sg P3	=> mkVoice v flaug2 ;
+					VPast v Indicative Pl P1	=> mkVoice v flugum ;
+					VPast v Indicative Pl P2	=> mkVoice v fluguð ;
+					VPast v Indicative Pl P3	=> mkVoice v flugu ;
+					VPres v Subjunctive Sg P1	=> mkVoice v fljúgi1 ;
+					VPres v Subjunctive Sg P2	=> mkVoice v fljúgir ;
+					VPres v Subjunctive Sg P3	=> mkVoice v fljúgi3 ;
+					VPres v Subjunctive Pl P1	=> mkVoice v fljúgumS ;
+					VPres v Subjunctive Pl P2	=> mkVoice v fljúgiðS ;
+					VPres v Subjunctive Pl P3	=> mkVoice v fljúgi ;
+					VPast v Subjunctive Sg P1	=> mkVoice v flygi1 ;
+					VPast v Subjunctive Sg P2	=> mkVoice v flygir ;
+					VPast v Subjunctive Sg P3	=> mkVoice v flygi2 ;
+					VPast v Subjunctive Pl P1	=> mkVoice v flygjum ;
+					VPast v Subjunctive Pl P2	=> mkVoice v flygjuð ;
+					VPast v Subjunctive Pl P3	=> mkVoice v flygju ;
+					VImp v Sg			=> mkVoice v fljúgðu ;
+					VImp v Pl			=> mkVoice v fljúgið ;
+					VPresPart			=> fljúgandi ;
+					VPastPart _			=> floginn ; -- atm
+					VSup v				=> mkVoice v flogið
 				}
 		} ;
 
@@ -222,9 +235,9 @@ resource ResIce = ParamX ** open Prelude in {
 			let 
 				hafa = mkVerb "hafa" "hef" "hefur" "hefur" "höfum" "hafið" "hafa" "hafði" "hafðir" "hafði" "höfðum" "höfðuð" "höfðu" "hafi" "hafir" "hafi" "höfum" "hafið" "hafi" "hefði" "hefðir" "hefði" "hefðum" "hefðuð" "hefðu" "hafðu" "hafið" "hafandi" "hafður" "haft"
 			in case <t,a,neg> of {
-				<Pres,Ag _ n p,_> => v.s ! VPres Indicative n p ;
-				<Perf,Ag _ n p,True> => hafa.s ! VPres Indicative n p ++ v.s ! VSup;
-				<Perf,Ag _ n p,False> => hafa.s ! VPres Indicative n p ++ "ekki" ++  v.s ! VSup
+				<Pres,Ag _ n p,_> => v.s ! VPres Active Indicative n p ;
+				<Perf,Ag _ n p,True> => hafa.s ! VPres Active Indicative n p ++ v.s ! VSup Active;
+				<Perf,Ag _ n p,False> => hafa.s ! VPres Active Indicative n p ++ "ekki" ++  v.s ! VSup Active
 		};
 
 
