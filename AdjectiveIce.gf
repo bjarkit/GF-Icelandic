@@ -2,7 +2,7 @@ concrete AdjectiveIce of Adjective = CatIce ** open ResIce, Prelude in {
 
 	lin
 		-- A -> AP 
-		Posit a = {
+		PositA a = {
 			s = \\n,g,d,c => a.s ! APosit d n g ! c
 		} ;
 
