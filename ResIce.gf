@@ -37,11 +37,18 @@ resource ResIce = ParamX ** open Prelude in {
 
 	--2 For $Verb$
 
-		VForm = 
-			  VInf 
-			| VPres Number Person 
-			| VPast Number Person 
-			| V1Part
+		Mood = Indicative | Subjunctive ;
+
+		PForm = PWeak Number Gender Case | PStrong Number Gender Case ;
+
+		VForm =
+			VInf
+			| VPres Mood Number Person
+			| VPast Mood Number Person
+			| VImp Number
+			| VPresPart -- It doesn really inflect, i.e. same form in all cases, genders and number
+			| VPastPart PForm -- inflects also in weak/strong, number, genders and cases, is sometimes used as an adjective
+			| VSup
 			;
 
 	--2 For $Adjective$
@@ -162,43 +169,62 @@ resource ResIce = ParamX ** open Prelude in {
 			s : VForm => Str
 		} ;
 
-		mkVerb : (_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> V =
-			\vera,er1,ert,er3,erum,eruð,eru,var1,varst,var3,vorum,voruð,voru,verið -> {
+		mkVerb : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x30 : Str) -> V =
+			\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
+			fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
+			fljúgðu,fljúgið,fljúgandi,floginn,flogið -> {
 				s = table {
-					VInf 		=> vera ;
-					VPres Sg Per1	=> er1 ;
-					VPres Sg Per2	=> ert ;
-					VPres Sg Per3	=> er3 ;
-					VPres Pl Per1	=> erum ; 
-					VPres Pl Per2	=> eruð ;
-					VPres Pl Per3	=> eru ;
-					VPast Sg Per1	=> var1 ;
-					VPast Sg Per2	=> varst ;
-					VPast Sg Per3	=> var3 ;
-					VPast Pl Per1	=> vorum ;
-					VPast Pl Per2	=> voruð ; 
-					VPast Pl Per3	=> voru;
-					V1Part		=> verið
-				} ;
-		} ;	
+					VInf			=> fljúga ;
+					VPres Indicative Sg P1	=> flýg ;
+					VPres Indicative Sg P2	=> flýgur2 ;
+					VPres Indicative Sg P3	=> flýgur3 ;
+					VPres Indicative Pl P1	=> fljúgum ;
+					VPres Indicative Pl P2	=> fljúgið ;
+					VPres Indicative Pl P3	=> fljúga ;
+					VPast Indicative Sg P1	=> flaug1 ;
+					VPast Indicative Sg P2	=> flaugst ;
+					VPast Indicative Sg P3	=> flaug2 ;
+					VPast Indicative Pl P1	=> flugum ;
+					VPast Indicative Pl P2	=> fluguð ;
+					VPast Indicative Pl P3	=> flugu ;
+					VPres Subjunctive Sg P1	=> fljúgi1 ;
+					VPres Subjunctive Sg P2	=> fljúgir ;
+					VPres Subjunctive Sg P3	=> fljúgi3 ;
+					VPres Subjunctive Pl P1	=> fljúgumS ;
+					VPres Subjunctive Pl P2	=> fljúgiðS ;
+					VPres Subjunctive Pl P3	=> fljúgi ;
+					VPast Subjunctive Sg P1	=> flygi1 ;
+					VPast Subjunctive Sg P2	=> flygir ;
+					VPast Subjunctive Sg P3	=> flygi2 ;
+					VPast Subjunctive Pl P1	=> flygjum ;
+					VPast Subjunctive Pl P2	=> flygjuð ;
+					VPast Subjunctive Pl P3	=> flygju ;
+					VImp Sg			=> fljúgðu ;
+					VImp Pl			=> fljúgið ;
+					VPresPart		=> fljúgandi ;
+					VPastPart _		=> floginn ; -- atm
+					VSup			=> flogið
+				}
+		} ;
 
 		VP : Type = {
 			s 	: V;
 			obj 	: Agr => Str; 
-		};
+		} ;
 
 		-- For Predication
 		agrV : V -> Agr -> Tense -> Bool -> Str = \v,a,t,neg -> 
-			-- 1	In these scenarios, the only auxilary verb used (as far as I know)
-			--	 is 'að hafa' ('to have') - therefore it is hardcoded atm.
-			-- 2	'hef' and 'hefur' are dominant in modern Icelandic - but 'hefi' and
-			--	'hefir' are rather common in written texts.
+			-- should be moved/changed - legacy from the Miniature resource grammar
+			-- some complex verbal constructions (taken from The Germanic Languages (Auwera & König) - Icelandic (by Höskuldur Þráinsson) p 163: 
+			--  Perfect : aux (hafa) + supine
+			--  Future  : aux (munu) + infinitive
+			--  Passive : aux (vera) + past participle 
 			let 
-				aux = mkVerb "hafa" "hef" "hefur" "hefur" "höfum" "hafið" "hafa" "hafði" "hafðir" "hafði" "höfðum" "höfðuð" "höfðu" "haft"
+				hafa = mkVerb "hafa" "hef" "hefur" "hefur" "höfum" "hafið" "hafa" "hafði" "hafðir" "hafði" "höfðum" "höfðuð" "höfðu" "hafi" "hafir" "hafi" "höfum" "hafið" "hafi" "hefði" "hefðir" "hefði" "hefðum" "hefðuð" "hefðu" "hafðu" "hafið" "hafandi" "hafður" "haft"
 			in case <t,a,neg> of {
-				<TPres,Ag _ n p,_> => v.s ! VPres n p ;
-				<TPerf,Ag _ n p,True> => aux.s ! VPres n p ++ v.s ! V1Part;
-				<TPerf,Ag _ n p,False> => aux.s ! VPres n p ++ "ekki" ++  v.s ! V1Part
+				<Pres,Ag _ n p,_> => v.s ! VPres Indicative n p ;
+				<Perf,Ag _ n p,True> => hafa.s ! VPres Indicative n p ++ v.s ! VSup;
+				<Perf,Ag _ n p,False> => hafa.s ! VPres Indicative n p ++ "ekki" ++  v.s ! VSup
 		};
 
 

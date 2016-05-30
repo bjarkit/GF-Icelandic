@@ -30,7 +30,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- NP -> V2  -> NP
 		PPartNP np v2 = {
 			s = \\c => case np.a of {
-				Ag _ n p	=> np.s ! c ++ v2.s ! VPast n p 
+				Ag g n p	=> np.s ! c ++ v2.s ! VPastPart (PStrong n g c) -- FIXME hardcoded strong declension 
 			} ;
 			rc = np.rc ;
 			adv = np.adv ;
