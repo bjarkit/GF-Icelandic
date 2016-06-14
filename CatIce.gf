@@ -20,7 +20,13 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 		-- Verb
 
 		VP = ResIce.VP ;
+
 		Comp = {s : Agr => Str} ; 
+
+		VPSlash = ResIce.VP ** {
+			c2 : Preposition ;
+			n  : Agr => Str
+		} ;	
 
 		-- Adjective
 
@@ -74,16 +80,13 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 
 		-- Structural
 		Conj = {s : Str ; n : Number} ;
-		Prep = {
-			s : Str ;
-			c : Case
-		} ;
+		Prep = ResIce.Preposition ;
 
 		-- Open lexical classes, e.g. Lexicon
 
 		V, VS, VQ, VA = ResIce.V;
 
-		V2, V2A, V2S, V2Q = V ** {c : Case} ;
+		V2, V2A, V2S, V2Q = V ** {c2 : Preposition} ;
 
 		VV = ResIce.V ** {c2 : Str} ;
 
