@@ -44,6 +44,26 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			}
 		} ;
 
+		-- V2 -> VPSlash
+		SlashV2a v = predV v ** {
+			n = \\_	=> [] ;
+			c2 = v.c2
+		} ;
+
+		-- V3 -> NP -> VPSlash
+		Slash2V3 v3 np = predV v3 ** {
+			obj = \\_ => v3.c2.s ++ np.s ! v3.c2.c ;
+			n = \\_	=> [] ; 
+			c2 = v3.c3
+		} ;
+
+		-- V3 -> NP -> VPSlash
+		Slash3V3 v3 np = predV v3 ** {
+			obj = \\_ => v3.c3.s ++ np.s ! v3.c3.c ;
+			n = \\_ => [] ;
+			c2 = v3.c2
+		} ;
+
 		-- VP -> Adv -> VP
 		AdvVP vp adv = vp ** { 
 			obj = \\a => adv.s ++ vp.obj ! a
