@@ -44,4 +44,13 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			}
 		} ;
 
+		-- VP -> Adv -> VP
+		AdvVP vp adv = vp ** { 
+			obj = \\a => adv.s ++ vp.obj ! a
+		} ;
+
+		-- VP -> Adv -> VP 
+		ExtAdvVP vp adv = vp ** {
+			obj = \\a => embedInCommas (adv.s ++ vp.obj ! a)
+		} ;
 }
