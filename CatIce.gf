@@ -74,12 +74,18 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 
 		-- Structural
 		Conj = {s : Str ; n : Number} ;
+		Prep = {
+			s : Str ;
+			c : Case
+		} ;
 
 		-- Open lexical classes, e.g. Lexicon
 
-		V = ResIce.V;
+		V, VS, VQ, VA = ResIce.V;
 
-		V2 = V ** {c : Case} ;
+		V2, V2A, V2S, V2Q = V ** {c : Case} ;
+
+		VV = ResIce.V ** {c2 : Str} ;
 
 		A = ResIce.A ;
 		A2 = ResIce.A ** {c2 : Str} ;
