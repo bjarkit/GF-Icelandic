@@ -4,7 +4,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 
 	lin
 		-- V -> VP
-		UsuV = predV ;
+		UseV = predV ;
 
 		-- VV  -> VP -> VP
 		ComplVV vv vp =
