@@ -86,11 +86,9 @@ concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
 
 		V, VS, VQ, VA = ResIce.V;
 
-		V2, V2A, V2S, V2Q = V ** {c2 : Preposition} ;
+		VV, V2, V2A, V2S, V2Q = ResIce.V ** {c2 : Preposition} ;
 
-		V3 = V ** {c2,c3 : Preposition} ;
-
-		VV = ResIce.V ** {c2 : Str} ;
+		V3, V2V = ResIce.V ** {c2,c3 : Preposition} ;
 
 		A = ResIce.A ;
 		A2 = ResIce.A ** {c2 : Str} ;
