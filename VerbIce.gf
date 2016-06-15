@@ -12,7 +12,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 				vvp = predV vv
 			in
 				vvp ** {
-					obj = \\a => vvp.obj ! a ++ vv.c2 ++ vp.obj ! a
+					obj = \\a => vvp.obj ! a ++ vv.c2.s ++ infVP vp a 
 				} ;
 
 		-- VS  -> S  -> VP
@@ -62,6 +62,52 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			obj = \\_ => v3.c3.s ++ np.s ! v3.c3.c ;
 			n = \\_ => [] ;
 			c2 = v3.c2
+		} ;
+
+		-- V2V -> VP -> VPSlash
+		SlashV2V v2v vp = predV v2v ** {
+			n = \\a => v2v.c3.s ++ infVP vp a ;
+			c2 = v2v.c2 ;
+		} ;
+
+		-- V2S -> S -> VPSlash
+		SlashV2S v2s s = predV v2s ** {
+			n = \\_ => s.s ;
+			c2 = v2s.c2
+		} ;
+
+		-- V2Q -> QS -> VPSlash
+		SlashV2Q v2q qs = predV v2q ** {
+			n = \\_ => qs.s ;
+			c2 = v2q.c2
+		} ;
+
+		-- V2A -> AP -> VPSlash
+		SlashV2A v2a ap = predV v2a ** {
+			n = \\a => case a of {
+				Ag g n p 	=> ap.s ! n ! g ! Weak ! Nom 
+			} ;
+			c2 = v2a.c2
+		} ;
+
+		-- VPSlash -> NP -> VP
+		ComplSlash vps np = {
+			s = vps.s ;
+			obj = \\a => vps.n ! a ++ vps.obj ! a ++ np.s ! vps.c2.c 
+		} ;
+
+		-- VV -> VPSlash -> VPSlash
+		SlashVV vv vps = predV vv ** {
+			obj = \\a => vv.c2.s ++ infVP vps a ;
+			n = \\_ => [] ;
+			c2 = vv.c2
+		} ;
+
+		-- V2V -> NP -> VPSlash -> VPSlash
+		SlashV2VNP v2v np vps = predV v2v ** {
+			obj = \\a => v2v.c2.s ++ np.s ! v2v.c2.c ++ v2v.c3.s ++ infVP vps a ;
+			n = \\_ => [] ;
+			c2 = v2v.c2
 		} ;
 
 		-- VP -> Adv -> VP
