@@ -52,7 +52,7 @@ concrete MiniresourceIce of Miniresource = open Prelude in {
 				in case <t,p> of {
 					-- In case of TPerf, the negation goes between the auxilary verb
 					-- and the main verb - done in agrV.
-					<TPres, False>	=> subj ++ verb ++ obj ++ "ekki";
+					<TPres, False>	=> subj ++ verb ++ "ekki" ++ obj;
 					_		=> subj ++ verb ++ obj
 				};
 		};
