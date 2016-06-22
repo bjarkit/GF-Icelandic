@@ -4,6 +4,7 @@ concrete LexiconIce of Lexicon = CatIce **
   open ParadigmsIce, IrregIce, Prelude in {
 
 	lin
+		already_Adv = mkAdv "þegar" ;
 --		arrive_V = mkV "koma" "kem" "kemur" "kemur" "komum" "komið" "koma" "kom" "komst" "kom" "komum" "komuð" "komu" 
 --			"komi" "komir" "komi" "komum" "komið" "komi" "kæmi" "kæmir" "kæmi" "kæmum" "kæmuð" "kæmu"
 --			"komdu" "komið" "komandi" "kominn" "komið" ;
@@ -17,29 +18,11 @@ concrete LexiconIce of Lexicon = CatIce **
 		dog_N = mkN "hundur" "hundar" masculine ;
 		door_N = mkN "hurð" "hurðir" feminine ;
 		factory_N = mkN "verksmiðja" "verksmiðjur" feminine ;
+		far_Adv = mkAdv "langt" ;
 		fish_N = mkN "fiskur" "fiskar" masculine ;
 		floor_N = mkN "gólf" "gólf" neuter ;
 		garden_N = mkN "garður" "garðar" masculine ;
 		gold_N = mkN "gull" "gull" neuter ;
-		green_A = mkA "grænn" "grænan" "grænum" "grænans" 
-			"græn" "græna" "grænni" "grænnar" 
-			"grænt" "grænt" "grænu" "græns" 
-			"grænir" "græna" "grænum" "grænna" 
-			"grænar" "grænar" "grænum" "grænna" 
-			"græn" "græn" "grænum" "grænna" 
-			"græni" "græna" 
-			"græna" "grænu" 
-			"græna" "grænu" 
-			"grænni" "grænna" "grænni"
-			"grænastur" "grænastan" "grænustum" "grænasts"
-			"grænust" "grænasta" "grænastri" "grænstrar"
-			"grænast" "grænast" "grænsustu" "grænasts"
-			"grænastir" "grænasta" "grænustum" "grænastra"
-			"grænastar" "grænastar" "grænustum" "grænastra"
-			"grænust" "grænust" "grænustum" "grænastra"
-			"grænasti" "grænasta"
-			"grænasta" "grænustu"
-			"grænasta" "grænstu" ;
 		--hill_N = mkN "hæð" "hæðar" feminine ; error -> Internal error in GeneratePMCFC: evalTerm ("hæð")
 		horse_N = mkN "hestur" "hestar" masculine ;
 		hot_A = mkA "heitur" "heit" ;
@@ -56,6 +39,8 @@ concrete LexiconIce of Lexicon = CatIce **
 			"maðurinn" "manninn" "manninum" "mannsins" 
 			"menn" "menn" "mönnum" "manna" 
 			"mennirnir" "mennina" "mönnunum" "mannanna" masculine ;
+		now_Adv = mkAdv "núna" ;
+		today_Adv = mkAdv "í dag" ;
 		tree_N = mkN "tré" "tré" "tré" "trés" 
 			"tréð" "tréð" "trénu" "trésins"
 			"tré" "tré" "trjáum" "trjáa" 
