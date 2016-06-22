@@ -110,6 +110,12 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			c2 = v2v.c2
 		} ;
 
+		-- VPSlash -> VP
+		ReflVP vps = {
+			s = vps.s ;
+			obj = \\a => vps.c2.s ++ vps.n ! a ++ vps.obj ! a
+		} ;
+
 		-- VP -> Adv -> VP
 		AdvVP vp adv = vp ** { 
 			obj = \\a => adv.s ++ vp.obj ! a
