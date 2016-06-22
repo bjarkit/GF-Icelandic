@@ -97,7 +97,7 @@ resource ParadigmsIce = open
 		mkA = overload {
 
 			-- The theoretical worst case
-			mkA : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
+			mkA : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
 				\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
 				sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
 				sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
@@ -116,7 +116,7 @@ resource ParadigmsIce = open
 				supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
 				supWeakSgMascNom,supWeakSgMascAccDatGen,
 				supWeakSgFemNom,supWeakSgFemAccDatGen,
-				supWeakSgNeut,supWeakPl -> 
+				supWeakSgNeut,supWeakPl,adv -> 
 				lin A (mkAdjective
 				sgMascNom sgMascAcc sgMascDat sgMascGen 
 				sgFemNom sgFemAcc sgFemDat sgFemGen 
@@ -136,7 +136,7 @@ resource ParadigmsIce = open
 				supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen 
 				supWeakSgMascNom supWeakSgMascAccDatGen 
 				supWeakSgFemNom supWeakSgFemAccDatGen 
-				supWeakSgNeut supWeakPl ) ;
+				supWeakSgNeut supWeakPl adv) ;
 
 
 			-- Given the positive strong Sg.Masc.Nom. and Sg.Fem.Nom.
@@ -157,10 +157,15 @@ resource ParadigmsIce = open
 		-- number of arguments.
 
 		mkV = overload {
+
 			-- The theoretical worst case
-			mkVerb : (_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> V
-				= \vera,er1,ert,er3,erum,eruð,eru,var1,varst,var3,vorum,voruð,voru,verið ->
-				lin V (mkVerb vera er1 ert er3 erum eruð eru var1 varst var3 vorum voruð voru verið) ; 
+			mkV : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x30 : Str) -> V =
+				\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
+				fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
+				fljúgðu,fljúgið,fljúgandi,floginn,flogið -> 
+				lin V (mkVerb fljúga flýg flýgur2 flýgur3 fljúgum fljúgið fljúga flaug1 flaugst flaug2 flugum fluguð flugu 
+				fljúgi1 fljúgir fljúgi3 fljúgumS fljúgiðS fljúgi flygi1 flygir flygi2 flygjum flygjuð flygju 
+				fljúgðu fljúgið fljúgandi floginn flogið) ;
 		};
 
 		--3 Two-place verbs
@@ -171,9 +176,13 @@ resource ParadigmsIce = open
 		mkV2 = overload {
 
 			-- Theoretical worst case.
-			mkV2 : (_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> Case -> V2
-				= \vera,er1,ert,er3,erum,eruð,eru,var1,varst,var3,vorum,voruð,voru,verið,c -> 
-					lin V2 (mkVerb vera er1 ert er3 erum eruð eru var1 varst var3 vorum voruð voru verið ** {c = c});
+			mkV2 : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x30 : Str) -> Case -> V =
+				\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
+				fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
+				fljúgðu,fljúgið,fljúgandi,floginn,flogið,c -> 
+				lin V (mkVerb fljúga flýg flýgur2 flýgur3 fljúgum fljúgið fljúga flaug1 flaugst flaug2 flugum fluguð flugu 
+				fljúgi1 fljúgir fljúgi3 fljúgumS fljúgiðS fljúgi flygi1 flygir flygi2 flygjum flygjuð flygju 
+				fljúgðu fljúgið fljúgandi floginn flogið) ** {c = c};
 		};
 
 		--2 Definitions of paradigms
@@ -229,7 +238,7 @@ resource ParadigmsIce = open
 			<baseSg + "a", basePl + "ur",Fem>	=> lin N (mkNoun nomSg (baseSg + "u") (baseSg + "u") (baseSg + "u")
 								(nomPl + "n") (baseSg + "una") (baseSg + "unni") (baseSg + "unnar")
 								nomPl nomPl (basePl + "um") (basePl + "a")
-								(basePl + "rinar") (basePl + "rinar") (basePl + "unum") (basePl + "anna") Fem ) ;
+								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
 			-- æf-i , æf-ir
 			<baseSg + "i", basePl + "ir",Fem> 	=> lin N (mkNoun nomSg nomSg nomSg nomSg
 								(nomSg + "n") (nomSg + "na") (nomSg + "nni") (nomSg + "nnar")
@@ -325,8 +334,9 @@ resource ParadigmsIce = open
 
 		-- note on u-shift :
 		-- Adjectives with a in the root syllable u-shifts it ö. All other root vowels
-		-- are unchanged throughout the inflexion. 
+		-- are unchanged throughout the inflexion (in the positve). 
 		-- a in suffixes is similarly u-shifted to u.
+		-- i-shift is note taken into account here.
 		
 		-- 2 Adjectives having -(u)r (expanded -r) 
 		<baseA + "ur", baseÖ + "ur">		=> lin A ( mkAdjective mas (baseA + "ran") (baseÖ + "rum") (mas + "s") -- strong Sg.Masc.
@@ -349,7 +359,8 @@ resource ParadigmsIce = open
 							(baseA + "rasti") (baseA + "rasta") -- superlative weak Sg.Masc.
 							(baseA + "rasta") (baseÖ + "rustu") -- superlative weak Sg.Fem.
 							(baseA + "rasta") -- superlative weak Sg.Neutr.
-							(baseÖ + "rustu") ) ;-- superlative weak Pl.
+							(baseÖ + "rustu") -- superlative weak Pl.
+							(baseÖ + "lega")) ; 
 		-- 1 Adjectives ending in -ur in the Sg.Masc.Nom.
 		<baseA + "ur", baseÖ> 		=> lin A (mkAdjective
 							(baseA + "ur") (baseA + "an") (baseÖ + "um") (baseA + "s") -- strong Sg.Masc.
@@ -372,12 +383,13 @@ resource ParadigmsIce = open
 							(baseA + "asti") (baseA + "asta") -- superlative weak Sg.Masc.
 							(baseA + "asta") (baseÖ + "ustu") -- superlative weak Sg.Fem.
 							(baseA + "asta") -- superlative weak Sg.Neutr.
-							(baseÖ + "ustu") ); -- superlative weak Pl.
+							(baseÖ + "ustu") -- superlative weak Pl.
+							(baseÖ + "lega") ) ;
 		
 		-- 5 Adjectives having stems that end in -r, -s, (consonant +) -n 
 		<baseA + "r", baseÖ + "r">		=> sameStem mas fem ;
 		<baseA + "s", baseÖ + "s">		=> sameStem mas fem ;
-		--<baseA@(*consonant + "n"), baseÖ@(*consonant + "n")>		=> sameStem mas fem ;
+		-- <baseA + consonant + "n", baseÖ + consonant + "n">		=> sameStem mas fem ;
 
 		-- 4  Adjectivs having stem vowels -ý or -æ
 		<base + "r", _ + ("ý" | "æ")>	=> lin A (mkAdjective
@@ -401,7 +413,8 @@ resource ParadigmsIce = open
 							(base + "jasti") (base + "jasta") -- superlative weak Sg.Masc.
 							(base + "jasta") (base + "justu") -- superlative weak Sg.Fem.
 							(base + "jasta") -- superlative weak Sg.Neutr.
-							(base + "justu") ) ; -- superlative weak Pl.
+							(base + "justu") -- superlative weak Pl.
+							(base + "lega") ) ;
 
 		-- 3 Adjectives having stem vowels -á, -ó, -ú 
 		<base + "r", _ + ("á" | "ó" | "ú")>	=> lin A (mkAdjective
@@ -425,7 +438,8 @@ resource ParadigmsIce = open
 							(base + "asti") (base + "asta") -- superlative weak Sg.Masc.
 							(base + "asta") (base + "ustu") -- superlative weak Sg.Fem.
 							(base + "asta") -- superlative weak Sg.Neutr.
-							(base + "ustu") ) ; -- superlative weak Pl.
+							(base + "ustu") -- superlative weak Pl.
+							(base + "lega") ) ;
 
 		<_ + "inn" , base + "in">		=> lin A (mkAdjective
 							(base + "inn") (base + "inn") (base + "num") (base + "ins") -- strong Sg.Masc.
@@ -448,7 +462,8 @@ resource ParadigmsIce = open
 							(base + "nasti") (base + "nasta") -- superlative weak Sg.Masc.
 							(base + "nasta") (base + "nustu") -- superlative weak Sg.Fem.
 							(base + "nasta") -- superlative weak Sg.Neutr.
-							(base + "nustu") )  -- superlative weak Pl.
+							(base + "nustu") -- superlative weak Pl.
+							(base + "lega") )
 		} ;
 
 		sameStem : (_,_ : Str) -> A = \baseA,baseÖ-> lin A (mkAdjective 
@@ -472,7 +487,8 @@ resource ParadigmsIce = open
 			(baseA + "asti") (baseA + "asta") -- superlative weak Sg.Masc.
 			(baseA + "asta") (baseÖ + "ustu") -- superlative weak Sg.Fem.
 			(baseA + "asta") -- superlative weak Sg.Neutr.
-			(baseÖ + "ustu") ) ;-- superlative weak Pl.
+			(baseÖ + "ustu") -- superlative weak Pl.
+			(baseÖ + "lega") ) ;
 
 		-- A helper function that can take in and list out all cases in the positive degree would be nice.
 
@@ -497,4 +513,8 @@ resource ParadigmsIce = open
 				Pl	=> \\_,_	=> sjött + "u"
 			} 
 		} ;
+
+
+		-- 3 Adverbs
+		mkAdv : Str -> Adv = \x -> lin Adv (ss x) ;
 } ;
