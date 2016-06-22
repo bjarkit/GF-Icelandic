@@ -39,7 +39,7 @@ resource ResIce = ParamX ** open Prelude in {
 
 		Mood = Indicative | Subjunctive ;
 
-		Voice = Active | Middle ;--| Passive -> just aux (að vera - to be) + past participle
+		Voice = Active | Middle ;--| Passive -> just aux (að vera - to be) + past participle - to be added :D
 
 		PForm = PWeak Number Gender Case | PStrong Number Gender Case ;
 
@@ -49,7 +49,6 @@ resource ResIce = ParamX ** open Prelude in {
 			| VPast Voice Mood Number Person
 			| VImp Voice Number
 			| VPresPart -- It doesn really inflect, i.e. same form in all cases, genders and number
-			| VPastPart PForm -- inflects also in weak/strong, number, genders and cases, is sometimes used as an adjective
 			| VSup Voice
 			;
 
@@ -58,11 +57,14 @@ resource ResIce = ParamX ** open Prelude in {
 		Declension = Weak | Strong ;
 
 		AForm = 
-			  APosit Declension Number Gender 
-			| ACompar Number Gender  -- the comparative has only the weak declension
-			| ASuperl Declension Number Gender
+			  APosit Declension Number Gender Case
+			| ACompar Number Gender Case
+			| ASuperl Declension Number Gender Case
+			| AAdv
 			;
 		
+	--2 For $Sentence$
+		Order = ODir | OQuestion ;
 
 	--------------------------------------------
 	--TYPE DEFINITIONS + WORST-CASE CONSTRUCTORS
@@ -114,10 +116,10 @@ resource ResIce = ParamX ** open Prelude in {
 		-- For $Adjectives$
 
 		A : Type = {
-			s : AForm => Case => Str
+			s : AForm => Str
 		} ; 
 
-		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
+		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
 			\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
 			sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
 			sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
@@ -136,39 +138,41 @@ resource ResIce = ParamX ** open Prelude in {
 			supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
 			supWeakSgMascNom,supWeakSgMascAccDatGen,
 			supWeakSgFemNom,supWeakSgFemAccDatGen,
-			supWeakSgNeut,supWeakPl -> {
+			supWeakSgNeut,supWeakPl,adv -> {
 				s = table {
-					APosit Weak Sg Masc	=> caseList weakSgMascNom weakSgMascAccDatGen weakSgMascAccDatGen weakSgMascAccDatGen ;
-					APosit Weak Sg Fem 	=> caseList weakSgFemNom weakSgFemAccDatGen weakSgFemAccDatGen weakSgFemAccDatGen ;
-					APosit Weak Sg Neutr	=> caseList weakSgNeut weakSgNeut weakSgNeut weakSgNeut ;
-					APosit Weak Pl _ 	=> caseList weakPl weakPl weakPl weakPl ;
-					APosit Strong Sg Masc	=> caseList sgMascNom sgMascAcc sgMascDat sgMascGen ;
-					APosit Strong Sg Fem	=> caseList sgFemNom sgFemAcc sgFemDat sgFemGen ;
-					APosit Strong Sg Neutr	=> caseList sgNeutNom sgNeutAcc sgNeutDat sgNeutGen ;
-					APosit Strong Pl Masc	=> caseList plMascNom plMascAcc plMascDat plMascGen ;
-					APosit Strong Pl Fem	=> caseList plFemNom plFemAcc plFemDat plFemGen ;
-					APosit Strong Pl Neutr	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ;
-					ACompar Sg Masc		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ;
-					ACompar Sg Fem		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ;
-					ACompar Sg Neutr	=> caseList comSgNeutrNom comSgNeutrNom comSgNeutrNom comSgNeutrNom ;
-					ACompar Pl _		=> caseList comPl comPl comPl comPl ;
-					ASuperl Weak Sg Masc	=> caseList supWeakSgMascNom supWeakSgMascAccDatGen supWeakSgMascAccDatGen supWeakSgMascAccDatGen ;
-					ASuperl Weak Sg Fem 	=> caseList supWeakSgFemNom supWeakSgFemAccDatGen supWeakSgFemAccDatGen supWeakSgFemAccDatGen ;
-					ASuperl Weak Sg Neutr	=> caseList supWeakSgNeut supWeakSgNeut supWeakSgNeut supWeakSgNeut ;
-					ASuperl Weak Pl _ 	=> caseList supWeakPl supWeakPl supWeakPl supWeakPl ;
-					ASuperl Strong Sg Masc	=> caseList supSgMascNom supSgMascAcc supSgMascDat supSgMascGen ;
-					ASuperl Strong Sg Fem	=> caseList supSgFemNom supSgFemAcc supSgFemDat supSgFemGen ;
-					ASuperl Strong Sg Neutr	=> caseList supSgNeutNom supSgNeutAcc supSgNeutDat supSgNeutGen ;
-					ASuperl Strong Pl Masc	=> caseList supPlMascNom supPlMascAcc supPlMascDat supPlMascGen ;
-					ASuperl Strong Pl Fem	=> caseList supPlFemNom supPlFemAcc supPlFemDat supPlFemGen ;
-					ASuperl Strong Pl Neutr	=> caseList supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen
+					APosit Weak Sg Masc c		=> caseList weakSgMascNom weakSgMascAccDatGen weakSgMascAccDatGen weakSgMascAccDatGen ! c ;
+					APosit Weak Sg Fem c		=> caseList weakSgFemNom weakSgFemAccDatGen weakSgFemAccDatGen weakSgFemAccDatGen ! c ;
+					APosit Weak Sg Neutr c		=> caseList weakSgNeut weakSgNeut weakSgNeut weakSgNeut ! c ;
+					APosit Weak Pl _ c 		=> caseList weakPl weakPl weakPl weakPl ! c ;
+					APosit Strong Sg Masc c		=> caseList sgMascNom sgMascAcc sgMascDat sgMascGen ! c ;
+					APosit Strong Sg Fem c		=> caseList sgFemNom sgFemAcc sgFemDat sgFemGen ! c ;
+					APosit Strong Sg Neutr c	=> caseList sgNeutNom sgNeutAcc sgNeutDat sgNeutGen ! c ;
+					APosit Strong Pl Masc c		=> caseList plMascNom plMascAcc plMascDat plMascGen ! c ;
+					APosit Strong Pl Fem c		=> caseList plFemNom plFemAcc plFemDat plFemGen ! c ;
+					APosit Strong Pl Neutr c	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ! c ;
+					ACompar Sg Masc c		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ! c ;
+					ACompar Sg Fem c		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ! c ;
+					ACompar Sg Neutr c		=> caseList comSgNeutrNom comSgNeutrNom comSgNeutrNom comSgNeutrNom ! c ;
+					ACompar Pl _ c			=> caseList comPl comPl comPl comPl ! c ;
+					ASuperl Weak Sg Masc c		=> caseList supWeakSgMascNom supWeakSgMascAccDatGen supWeakSgMascAccDatGen supWeakSgMascAccDatGen ! c ;
+					ASuperl Weak Sg Fem c		=> caseList supWeakSgFemNom supWeakSgFemAccDatGen supWeakSgFemAccDatGen supWeakSgFemAccDatGen ! c ;
+					ASuperl Weak Sg Neutr c		=> caseList supWeakSgNeut supWeakSgNeut supWeakSgNeut supWeakSgNeut ! c ;
+					ASuperl Weak Pl _ c 		=> caseList supWeakPl supWeakPl supWeakPl supWeakPl ! c ;
+					ASuperl Strong Sg Masc c	=> caseList supSgMascNom supSgMascAcc supSgMascDat supSgMascGen ! c ;
+					ASuperl Strong Sg Fem c		=> caseList supSgFemNom supSgFemAcc supSgFemDat supSgFemGen ! c ;
+					ASuperl Strong Sg Neutr c	=> caseList supSgNeutNom supSgNeutAcc supSgNeutDat supSgNeutGen ! c ;
+					ASuperl Strong Pl Masc c	=> caseList supPlMascNom supPlMascAcc supPlMascDat supPlMascGen ! c ;
+					ASuperl Strong Pl Fem c		=> caseList supPlFemNom supPlFemAcc supPlFemDat supPlFemGen ! c ;
+					ASuperl Strong Pl Neutr c	=> caseList supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen ! c ;
+					AAdv				=> adv
 				}
 		} ;
 
 		-- For $Verb$.
 
 		V : Type = {
-			s : VForm => Str
+			s : VForm => Str ;
+			pp : PForm => Str
 		} ;
 
 		mkVoice : Voice -> Str -> Str = \v,s ->
@@ -182,11 +186,14 @@ resource ResIce = ParamX ** open Prelude in {
 				}
 		} ;
 
-		mkVerb : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x30 : Str) -> V =
+		mkVerb : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x59 : Str) -> V =
 			\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
 			fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
-			fljúgðu,fljúgið,fljúgandi,floginn,flogið -> {
-				s = table {
+			fljúgðu,fljúgið,fljúgandi,floginn,sgMascAcc,sgMascDat,sgMascGen,sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
+			sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,plMascNom,plMascAcc,plMascDat,plMascGen,
+			plFemNom,plFemAcc,plFemDat,plFemGen,plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
+			weakSgMascNom,weakSgMascAccDatGen,weakSgFemNom,weakSgFemAccDatGen,weakSgNeut,weakPl,flogið -> {
+				s = table { -- This, along with pp, can and will be simplified much further in paradigms
 					VInf				=> fljúga ;
 					VPres v Indicative Sg P1	=> mkVoice v flýg ;
 					VPres v Indicative Sg P2	=> mkVoice v flýgur2 ;
@@ -214,32 +221,66 @@ resource ResIce = ParamX ** open Prelude in {
 					VPast v Subjunctive Pl P3	=> mkVoice v flygju ;
 					VImp v Sg			=> mkVoice v fljúgðu ;
 					VImp v Pl			=> mkVoice v fljúgið ;
-					VPresPart			=> fljúgandi ;
-					VPastPart _			=> floginn ; -- atm
+					VPresPart 			=> fljúgandi ;
+					--VPastPart _			=> floginn ; -- atm
 					VSup v				=> mkVoice v flogið
+				} ;
+				pp = table {
+					PWeak Sg Masc Nom	=> weakSgMascNom ;
+					PWeak Sg Masc _		=> weakSgMascAccDatGen ;
+					PWeak Sg Fem Nom	=> weakSgFemNom ;
+					PWeak Sg Fem _		=> weakSgFemAccDatGen ;
+					PWeak Sg Neutr _	=> weakSgNeut ;
+					PWeak Pl _ _		=> weakPl ;
+					PStrong Sg Masc c	=> caseList floginn sgMascAcc sgMascDat sgMascGen ! c ;
+					PStrong Sg Fem c	=> caseList sgFemNom sgFemAcc sgFemDat sgFemGen ! c ;
+					PStrong Sg Neutr c	=> caseList sgNeutNom sgNeutAcc sgNeutDat sgNeutGen ! c ;
+					PStrong Pl Masc c	=> caseList plMascNom plMascAcc plMascDat plMascGen ! c ;
+					PStrong Pl Fem c	=> caseList plFemNom plFemAcc plFemDat plFemGen ! c ;
+					PStrong Pl Neutr c	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ! c
 				}
 		} ;
 
 		VP : Type = {
-			s 	: V;
+			s 	: Tense => Anteriority => Polarity => Agr => Str ;
 			obj 	: Agr => Str; 
 		} ;
 
-		-- For Predication
-		agrV : V -> Agr -> Tense -> Bool -> Str = \v,a,t,neg -> 
-			-- should be moved/changed - legacy from the Miniature resource grammar
-			-- some complex verbal constructions (taken from The Germanic Languages (Auwera & König) - Icelandic (by Höskuldur Þráinsson) p 163: 
-			--  Perfect : aux (hafa) + supine
-			--  Future  : aux (munu) + infinitive
-			--  Passive : aux (vera) + past participle 
-			let 
-				hafa = mkVerb "hafa" "hef" "hefur" "hefur" "höfum" "hafið" "hafa" "hafði" "hafðir" "hafði" "höfðum" "höfðuð" "höfðu" "hafi" "hafir" "hafi" "höfum" "hafið" "hafi" "hefði" "hefðir" "hefði" "hefðum" "hefðuð" "hefðu" "hafðu" "hafið" "hafandi" "hafður" "haft"
-			in case <t,a,neg> of {
-				<Pres,Ag _ n p,_> => v.s ! VPres Active Indicative n p ;
-				<Perf,Ag _ n p,True> => hafa.s ! VPres Active Indicative n p ++ v.s ! VSup Active;
-				<Perf,Ag _ n p,False> => hafa.s ! VPres Active Indicative n p ++ "ekki" ++  v.s ! VSup Active
-		};
+
+		-- FIXME : Hardcoded VInf for the sake of testing -> todo general VForm
+		infVP : VP -> Agr -> Str = \vp,agr -> infVPPlus vp Pres Simul Pos agr ;
+
+		infVPPlus : VP -> Tense -> Anteriority -> Polarity -> Agr -> Str = \vp,ten,ant,pol,ag -> 
+			vp.s ! ten ! ant ! pol ! ag ++ vp.obj ! ag ;
+
+		-- FIXME : in process
+		predV : V -> VP = \v -> {
+			s = \\ten,ant,pol,agr => case <ten,ant,pol,agr> of {
+				<_,_,Pos,Ag g n p> => v.s ! VInf ;
+				<_,_,Neg,Ag g n p> => v.s ! VInf ++ "ekki"
+			} ;
+			obj = \\_ => []
+		} ;
 
 
+		Preposition : Type = {
+			s : Str ;
+			c : Case
+		} ;
+
+		Cl : Type = {
+			s : Tense => Anteriority => Polarity => Order => Str
+		} ;
+
+		mkClause : NP -> VP -> Cl = \np,vp -> {
+			s = \\ten,ant,pol,order =>
+				let
+					subj = np.s ! Nom ;
+					verb = vp.s ! ten ! ant ! pol ! np.a ;
+					obj = vp.obj ! np.a
+				in case order of {
+					_	=> subj ++ verb ++ obj
+				} ;
+		} ;
 
 }
