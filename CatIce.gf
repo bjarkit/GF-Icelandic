@@ -1,21 +1,19 @@
-concrete CatIce of Cat = CommonX - [Pol] ** open ResIce, Prelude in {
+concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
   flags optimize=all_subs ;
 
 	lincat
-		Pol = {s : Str ; b : Bool} ;
 
-		-- Tensed/Untensed
+		-- Sentence
 
 		S = {s : Str} ;
+
 		RS = {
 			s : Agr => Str ;
 			c : Case
 		} ;
 
-		-- Sentence
-
-		Cl = {s : ResIce.Tense => Bool => Str} ;
+		Cl = ResIce.Cl ;
 
 		-- Verb
 
