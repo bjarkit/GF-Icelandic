@@ -29,7 +29,7 @@ resource ResIce = ParamX ** open Prelude in {
 		-- article on the other hand can be either freestanding or used as a suffix (for all genders).
 		-- The freestanding version is rare and can only be followed by an adjective and the suffix 
 		-- depends on gender and the ending of the noun.
-		Species = Def | Indef ;
+		Species = Def | Indef | Suffix;
 	
 		-- Agreement of noun phrases has three parts
 		Agr = Ag Gender Number Person ;
@@ -102,12 +102,12 @@ resource ResIce = ParamX ** open Prelude in {
 			hestarnir,hestana,hestunum,hestanna,g -> {
 				s = table {
 					Sg => table {
-						Indef	=> caseList hestur hest hesti hests ;
-						Def	=> caseList hesturinn hestinn hestinum hestsins 
+						Suffix	=> caseList hesturinn hestinn hestinum hestsins ;
+						_	=> caseList hestur hest hesti hests
 					} ;
 					Pl => table {
-						Indef	=> caseList hestar hestaAcc hestum hestaGen ;
-						Def	=> caseList hestarnir hestana hestunum hestanna
+						Suffix	=> caseList hestarnir hestana hestunum hestanna ;
+						_	=> caseList hestar hestaAcc hestum hestaGen
 					}
 				} ;
 				g = g
@@ -182,7 +182,8 @@ resource ResIce = ParamX ** open Prelude in {
 					base + "ur"	=> base + "st" ;
 					base + "r"	=> base + "st" ;
 					base + "ð"	=> base + "st" ;
-					base + "ðu"	=> base + "stu" 
+					base + "ðu"	=> base + "stu" ;
+					_		=> s + "st"
 				}
 		} ;
 
@@ -262,7 +263,6 @@ resource ResIce = ParamX ** open Prelude in {
 			obj = \\_ => []
 		} ;
 
-
 		Preposition : Type = {
 			s : Str ;
 			c : Case
@@ -272,12 +272,11 @@ resource ResIce = ParamX ** open Prelude in {
 			s : Tense => Anteriority => Polarity => Order => Str
 		} ;
 
-		mkClause : NP -> VP -> Cl = \np,vp -> {
+		mkClause : Str -> VP -> Agr -> Cl = \subj,vp,agr -> {
 			s = \\ten,ant,pol,order =>
 				let
-					subj = np.s ! Nom ;
-					verb = vp.s ! ten ! ant ! pol ! np.a ;
-					obj = vp.obj ! np.a
+					verb = vp.s ! ten ! ant ! pol ! agr ;
+					obj = vp.obj ! agr
 				in case order of {
 					_	=> subj ++ verb ++ obj
 				} ;
