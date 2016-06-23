@@ -23,6 +23,12 @@ concrete LexiconIce of Lexicon = CatIce **
 		far_Adv = mkAdv "langt" ;
 		fish_N = mkN "fiskur" "fiskar" masculine ;
 		floor_N = mkN "gólf" "gólf" neuter ;
+		fly_V = mkV "fljúga" "flýg" "flýgur" "flýgur" "fljúgum" "fljúgið" "fljúga" "flaug1" "flaugst" "flaug" "flugum" "fluguð" "flugu" 
+			"fljúgi" "fljúgir" "fljúgi" "fljúgum" "fljúgið" "fljúgi" "flygi" "flygir" "flygi" "flygjum" "flygjuð" "flygju" 
+			"fljúgðu" "fljúgið" "fljúgandi" "floginn" "floginn" "flognum" "flogins" "flogin" "flogna" "floginni" "floginnar" 
+			"flogið" "flogið" "flognu" "flogins" "flognir" "flogna" "flognum" "floginna" 
+			"flognar" "flognar" "flognum" "floginna" "flogin" "flogin" "flognum" "floginna" 
+			"flogni" "flogna" "flogna" "flognu" "flogna" "flognu" "flogið" ;
 		garden_N = mkN "garður" "garðar" masculine ;
 		gold_N = mkN "gull" "gull" neuter ;
 		--hill_N = mkN "hæð" "hæðar" feminine ; error -> Internal error in GeneratePMCFC: evalTerm ("hæð")
