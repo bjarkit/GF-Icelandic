@@ -5,12 +5,11 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 	lin
 		-- Noun phrases
 
-		--Build a noun phrase from a determiner and a common noun 
 		--Det -> CN -> NP
 		DetCN det cn = {
 			s = \\c => case det.b of {
 				Def => det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c ;
-				Indef => cn.s ! det.n ! det.b ! det.d ! c
+				_ => cn.s ! det.n ! det.b ! det.d ! c
 			} ;
 			rc = cn.rc ! det.n ;
 			adv = cn.adv ;
@@ -111,7 +110,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 					Neutr	=> caseList "hin" "hin" "hinum" "hinna"
 				}
 			} ;
-			b = Def ;
+			b = Suffix ;
 			d = Weak
 		} ;
 
