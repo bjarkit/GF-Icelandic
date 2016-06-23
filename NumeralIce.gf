@@ -7,7 +7,7 @@ concrete NumeralIce of Numeral = CatIce [Numeral,Digits] ** open Prelude, ResIce
 		CardOrd = NOrd Number Gender Case ;
 
 	lincat
-		Numeral 		= { s : Str } ;
+		--Numeral 		= { s : Str } ;
 		Digit			= LinDigit ;
 		lincat Sub10 		= {s : DForm => Str ; size : Size} ;
 		lincat Sub100 		= {s : NGen => Str ; size : Size} ;
