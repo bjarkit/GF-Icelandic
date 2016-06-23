@@ -5,9 +5,11 @@ concrete LexiconIce of Lexicon = CatIce **
 
 	lin
 		already_Adv = mkAdv "þegar" ;
---		arrive_V = mkV "koma" "kem" "kemur" "kemur" "komum" "komið" "koma" "kom" "komst" "kom" "komum" "komuð" "komu" 
---			"komi" "komir" "komi" "komum" "komið" "komi" "kæmi" "kæmir" "kæmi" "kæmum" "kæmuð" "kæmu"
---			"komdu" "komið" "komandi" "kominn" "komið" ;
+		arrive_V = mkV "koma" "kem" "kemur" "kemur" "komum" "komið" "koma" "kom" "komst" "kom" "komum" "komuð" "komu" 
+			"komi" "komir" "komi" "komum" "komið" "komi" "kæmi" "kæmir" "kæmi" "kæmum" "kæmuð" "kæmu"
+			"komdu" "komið" "komandi" "kominn" "kominn" "komnum" "komins" "komin" "komna" "kominni" "kominnar" "komið" "komið" "komnu" "komins"
+			"komnir" "komna" "komnum" "kominna" "komnar" "komnar" "komnum" "kominna" "komin" "komin" "komnum" "kominna" "komni" "komna" "komna" 
+			"komnu" "komna" "komnu" "komið" ;
 		boat_N = mkN "bátur" "bátar" masculine;
 		boy_N = mkN "strákur" "strákar" masculine ;
 		cheese_N = mkN "ostur" "ostar" masculine ;
