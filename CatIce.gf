@@ -15,6 +15,12 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		Cl = ResIce.Cl ;
 
+		-- Relative
+
+		RCl = {
+			s : Tense => Anteriority => Polarity => Order => Agr => Str
+		} ;
+
 		-- Verb
 
 		VP = ResIce.VP ;
@@ -36,9 +42,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 		
 		CN = {
 			s : Number => Species => Declension => Case => Str ;
-			g : Gender ;
-			rc : Number => Str ;
-			adv : Str
+			g : Gender
 		} ;
 
 		Det = {
@@ -77,7 +81,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 		} ;
 
 		-- Structural
-		Conj = {s : Str ; n : Number} ;
+		Conj = {s1,s2 : Str ; n : Number} ;
 		Prep = ResIce.Preposition ;
 
 		-- Open lexical classes, e.g. Lexicon
