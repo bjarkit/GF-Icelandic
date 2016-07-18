@@ -24,7 +24,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 					obj = \\a => vvs.obj ! a ++ s.s
 				} ;
 
-		-- VQ  -> QS -> VP ;   wonder who runs
+		-- VQ  -> QS -> VP
 		ComplVQ vq qs =
 			let
 				vvq = predV vq
@@ -33,7 +33,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 					obj = \\a => vvq.obj ! a ++ qs.s
 				} ;
 
-		-- VA  -> AP -> VP ;  -- they become red
+		-- VA  -> AP -> VP
 		ComplVA va ap =
 			let
 				vp = (predV va)
@@ -116,13 +116,57 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			obj = \\a => vps.c2.s ++ vps.n ! a ++ vps.obj ! a
 		} ;
 
-		-- VP -> Adv -> VP
-		AdvVP vp adv = vp ** { 
-			obj = \\a => adv.s ++ vp.obj ! a
+		-- Comp -> VP
+		UseComp comp = predV verbBe ** {
+			obj = \\a => comp.s ! a
 		} ;
 
+		-- V2 -> VP
+		PassV2 v2 = 
+			let
+				vp = predV verbBe
+			in
+				{
+					s = \\ten,ant,pol,agr => case <agr> of {
+						<Ag g n p>	=> vp.s ! ten ! ant ! pol ! agr ++ v2.pp ! PStrong n g Nom
+					} ;
+					obj = \\agr	=> vp.obj ! agr
+				} ;
+
+		-- VP -> Adv -> VP
+		AdvVP vp adv = vp ** {obj = \\a => adv.s ++ vp.obj ! a} ;
+
 		-- VP -> Adv -> VP 
-		ExtAdvVP vp adv = vp ** {
-			obj = \\a => embedInCommas (adv.s ++ vp.obj ! a)
+		ExtAdvVP vp adv = vp ** {obj = \\a => adv.s ++ vp.obj ! a} ;
+
+		-- AdV -> VP -> VP
+		AdVVP adv vp = vp ** {obj = \\a => adv.s ++ vp.obj ! a} ;
+
+--    AdvVPSlash : VPSlash -> Adv -> VPSlash ;  -- use (it) here
+--    AdVVPSlash : AdV -> VPSlash -> VPSlash ;  -- always use (it)
+--   
+--    VPSlashPrep : VP -> Prep -> VPSlash ;  -- live in (it)
+
+		-- AP -> Comp
+		CompAP ap = { 
+			s = \\a => case a of {
+				Ag g n _	=> ap.s ! n ! g ! Strong ! Nom
+			}
 		} ;
+				
+		-- NP -> Comp
+		CompNP np = {s = \\_ => np.s ! Nom} ;
+
+		-- Adv -> Comp
+		CompAdv adv = {s = \\_ => adv.s} ;
+
+		-- CN -> Comp
+		CompCN cn = {
+			s = \\a	=> case a of {
+				Ag _ n _	=> cn.s ! n ! Indef ! Strong ! Nom
+			}
+		} ;
+
+		-- VP
+		UseCopula = predV verbBe ;
 }
