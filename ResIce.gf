@@ -64,6 +64,8 @@ resource ResIce = ParamX ** open Prelude in {
 			;
 		
 	--2 For $Sentence$
+
+		-- This is a direct copy paste from english atm
 		Order = ODir | OQuestion ;
 
 	--------------------------------------------
@@ -76,22 +78,20 @@ resource ResIce = ParamX ** open Prelude in {
 		caseList : (_,_,_,_ : Str) -> Case => Str =
 			\n,a,d,g -> table {
 				Nom => n ;
-				Acc => a ; 
-				Dat => d ; 
+				Acc => a ;
+				Dat => d ;
 				Gen => g
 			} ;
 
 		-- For $Nouns$
 
 		N : Type = { 
-			s : Number => Species => Case => Str ; 
+			s : Number => Species => Case => Str ;
 			g : Gender
 		} ;
 
 		NP : Type = {
 			s : Case => Str;
-			rc : Str ;
-			adv : Str ;
 			a : Agr
 		} ;
 
@@ -117,7 +117,7 @@ resource ResIce = ParamX ** open Prelude in {
 
 		A : Type = {
 			s : AForm => Str
-		} ; 
+		} ;
 
 		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
 			\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
@@ -223,7 +223,6 @@ resource ResIce = ParamX ** open Prelude in {
 					VImp v Sg			=> mkVoice v fljúgðu ;
 					VImp v Pl			=> mkVoice v fljúgið ;
 					VPresPart 			=> fljúgandi ;
-					--VPastPart _			=> floginn ; -- atm
 					VSup v				=> mkVoice v flogið
 				} ;
 				pp = table {
@@ -244,7 +243,7 @@ resource ResIce = ParamX ** open Prelude in {
 
 		VP : Type = {
 			s 	: Tense => Anteriority => Polarity => Agr => Str ;
-			obj 	: Agr => Str; 
+			obj 	: Agr => Str;
 		} ;
 
 
@@ -254,14 +253,76 @@ resource ResIce = ParamX ** open Prelude in {
 		infVPPlus : VP -> Tense -> Anteriority -> Polarity -> Agr -> Str = \vp,ten,ant,pol,ag -> 
 			vp.s ! ten ! ant ! pol ! ag ++ vp.obj ! ag ;
 
-		-- FIXME : in process
+		--Agr = Ag Gender Number Person ;
 		predV : V -> VP = \v -> {
 			s = \\ten,ant,pol,agr => case <ten,ant,pol,agr> of {
-				<_,_,Pos,Ag g n p> => v.s ! VInf ;
-				<_,_,Neg,Ag g n p> => v.s ! VInf ++ "ekki"
+				-- hann sefur 'he sleeps'
+				<Pres,Simul,Pos,Ag g n p>	=> v.s ! VPres Active Indicative n p ;
+				-- hann sefur ekki 'he doesn't sleep'
+				<Pres,Simul,Neg,Ag g n p>	=> v.s ! VPres Active Indicative n p ++ "ekki" ;
+				-- hann hefur sofið 'he has slept'
+				<Pres,Anter,Pos,Ag g n p>	=> verbHave.s ! VPres Active Indicative n p ++ v.s ! VSup Active ;
+	 			-- hann hefur ekki sofið 'he hasn't slept'
+				<Pres,Anter,Neg,Ag g n p>	=> verbHave.s ! VPres Active Indicative n p ++ "ekki" ++ v.s ! VSup Active ;
+				-- hann svaf 'he slept'
+				<Past,Simul,Pos,Ag g n p> 	=> v.s ! VPast Active Indicative n p ;
+	 			-- hann svaf ekki 'he didn't sleep'
+				<Past,Simul,Neg,Ag g n p> 	=> v.s ! VPast Active Indicative n p ++ "ekki" ;
+				-- hann hafði sofið 'he had slept'
+				<Past,Anter,Pos,Ag g n p> 	=> verbHave.s ! VPast Active Indicative n p ++ v.s ! VSup Active ;
+	 			-- hann hafði ekki sofið 'he hadn't slept'
+				<Past,Anter,Neg,Ag g n p> 	=> verbHave.s ! VPast Active Indicative n p ++ "ekki" ++ v.s ! VSup Active ;
+	 			-- hann mun sofa 'he will sleep'
+				<Fut,Simul,Pos,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ v.s ! VInf ;
+	 			-- hann mun ekki sofa 'he won't sleep'
+				<Fut,Simul,Neg,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ "ekki" ++ v.s ! VInf ;
+				-- hann mun hafa sofið 'he will have slept'	
+				<Fut,Anter,Pos,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
+				-- hann mun ekki hafa sofið 'he won't have slept'
+				<Fut,Anter,Neg,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ "ekki" ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
+				-- hann myndi sofa 'he would sleep'
+				<Cond,Simul,Pos,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ v.s ! VInf ;
+				-- hann myndi ekki sofa 'he wouldn't sleep'
+				<Cond,Simul,Neg,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ "ekki" ++ v.s ! VInf ;
+				-- hann myndi hafa sofið 'he would have slept'
+				<Cond,Anter,Pos,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
+				-- hann myndi ekki hafa sofið 'he wouldn't have slept'
+				<Cond,Anter,Neg,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ "ekki" ++  verbHave.s ! VInf ++ v.s ! VSup Active
 			} ;
 			obj = \\_ => []
 		} ;
+
+		-- Auxilary verbs --
+
+		-- Auxilary verbs do not forma special group in Icelandic. But many of them do have or rather dont have 
+		-- the same forms as other verbs. As an example the verb "að vera" (e. to be) does not have the past 
+		-- participle nor does it exist in the middle voice or passive voice. Therefore, I will (for the time being)
+		-- fill in the remaining with the infinitive "vera". This goes also for the rest of the auxileries.
+
+		verbBe : V = mkVerb "vera" "er" "ert" "er" "erum" "eruð" "eru" "var" "varst" "var" "vorum" "voruð" "voru"
+					"sé" "sért" "sé" "séum" "séuð" "séu" "væri" "værir" "væri" "værum" "voruð" "væru"
+					"vertu" "verið" "verandi" "vera" "vera" "vera" "vera" "vera" "vera" "vera" "vera"
+					"vera" "vera" "vera" "vera" "vera" "vera" "vera" "vera"
+					"vera" "vera" "vera" "vera" "vera" "vera" "vera" "vera"
+					"vera" "vera" "vera" "vera" "vera" "vera" "verið" ;
+
+		verbBecome : V = mkVerb "verða" "verð" "verður" "verður" "verðum" "verðið" "verða" "varð" "varðst" "varð" "urðum" "urðuð" "urðu"
+					"verði" "verðir" "verði" "verðum" "verðið" "verði" "yrði" "yrðir" "yrði" "yrðum" "yrðuð" "yrðu"
+					"verðið" "verðið" "verðandi" "orðinn" "orðinn" "orðnum" "orðsins" "orðin" "orðna" "orðinni" "orðinnar"
+					"orðið" "orðið" "orðnu" "orðins" "orðnir" "orðna" "orðnum" "orðinna" "orðnar" "orðnar" "orðnum" "orðinna"
+					"orðin" "orðin" "orðnum" "orðinna" "orðni" "orðna" "orðna" "orðnu" "orðna" "orðnu" "orðið" ;
+
+		verbHave : V = mkVerb "hafa" "hef" "hefur" "hefur" "höfum" "hafið" "hafa" "hafði" "hafðir" "hafði" "höfðum" "höfðuð" "höfðu"
+					"hafi" "hafir" "hafi" "höfðum" "hafið" "hafi" "hefði" "hefðir" "hefði" "hefðum" "hefðuð" "hefðu"
+					"hafðu" "hafið" "hafandi" "hafður" "hafðan" "höfðum" "hafðs" "höfð" "hafða" "hafðri" "hafðrar" "haft"
+					"haft" "höfðu" "hafðs" "hafðir" "hafða" "höfðum" "hafðra" "hafðar" "hafðar" "höfðum" "hafðra" "höfð"
+					"höfð" "höfðum" "hafðra" "hafa" "hafa" "hafa" "hafa" "hafa" "hafa" "haft" ;
+
+		verbWill : V = mkVerb "munu" "mun" "munt" "mun" "munum" "munuð" "munu" "munu" "munu" "munu" "munu" "munu" "munu"
+					"muni" "munir" "muni" "munum" "munið" "muni" "myndi" "myndir" "myndi" "myndum" "mynduð" "myndu"
+					"munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu"
+					"munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu"
+					"munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" ;
 
 		Preposition : Type = {
 			s : Str ;
