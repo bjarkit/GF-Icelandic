@@ -401,7 +401,7 @@ resource ParadigmsIce = open
 		-- 5 Adjectives having stems that end in -r, -s, (consonant +) -n 
 		<baseA + "r", baseÖ + "r">		=> sameStem mas fem ;
 		<baseA + "s", baseÖ + "s">		=> sameStem mas fem ;
-		-- <baseA + consonant + "n", baseÖ + consonant + "n">		=> sameStem mas fem ;
+		-- <baseA + #consonant + "n", baseÖ + #consonant + "n">		=> sameStem mas fem ;
 
 		-- 4  Adjectivs having stem vowels -ý or -æ
 		<base + "r", _ + ("ý" | "æ")>	=> lin A (mkAdjective
@@ -529,4 +529,24 @@ resource ParadigmsIce = open
 
 		-- 3 Adverbs
 		mkAdv : Str -> Adv = \x -> lin Adv (ss x) ;
+
+		mkAdA : Str -> AdA = \x -> lin AdA (ss x) ;
+		
+		mkAdN : Str -> AdN = \x -> lin AdN (ss x) ;
+
+		-- 3 Prepositions
+
+		mkPrep : Str -> Case -> Prep = \s,c -> lin Prep {s = s ; c = c } ;
+
+		-- 2 Conjunctions
+
+		mkConj = overload {
+			mkConj : Str -> Conj = \y -> mk2Conj [] y plural ;
+			mkConj : Str -> Number -> Conj =\y,n -> mk2Conj [] y n ;
+			mkConj : Str -> Str -> Conj =\x,y -> mk2Conj x y plural ;
+			mkConj : Str -> Str -> Number -> Conj =\x,y,n -> mk2Conj x y n ;
+		} ;
+
+		mk2Conj : Str -> Str -> Number -> Conj = \x,y,n ->
+			lin Conj (sd2 x y ** {n = n}) ;
 } ;
