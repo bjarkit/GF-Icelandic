@@ -21,8 +21,9 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "sérhvert" "sérhvert" "sérhverju" "sérhvers"
 			} ;
 			n = Sg ;
-			b = Def ;
-			d = Strong -- or weak?
+			b = Indef Free ;
+			d = Strong ;
+			isPre = True
 		} ;
 		everywhere_Adv = mkAdv "alls staðar" ;
 		few_Det = {
@@ -32,8 +33,9 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "fáein" "fáein" "fáeinum" "fáeinna"
 			} ;
 			n = Pl ;
-			b = Def ;
-			d = Strong
+			b = Indef Free ;
+			d = Strong ;
+			isPre = True
 		} ;
 		for_Prep = mkPrep "fyrir" dative ;
 		from_Prep = mkPrep "frá" dative ;
@@ -52,8 +54,9 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "nokkurt" "nokkurt" "nokkru" "nokkurs"
 			} ;
 			n = Sg ;
-			b = Def ;
-			d = Weak
+			b = Indef Free;
+			d = Strong ;
+			isPre = True
 		} ;
 		somePl_Det = {
 			s = table {
@@ -62,8 +65,9 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "nokkur" "nokkur" "nokkrum" "nokkurra"
 			} ;
 			n = Pl ;
-			b = Def ;
-			d = Weak
+			b = Indef Free ;
+			d = Strong ;
+			isPre = True
 		} ;
 		through_Prep = mkPrep "gegnum" accusative ;
 		too_AdA = mkAdA "líka" ;
@@ -99,8 +103,9 @@ concrete StructuralIce of Structural = CatIce **
 						Neutr	=> caseList "þessi" "þessi" "þessum" "þessara"
 				}
 			} ;
-			b = Def ;
-			d = Weak
+			b = Def Free ;
+			d = Weak ;
+			isPre = True
 		} ;
 		that_Quant =  {
 			s = table {
@@ -115,8 +120,9 @@ concrete StructuralIce of Structural = CatIce **
 						Neutr	=> caseList "þau" "þau" "þeim" "þeirra"
 				}
 			} ;
-			b = Def ;
-			d = Weak
+			b = Def Free ;
+			d = Weak ;
+			isPre = True
 		} ;
 		and_Conj = mkConj "og" ;
 		or_Conj = mkConj "eða" singular ;
@@ -135,4 +141,17 @@ concrete StructuralIce of Structural = CatIce **
 		-- where_IAdv = ss "þar" ; þar, hvar, hvert?
 		why_IAdv = ss "af hverju" ;
 		yes_Phr = ss "já" ;
+		i_Pron  = mkPronPers "ég" "mig" "mér" "mín" "minn" "minn" "mínum" "míns" "mín" "mína" "minni" "minnar" "mitt" "mitt" "mínu" "míns" "mínir" "mína" "mínum" "minna" "mínar" "mínar" "mín" "mín" Masc Sg P1 ;
+		youSg_Pron = mkPronPers "þú" "þig" "þér" "þín" "þinn" "þinn" "þínum" "þíns" "þín" "þína" "þinni" "þinnar" "þitt" "þitt" "þínu" "þíns" "þínir" "þína" "þínum" "þinna" "þínar" "þínar" "þín" "þín" Masc Sg P2 ;
+		-- He, she and it are complicated regarding possessions. Sinn is 
+		-- used for thrid persons singular, but only if it is the subject 
+		-- of the sentence, otherwise the genitive of the personal pronoun 
+		-- (hans) is used.
+		--  he_Pron = mkPronPers "hann" "hann" "honum" "hans" Masc Sg P3 ;
+		--  she_Pron = mkPronPers "hún" "hana" "henni" "hennar" Fem Sg P3 ;
+		--  it_Pron = mkPronPers "það" "það" "því" "þess" Neutr Sg P3 ;
+		--  they_Pron = mkPronPers depends on gender,i.e. has 3x4 forms for personal pronouns and is complicated as a possessive
+		--  we_Pron = mkPronPers "við" "okkur" "okkur" "okkar" the possesive equivalent, vor, is mostly used in elevated style.
+		--  youPl_Pron = mkPronPers "þið" "ykkur" "ykkur" "ykkar" the possesive equivalent is complicated 
+		--  youPol_Pron = mkPron "you" "you" "your" "yours" singular P2 human ;
 }
