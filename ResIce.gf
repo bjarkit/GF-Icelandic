@@ -29,7 +29,12 @@ resource ResIce = ParamX ** open Prelude in {
 		-- article on the other hand can be either freestanding or used as a suffix (for all genders).
 		-- The freestanding version is rare and can only be followed by an adjective and the suffix 
 		-- depends on gender and the ending of the noun.
-		Species = Def | Indef | Suffix;
+		SForm = Suffix | Free ;
+
+		Species = Def SForm | Indef SForm ;
+
+		-- For Pronouns
+		PPType = PPers | PPoss Number Gender ;
 	
 		-- Agreement of noun phrases has three parts
 		Agr = Ag Gender Number Person ;
@@ -102,12 +107,12 @@ resource ResIce = ParamX ** open Prelude in {
 			hestarnir,hestana,hestunum,hestanna,g -> {
 				s = table {
 					Sg => table {
-						Suffix	=> caseList hesturinn hestinn hestinum hestsins ;
+						_Suffix	=> caseList hesturinn hestinn hestinum hestsins ;
 						_	=> caseList hestur hest hesti hests
 					} ;
 					Pl => table {
-						Suffix	=> caseList hestarnir hestana hestunum hestanna ;
-						_	=> caseList hestar hestaAcc hestum hestaGen
+						_Suffix	=> caseList hestarnir hestana hestunum hestanna ;
+						_ 	=> caseList hestar hestaAcc hestum hestaGen
 					}
 				} ;
 				g = g
@@ -341,6 +346,28 @@ resource ResIce = ParamX ** open Prelude in {
 				in case order of {
 					_	=> subj ++ verb ++ obj
 				} ;
+		} ;
+
+		-- 2 Pronouns
+
+		Pron : Type = {
+			s : PPType => Case => Str ; 
+			a : Agr
+		} ;
+
+		-- I guess it is inevitable to have personal and possessive pronouns under the same definition and mk function.
+		mkPronPers : (ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2 : Str) -> Gender -> Number -> Person -> Pron =
+			\ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2,g,n,p -> {
+			s = table {
+				PPers		=> caseList ég mig mér mín ;
+				PPoss Sg Masc	=> caseList minn1 minn2 mínum míns ;
+				PPoss Pl Masc	=> caseList mínir mínaPl mínumPl minnaPl ;
+				PPoss Sg Fem	=> caseList mínF mína minni minnar ;
+				PPoss Pl Fem	=> caseList mínar1 mínar2 mínumPl minnaPl ;
+				PPoss Sg Neutr	=> caseList mitt1 mitt2 mínu mínsN ;
+				PPoss Pl Neutr	=> caseList mínPl1 mínPl2 mínumPl minnaPl
+				} ;
+			a = Ag g n p ;
 		} ;
 
 }

@@ -49,7 +49,8 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			s : Gender => Case => Str ;
 			n : Number ; 
 			b : ResIce.Species ; 
-			d : ResIce.Declension
+			d : ResIce.Declension ;
+			isPre : Bool
 		} ;
 
 		Num  = {
@@ -69,15 +70,13 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			n : Number
 		} ;
 
-		Pron = {
-			s : Case => Str ; 
-			a : Agr
-		} ;
+		Pron = ResIce.Pron ;
 
 		Quant = {
 			s : Number => Gender => Case => Str ; 
 			b : ResIce.Species ; -- for nouns, indication if the suffixed article is used or not.
-			d : ResIce.Declension -- for adjectives, indication if the weak or strong form of the adjective is used.
+			d : ResIce.Declension ; -- for adjectives, indication if the weak or strong form of the adjective is used.
+			isPre : Bool
 		} ;
 
 		-- Structural
