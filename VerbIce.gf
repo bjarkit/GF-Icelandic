@@ -163,7 +163,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		-- CN -> Comp
 		CompCN cn = {
 			s = \\a	=> case a of {
-				Ag _ n _	=> cn.s ! n ! Indef ! Strong ! Nom
+				Ag _ n _	=> cn.s ! n ! Indef Free ! Strong ! Nom
 			}
 		} ;
 

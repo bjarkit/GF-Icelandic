@@ -15,9 +15,12 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		--Det -> CN -> NP
 		DetCN det cn = {
-			s = \\c => case det.b of {
-				Def => det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c ;
-				_ => cn.s ! det.n ! det.b ! det.d ! c
+			s = \\c => case <det.b,det.isPre> of {
+				<Def Suffix,True>	=> cn.s ! det.n ! det.b ! det.d ! c ;
+				<Def Suffix,False>	=> cn.s ! det.n ! det.b ! det.d ! c ++ det.s ! cn.g ! c ;
+				<Indef _,False>		=> cn.s ! det.n ! det.b ! det.d ! c ++ det.s ! cn.g ! c ;
+				<Indef _,True>		=> det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c ;
+				<_Free,_>		=> det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c
 			} ;
 			a = Ag cn.g det.n P3
 		} ;
@@ -29,7 +32,10 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		} ;
 
     		-- Pron -> NP 
-		UsePron p = p ;
+		UsePron p = {
+			s = \\c => p.s ! PPers ! c ;
+			a = p.a
+		} ;
 
 		-- NP -> V2  -> NP
 		PPartNP np v2 = {
@@ -61,7 +67,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! g ! c ;
 			n = num.n ;
 			b = quant.b ;
-			d = quant.d
+			d = quant.d ;
+			isPre = quant.isPre
 		} ;
 
 		-- Quant -> Num -> Ord -> Det
@@ -69,7 +76,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			s = \\g,c => quant.s ! num.n ! g ! c ++ num.s ! g ! c ++ ord.s ! num.n ! g ! c ;
 			n = num.n ;
 			b = quant.b ;
-			d = quant.d
+			d = quant.d ;
+			isPre = quant.isPre
 		} ;
 
 		-- Num - [no numeral, but marked as singular]
@@ -105,51 +113,35 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 					Neutr	=> caseList "hin" "hin" "hinum" "hinna"
 				}
 			} ;
-			b = Suffix ;
-			d = Weak
+			b = Def Suffix ;
+			d = Weak ;
+			isPre = True
 		} ;
 
 		-- Quant
 		IndefArt = {
 			s = \\_,_,_ => [] ;
-			b = Indef ;
-			d = Strong
+			b = Indef Free;
+			d = Strong ;
+			isPre = True
 		} ;
 
 		-- CN -> NP
 		MassNP cn = {
-			s = \\c => cn.s ! Sg ! Indef ! Strong ! c ;
+			s = \\c => cn.s ! Sg ! Indef Free ! Strong ! c ;
 			a =  Ag cn.g Sg P3
 		} ;
 
 		-- Pron -> Quant
-		-- FIXME :
-		-- 1 :
-		-- In regards to the declension
-		-- not sure if it should be
-		-- mitt (rauða hús (indef))  or (rauða húsið (Def)) mitt
-		-- (it could also be (húsið(Def)) mitt (rauða))
-		-- atm it is mitt (rauða hús(Indef)) 
-		-- according to Höskuldur Þráinsson in The syntax of Icelandic p 90
-		-- the default is def.noun + Possesive pronoun
-		-- 2 :
-		-- How should gender be treated in this?
-		-- 
-		-- Pronouns (only possessive or ?) should be treated different 
-		-- than generall quantifiers. Pronouns, on the default, go 
-		-- behind the noun but genereall quantifiers at the front.
 		PossPron p = {
-			s = \\_,_,c => p.s ! c ;
-			b = Indef ;
-			d = Weak 
+			s = \\n,g,c => p.s ! (PPoss n g) ! c ;
+			b = Def Suffix ;
+			d = Weak ;
+			isPre = False
 		} ;
 
 
 		-- Common Noun
-
-		-- Regarding CN's and NP's, I am pretty sure the RCL (rc field) 
-		-- is unnecessary since (to my knowledge) it is never discontinuous. 
-		-- The Adverb is a bit more tricky and unclear (to me).
 
 		UseN, UseN2 = \noun -> {
 			s = \\n,s,_,c => noun.s ! n ! s ! c ;
