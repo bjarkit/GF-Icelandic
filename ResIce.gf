@@ -248,6 +248,8 @@ resource ResIce = ParamX ** open Prelude in {
 
 		VP : Type = {
 			s 	: Tense => Anteriority => Polarity => Agr => Str ;
+			verb	: VForm => Str ; -- raw verbforms
+			pp	: PForm => Str ; -- raw past particple
 			obj 	: Agr => Str;
 		} ;
 
@@ -294,6 +296,8 @@ resource ResIce = ParamX ** open Prelude in {
 				-- hann myndi ekki hafa sofið 'he wouldn't have slept'
 				<Cond,Anter,Neg,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ "ekki" ++  verbHave.s ! VInf ++ v.s ! VSup Active
 			} ;
+			verb = \\vform	=> v.s ! vform ;
+			pp = \\pform => v.pp ! pform ;
 			obj = \\_ => []
 		} ;
 

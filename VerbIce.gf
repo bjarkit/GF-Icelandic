@@ -93,7 +93,9 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		-- VPSlash -> NP -> VP
 		ComplSlash vps np = {
 			s = vps.s ;
-			obj = \\a => vps.n ! a ++ vps.obj ! a ++ np.s ! vps.c2.c 
+			obj = \\a => vps.n ! a ++ vps.obj ! a ++ np.s ! vps.c2.c ;
+			verb = vps.verb ;
+			pp = vps.pp
 		} ;
 
 		-- VV -> VPSlash -> VPSlash
@@ -113,7 +115,9 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		-- VPSlash -> VP
 		ReflVP vps = {
 			s = vps.s ;
-			obj = \\a => vps.c2.s ++ vps.n ! a ++ vps.obj ! a
+			obj = \\a => vps.c2.s ++ vps.n ! a ++ vps.obj ! a ;
+			verb = vps.verb ;
+			pp = vps.pp
 		} ;
 
 		-- Comp -> VP
@@ -130,6 +134,8 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 					s = \\ten,ant,pol,agr => case <agr> of {
 						<Ag g n p>	=> vp.s ! ten ! ant ! pol ! agr ++ v2.pp ! PStrong n g Nom
 					} ;
+					verb = \\vform 	=> v2.s ! vform ;
+					pp = \\pform	=> v2.pp ! pform ;
 					obj = \\agr	=> vp.obj ! agr
 				} ;
 
