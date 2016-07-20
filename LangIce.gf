@@ -1,5 +1,6 @@
 
 concrete LangIce of Lang = 
-  GrammarIce,
-  LexiconIce
-  ** {} ;
+	GrammarIce
+	,LexiconIce
+	--,ConstructionIce
+	** {} ;
