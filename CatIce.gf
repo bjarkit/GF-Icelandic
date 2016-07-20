@@ -15,6 +15,8 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		Cl = ResIce.Cl ;
 
+		Imp = {s : Polarity => Number => Str} ;
+
 		-- Relative
 
 		RCl = {
