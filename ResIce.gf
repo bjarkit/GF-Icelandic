@@ -29,9 +29,7 @@ resource ResIce = ParamX ** open Prelude in {
 		-- article on the other hand can be either freestanding or used as a suffix (for all genders).
 		-- The freestanding version is rare and can only be followed by an adjective and the suffix 
 		-- depends on gender and the ending of the noun.
-		SForm = Suffix | Free ;
-
-		Species = Def SForm | Indef SForm ;
+		Species = Def | Indef | Suffix ;
 
 		-- For Pronouns
 		PPType = PPers | PPoss Number Gender ;
@@ -107,12 +105,12 @@ resource ResIce = ParamX ** open Prelude in {
 			hestarnir,hestana,hestunum,hestanna,g -> {
 				s = table {
 					Sg => table {
-						_Suffix	=> caseList hesturinn hestinn hestinum hestsins ;
-						_	=> caseList hestur hest hesti hests
+						Suffix	=> caseList hesturinn hestinn hestinum hestsins ;
+						_ 	=> caseList hestur hest hesti hests
 					} ;
 					Pl => table {
-						_Suffix	=> caseList hestarnir hestana hestunum hestanna ;
-						_ 	=> caseList hestar hestaAcc hestum hestaGen
+						Suffix	=> caseList hestarnir hestana hestunum hestanna ;
+						_	=> caseList hestar hestaAcc hestum hestaGen
 					}
 				} ;
 				g = g
@@ -193,20 +191,20 @@ resource ResIce = ParamX ** open Prelude in {
 		} ;
 
 		mkVerb : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x59 : Str) -> V =
-			\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
+			\fljúga1,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga2,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
 			fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
 			fljúgðu,fljúgið,fljúgandi,floginn,sgMascAcc,sgMascDat,sgMascGen,sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
 			sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,plMascNom,plMascAcc,plMascDat,plMascGen,
 			plFemNom,plFemAcc,plFemDat,plFemGen,plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
 			weakSgMascNom,weakSgMascAccDatGen,weakSgFemNom,weakSgFemAccDatGen,weakSgNeut,weakPl,flogið -> {
 				s = table { -- This, along with pp, can and will be simplified much further in paradigms
-					VInf				=> fljúga ;
+					VInf				=> fljúga1 ;
 					VPres v Indicative Sg P1	=> mkVoice v flýg ;
 					VPres v Indicative Sg P2	=> mkVoice v flýgur2 ;
 					VPres v Indicative Sg P3	=> mkVoice v flýgur3 ;
 					VPres v Indicative Pl P1	=> mkVoice v fljúgum ;
 					VPres v Indicative Pl P2	=> mkVoice v fljúgið ;
-					VPres v Indicative Pl P3	=> mkVoice v fljúga ;
+					VPres v Indicative Pl P3	=> mkVoice v fljúga2 ;
 					VPast v Indicative Sg P1	=> mkVoice v flaug1 ;
 					VPast v Indicative Sg P2	=> mkVoice v flaugst ;
 					VPast v Indicative Sg P3	=> mkVoice v flaug2 ;
