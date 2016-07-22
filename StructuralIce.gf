@@ -21,7 +21,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "sérhvert" "sérhvert" "sérhverju" "sérhvers"
 			} ;
 			n = Sg ;
-			b = Indef Free ;
+			b = Indef ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -33,7 +33,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "fáein" "fáein" "fáeinum" "fáeinna"
 			} ;
 			n = Pl ;
-			b = Indef Free ;
+			b = Indef ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -54,7 +54,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "nokkurt" "nokkurt" "nokkru" "nokkurs"
 			} ;
 			n = Sg ;
-			b = Indef Free;
+			b = Indef ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -65,7 +65,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "nokkur" "nokkur" "nokkrum" "nokkurra"
 			} ;
 			n = Pl ;
-			b = Indef Free ;
+			b = Indef ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -103,7 +103,7 @@ concrete StructuralIce of Structural = CatIce **
 						Neutr	=> caseList "þessi" "þessi" "þessum" "þessara"
 				}
 			} ;
-			b = Def Free ;
+			b = Def ;
 			d = Weak ;
 			isPre = True
 		} ;
@@ -120,7 +120,7 @@ concrete StructuralIce of Structural = CatIce **
 						Neutr	=> caseList "þau" "þau" "þeim" "þeirra"
 				}
 			} ;
-			b = Def Free ;
+			b = Def ;
 			d = Weak ;
 			isPre = True
 		} ;
@@ -154,4 +154,10 @@ concrete StructuralIce of Structural = CatIce **
 		--  we_Pron = mkPronPers "við" "okkur" "okkur" "okkar" the possesive equivalent, vor, is mostly used in elevated style.
 		--  youPl_Pron = mkPronPers "þið" "ykkur" "ykkur" "ykkar" the possesive equivalent is complicated 
 		--  youPol_Pron = mkPron "you" "you" "your" "yours" singular P2 human ;
+
+--  whatPl_IP = mkIP "what" "what" "what's" plural ;
+--  whatSg_IP = mkIP "what" "what" "what's" singular ;
+--  whoPl_IP = mkIP "who" "whom" "whose" plural ;
+--  whoSg_IP = mkIP "who" "whom" "whose" singular ;
+
 }
