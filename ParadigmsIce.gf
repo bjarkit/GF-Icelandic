@@ -248,7 +248,7 @@ resource ParadigmsIce = open
 								(basePl + "urnir") (basePl + "urnir") (basePl + "unum") (basePl + "anna") Masc ) ;
 			-- lilj-a , lilj-ur
 			<baseSg + "a", basePl + "ur",Fem>	=> lin N (mkNoun nomSg (baseSg + "u") (baseSg + "u") (baseSg + "u")
-								(nomPl + "n") (baseSg + "una") (baseSg + "unni") (baseSg + "unnar")
+								(nomSg + "n") (baseSg + "una") (baseSg + "unni") (baseSg + "unnar")
 								nomPl nomPl (basePl + "um") (basePl + "a")
 								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
 			-- æf-i , æf-ir
