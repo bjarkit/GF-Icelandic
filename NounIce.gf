@@ -16,11 +16,9 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		--Det -> CN -> NP
 		DetCN det cn = {
 			s = \\c => case <det.b,det.isPre> of {
-				<Def Suffix,True>	=> cn.s ! det.n ! det.b ! det.d ! c ;
-				<Def Suffix,False>	=> cn.s ! det.n ! det.b ! det.d ! c ++ det.s ! cn.g ! c ;
-				<Indef _,False>		=> cn.s ! det.n ! det.b ! det.d ! c ++ det.s ! cn.g ! c ;
-				<Indef _,True>		=> det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c ;
-				<_Free,_>		=> det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c
+				<Suffix,True>		=> cn.s ! det.n ! det.b ! det.d ! c ;
+				<_,True>		=> det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c ; 
+				<_,False>		=> cn.s ! det.n ! det.b ! det.d ! c ++ det.s ! cn.g ! c
 			} ;
 			a = Ag cn.g det.n P3
 		} ;
@@ -36,6 +34,10 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			s = \\c => p.s ! PPers ! c ;
 			a = p.a
 		} ;
+
+---- A noun phrase already formed can be modified by a $Predet$erminer.
+--
+--    PredetNP : Predet -> NP -> NP ; -- only the man 
 
 		-- NP -> V2  -> NP
 		PPartNP np v2 = {
@@ -113,7 +115,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 					Neutr	=> caseList "hin" "hin" "hinum" "hinna"
 				}
 			} ;
-			b = Def Suffix ;
+			b = Suffix;
 			d = Weak ;
 			isPre = True
 		} ;
@@ -121,21 +123,21 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- Quant
 		IndefArt = {
 			s = \\_,_,_ => [] ;
-			b = Indef Free;
+			b = Indef;
 			d = Strong ;
 			isPre = True
 		} ;
 
 		-- CN -> NP
 		MassNP cn = {
-			s = \\c => cn.s ! Sg ! Indef Free ! Strong ! c ;
+			s = \\c => cn.s ! Sg ! Indef ! Strong ! c ;
 			a =  Ag cn.g Sg P3
 		} ;
 
 		-- Pron -> Quant
 		PossPron p = {
 			s = \\n,g,c => p.s ! (PPoss n g) ! c ;
-			b = Def Suffix ;
+			b = Suffix ;
 			d = Weak ;
 			isPre = False
 		} ;
@@ -196,4 +198,34 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- CN -> Adv -> CN
 		AdvCN cn adv = cn ** {s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ adv.s} ;
+
+---- Nouns can also be modified by embedded sentences and questions.
+---- For some nouns this makes little sense, but we leave this for applications
+---- to decide. Sentential complements are defined in [Verb Verb.html].
+--
+--    SentCN  : CN -> SC  -> CN ;   -- question where she sleeps
+
+----2 Apposition
+--
+---- This is certainly overgenerating.
+--
+--    ApposCN : CN -> NP -> CN ;    -- city Paris (, numbers x and y)
+--
+----2 Possessive and partitive constructs
+--
+---- (New 13/3/2013 AR; Structural.possess_Prep and part_Prep should be deprecated in favour of these.)
+--
+--    PossNP  : CN -> NP -> CN ;     -- house of Paris, house of mine
+--    PartNP  : CN -> NP -> CN ;     -- glass of wine
+
+---- This is different from the partitive, as shown by many languages.
+--
+--    CountNP : Det -> NP -> NP ;    -- three of them, some of the boys
+--
+--
+----3 Conjoinable determiners and ones with adjectives
+--
+--    AdjDAP : DAP -> AP -> DAP ;    -- the large (one)
+--    DetDAP : Det -> DAP ;          -- this (or that) 
+
 }
