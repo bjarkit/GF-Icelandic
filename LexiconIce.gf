@@ -12,6 +12,7 @@ concrete LexiconIce of Lexicon = CatIce **
 			"komnu" "komna" "komnu" "komið" ;
 		boat_N = mkN "bátur" "bátar" masculine;
 		boy_N = mkN "strákur" "strákar" masculine ;
+		cat_N = regN "kisa" "kisur" feminine;
 		cheese_N = mkN "ostur" "ostar" masculine ;
 		city_N = mkN "borg" "borgir" feminine ;
 		cold_A = mkA "kaldur" "köld" ;
