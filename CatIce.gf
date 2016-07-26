@@ -4,7 +4,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 	lincat
 
-		-- Sentence
+		--2 Sentences and clauses
 
 		S = {s : Str} ;
 
@@ -17,9 +17,18 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		Cl = ResIce.Cl ;
 
+		ClSlash = {
+			s : Tense => Anteriority => Polarity => Order => Str
+		} ;
+
+		SSlash = {
+			s : Tense => Anteriority => Polarity => Order => Str
+		} ;
+
 		Imp = {s : Polarity => Number => Str} ;
 
-		-- Question
+
+		--2 Questions and interrogatives
 
 		QCl = {s : Tense => Anteriority => Polarity => QForm => Str} ; -- is Agr needed?
 
@@ -32,13 +41,15 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		IQuant = {s : Str} ;
 
-		-- Relative
+
+		--2 Relative clauses and pronouns
 
 		RCl = {s : Tense => Anteriority => Polarity => Order => Agr => Str} ;
 
 		RP = {s : Str} ;
 
-		-- Verb
+
+		--2 Verb phrases
 
 		VP = ResIce.VP ;
 
@@ -49,18 +60,22 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			n  : Agr => Str
 		} ;	
 
-		-- Adjective
 
-		AP = { s : Number => Gender => Declension => Case => Str } ;
+		--2 Adjectival phrases
 
-		-- Noun
+		AP = {s : Number => Gender => Declension => Case => Str} ;
 
-		NP =  ResIce.NP ;
-		
+
+		--2 Nouns and noun phrases
+
 		CN = {
 			s : Number => Species => Declension => Case => Str ;
 			g : Gender
 		} ;
+
+		NP =  ResIce.NP ;
+
+		Pron = ResIce.Pron ;
 
 		Det = {
 			s : Gender => Case => Str ;
@@ -74,11 +89,11 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			s : Number => Gender => Case => Str
 		} ;
 
-		DAP = {
-			s : Gender => Case => Str ;
-			n : Number ;
-			b : ResIce.Species ;
-			d : ResIce.Declension
+		Quant = {
+			s : Number => Gender => Case => Str ;
+			b : ResIce.Species ; -- for nouns, indication if the suffixed article is used or not.
+			d : ResIce.Declension ; -- for adjectives, indication if the weak or strong form of the adjective is used.
+			isPre : Bool
 		} ;
 
 		Num  = {
@@ -87,46 +102,45 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			hasCard : Bool
 		} ;
 
-		Numeral = { s : Str } ;
-
-		Ord = {
-			s : Number => Gender => Case => Str
-		} ; 
-
 		Card = {
 			s : Gender => Case => Str ; 
 			n : Number
 		} ;
 
-		Pron = ResIce.Pron ;
+		Ord = {
+			s : Number => Gender => Case => Str
+		} ; 
 
-		Quant = {
-			s : Number => Gender => Case => Str ; 
-			b : ResIce.Species ; -- for nouns, indication if the suffixed article is used or not.
-			d : ResIce.Declension ; -- for adjectives, indication if the weak or strong form of the adjective is used.
-			isPre : Bool
+		DAP = {
+			s : Gender => Case => Str ;
+			n : Number ;
+			b : ResIce.Species ;
+			d : ResIce.Declension
 		} ;
 
-		-- Structural
+
+		--2 Numerals
+
+		Numeral = {s : Str} ;
+
+
+		--2 Structural words
+
 		Conj = {s1,s2 : Str ; n : Number} ;
 		Prep = ResIce.Preposition ;
 
-		-- Open lexical classes, e.g. Lexicon
+
+		--2 Words of open classes
 
 		V, VS, VQ, VA = ResIce.V;
-
 		VV, V2, V2A, V2S, V2Q = ResIce.V ** {c2 : Preposition} ;
-
 		V3, V2V = ResIce.V ** {c2,c3 : Preposition} ;
 
 		A = ResIce.A ;
 		A2 = ResIce.A ** {c2 : Preposition} ;
 
 		N = ResIce.N ;
-
 		N2 = ResIce.N ** {c2 : Str} ;
-
 		N3 = ResIce.N ** {c2,c3 : Str} ;
-
 		PN = {s : Case => Str ; g : Gender} ;
 }
