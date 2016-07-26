@@ -13,10 +13,13 @@ concrete AdjectiveIce of Adjective = CatIce ** open ResIce, Prelude in {
 
 		-- A2 -> NP -> AP
 		ComplA2 a2 np = {
-			s = \\n,g,d,c => a2.s ! APosit d n g c ++ a2.c2 ++ np.s ! NCase Dat
+			s = \\n,g,d,c => a2.s ! APosit d n g c ++ a2.c2.s ++ np.s ! NCase a2.c2.c
 		} ;
 
--- ReflA2  : A2 -> AP ;        -- married to itself
+		-- A2 -> AP
+		ReflA2 a2 = {
+			s = \\n,g,d,c => a2.s ! APosit d n g c ++ a2.c2.s ++ reflPron n g a2.c2.c
+		} ;
 
 		-- A2 -> AP
 		UseA2 a2 = {

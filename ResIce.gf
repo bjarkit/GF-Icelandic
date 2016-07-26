@@ -33,10 +33,6 @@ resource ResIce = ParamX ** open Prelude in {
 
 		NPCase = NCase Case | NPPoss Number Gender Case ;
 	
-		-- Agreement of noun phrases has three parts
-		-- Agr = Ag Gender Number Person ;
-
-
 	--2 For $Verb$
 
 		Mood = Indicative | Subjunctive ;
@@ -76,6 +72,7 @@ resource ResIce = ParamX ** open Prelude in {
 
 	-- For $Lex$.
 	oper
+		-- Agreement of noun phrases has three parts
 		Agr : PType = {g : Gender ; n : Number ; p : Person} ;
 
 		gennumperToAgr : Gender -> Number -> Person -> Agr =
@@ -382,4 +379,20 @@ resource ResIce = ParamX ** open Prelude in {
 			a = gennumperToAgr g n p ;
 		} ;
 
+		-- Agr : PType = {g : Gender ; n : Number ; p : Person} ;
+		-- There is only one relfective pronoun in icelandic "sig". It is the same in all genders and numbers and 
+		-- does not technically exist in the nominative - the personal pronoun of the subject is then used (in the nominative)
+		-- along with pronoun sjálfur (although I have a hard time thinking of a scenario where it is used as such).
+		reflPron : Number -> Gender -> Case -> Str =
+			\n,g,c -> case <n,g,c> of {
+				<Sg,Masc,Nom>	=> "hann" ++ "sjálfur" ;
+				<Pl,Masc,Nom>	=> "þeir" ++ "sjálfir" ;
+				<Sg,Fem,Nom>	=> "hún" ++ "sjálf" ;
+				<Pl,Fem,Nom>	=> "þær" ++ "sjálfar" ;
+				<Sg,Neutr,Nom>	=> "það" ++ "sjálft" ;
+				<Pl,Neutr,Nom>	=> "þau" ++ "sjálf" ;
+				<_,_,Acc>	=> "sig" ;
+				<_,_,Dat>	=> "sér" ;
+				<_,_,Gen>	=> "sín"
+			};
 }

@@ -120,7 +120,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 		V3, V2V = ResIce.V ** {c2,c3 : Preposition} ;
 
 		A = ResIce.A ;
-		A2 = ResIce.A ** {c2 : Str} ;
+		A2 = ResIce.A ** {c2 : Preposition} ;
 
 		N = ResIce.N ;
 
