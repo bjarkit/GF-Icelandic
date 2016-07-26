@@ -23,8 +23,8 @@ concrete AdverbIce of Adverb = CatIce ** open ResIce, Prelude in {
 		PositAdAAdj a = { s = a.s ! AAdv} ;
 
 		-- Subj -> S -> Adv
-		SubjS sub s = { s = sub.s ++ s.s } ; -- until S has been implemented
+		SubjS sub s = { s = sub.s ++ s.s } ;
 
 		-- CAdv -> AdN
-		AdnCAdv cadv = { s = cadv.s ++ "en"} ; -- hardcoded atm
+		AdnCAdv cadv = { s = cadv.s ++ cadv.p} ;
 }

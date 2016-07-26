@@ -159,7 +159,6 @@ concrete StructuralIce of Structural = CatIce **
 --  whatSg_IP = mkIP "what" "what" "what's" singular ;
 --  whoPl_IP = mkIP "who" "whom" "whose" plural ;
 --  whoSg_IP = mkIP "who" "whom" "whose" singular ;
-			--s : Number => Gender => Case => Str
 
 		-- Note this is basically the superlative of the adjective margur (e. many)
 		-- a paradigm or make function will be made for Predet's.
@@ -182,5 +181,9 @@ concrete StructuralIce of Structural = CatIce **
 		-- only_Predet =
 		-- Same here : ekki is a sentence adverb that does not inflect
 		--not_Predet =
+
+		less_CAdv = {s = "minna" ; p = "en"} ;
+		more_CAdv = {s = "meira" ; p = "en"} ;
+		as_CAdv = {s = "eins" ; p = "og"} ;
 
 }
