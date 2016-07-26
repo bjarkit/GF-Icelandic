@@ -92,6 +92,14 @@ resource ParadigmsIce = open
 
 		} ;
 
+
+		mkPN = overload {
+
+			mkPN : Str -> Gender -> PN = 
+				\name,g	-> regPN name g ;	
+
+		} ;
+
 		--2 Adjectives
 
 		mkA = overload {
@@ -338,6 +346,15 @@ resource ParadigmsIce = open
 										(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (genSg + "innar")
 										nomPl nomPl (basePl + "um") (basePl + "a")
 										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem )
+		} ;
+
+		regPN : Str -> Gender -> PN = \name,g -> case <name,g> of {
+				<base + "i",Masc>	=> lin PN {s = caseList name (base + "a") (base + "a") (base + "a") ; g = Masc} ;
+				<base + "a",Masc>	=> lin PN {s = caseList name (base + "u") (base + "u") (base + "u") ; g = Masc} ;
+				<base + "ur",Masc>	=> lin PN {s = caseList name base (base + "i") (base + "s") ; g = Masc} ;
+				<base + "l",Masc>	=> lin PN {s = caseList name name name (name + "s") ; g = Masc} ;
+				<base + "s",Masc>	=> lin PN {s = caseList name name (name + "i") (name + "ar") ; g = Masc} ;
+				<base + #consonant,Masc>	=> lin PN {s = caseList name name (name + "i") (name + "s") ; g = Masc}
 		} ;
 
 		-- Most adjectives can be predicted from the Sg.Fem.Nom in the positive. Here we denote

@@ -38,6 +38,7 @@ concrete LexiconIce of Lexicon = CatIce **
 		house_N = mkN "hús" "hús" neuter ;
 		important_A = mkA "mikilvægur" "mikilvæg" ;
 		iron_N = mkN "járn" "járn" neuter ;
+		john_PN = mkPN "Jón" masculine ;
 		--king_N = mkN "konungur" "konung" masculine ; error -> Internal error in GeneratePMCFC: evalTerm ("hæð")
 		leather_N = mkN "leður" "leður" neuter ;
 --		love_V2 = mkV2 "elska" "elska" "elskar" "elskar" "elskum" "elskið" "elska" "elskaði" "elskaðir" "elskaði" "elskuðum" "elskuðuð" "elskuðu" 
