@@ -31,8 +31,7 @@ resource ResIce = ParamX ** open Prelude in {
 		-- depends on gender and the ending of the noun.
 		Species = Def | Indef | Suffix ;
 
-		-- For Pronouns
-		PPType = PPers | PPoss Number Gender ;
+		NPCase = NCase Case | NPPoss Number Gender Case ;
 	
 		-- Agreement of noun phrases has three parts
 		Agr = Ag Gender Number Person ;
@@ -86,6 +85,14 @@ resource ResIce = ParamX ** open Prelude in {
 				Gen => g
 			} ;
 
+		-- NPCase = NCase Case | NPPoss Number Gender Case ;
+	
+		npcaseToCase : NPCase -> Case = \npc	-> case npc of {
+				NCase c	=> c ;
+				NPPoss _ _ c => c
+		} ;
+
+
 		-- For $Nouns$
 
 		N : Type = { 
@@ -94,7 +101,7 @@ resource ResIce = ParamX ** open Prelude in {
 		} ;
 
 		NP : Type = {
-			s : Case => Str;
+			s : NPCase => Str ;
 			a : Agr
 		} ;
 
@@ -353,21 +360,22 @@ resource ResIce = ParamX ** open Prelude in {
 		-- 2 Pronouns
 
 		Pron : Type = {
-			s : PPType => Case => Str ; 
+			s : NPCase => Str ;
 			a : Agr
 		} ;
 
+		-- NPCase = NCase Case | NPPoss Number Gender Case ;
 		-- I guess it is inevitable to have personal and possessive pronouns under the same definition and mk function.
 		mkPronPers : (ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2 : Str) -> Gender -> Number -> Person -> Pron =
 			\ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2,g,n,p -> {
 			s = table {
-				PPers		=> caseList ég mig mér mín ;
-				PPoss Sg Masc	=> caseList minn1 minn2 mínum míns ;
-				PPoss Pl Masc	=> caseList mínir mínaPl mínumPl minnaPl ;
-				PPoss Sg Fem	=> caseList mínF mína minni minnar ;
-				PPoss Pl Fem	=> caseList mínar1 mínar2 mínumPl minnaPl ;
-				PPoss Sg Neutr	=> caseList mitt1 mitt2 mínu mínsN ;
-				PPoss Pl Neutr	=> caseList mínPl1 mínPl2 mínumPl minnaPl
+				NCase c			=> caseList ég mig mér mín ! c ;
+				NPPoss Sg Masc c	=> caseList minn1 minn2 mínum míns ! c ;
+				NPPoss Pl Masc c	=> caseList mínir mínaPl mínumPl minnaPl ! c ;
+				NPPoss Sg Fem c		=> caseList mínF mína minni minnar ! c ;
+				NPPoss Pl Fem c		=> caseList mínar1 mínar2 mínumPl minnaPl ! c ;
+				NPPoss Sg Neutr c	=> caseList mitt1 mitt2 mínu mínsN ! c ;
+				NPPoss Pl Neutr c	=> caseList mínPl1 mínPl2 mínumPl minnaPl ! c
 				} ;
 			a = Ag g n p ;
 		} ;
