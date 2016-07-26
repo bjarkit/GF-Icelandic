@@ -70,6 +70,10 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			isPre : Bool
 		} ;
 
+		Predet = {
+			s : Number => Gender => Case => Str
+		} ;
+
 		DAP = {
 			s : Gender => Case => Str ;
 			n : Number ;

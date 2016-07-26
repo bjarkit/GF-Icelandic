@@ -32,9 +32,11 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
     		-- Pron -> NP 
 		UsePron p = p ;
 
-		---- A noun phrase already formed can be modified by a $Predet$erminer.
-		--
-		--    PredetNP : Predet -> NP -> NP ; -- only the man 
+		-- Predet -> NP -> NP
+		PredetNP pred np = {
+			s = \\c => pred.s ! np.a.n ! np.a.g ! (npcaseToCase c) ++ np.s ! c ;
+			a = np.a
+		} ;
 
 		-- NP -> V2  -> NP
 		PPartNP np v2 = {

@@ -159,5 +159,28 @@ concrete StructuralIce of Structural = CatIce **
 --  whatSg_IP = mkIP "what" "what" "what's" singular ;
 --  whoPl_IP = mkIP "who" "whom" "whose" plural ;
 --  whoSg_IP = mkIP "who" "whom" "whose" singular ;
+			--s : Number => Gender => Case => Str
+
+		-- Note this is basically the superlative of the adjective margur (e. many)
+		-- a paradigm or make function will be made for Predet's.
+		most_Predet = {
+			s = table {
+				Sg	=> table {
+					Masc	=> caseList "flestur" "flestan" "flestum" "flests" ;
+					Fem	=> caseList "flest" "flesta" "flestri" "flestrar" ;
+					Nautr	=> caseList "flest" "flest" "flestu" "flests"
+				} ;
+				Pl	=> table {
+					Masc	=> caseList "flestir" "flesta" "flestum" "flestra" ;
+					Fem	=> caseList "flestar" "flestar" "flestum" "flestra" ;
+					Nautr	=> caseList "flest" "flest" "flestum" "flestra"
+				}
+			};
+		};
+					
+		-- not sure atm how this will translate : aðeins is an adverb that does not inflect and eini is a weak form of the adjective einn (e. one)
+		-- only_Predet =
+		-- Same here : ekki is a sentence adverb that does not inflect
+		--not_Predet =
 
 }
