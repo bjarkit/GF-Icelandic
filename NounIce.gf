@@ -196,11 +196,11 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- CN -> Adv -> CN
 		AdvCN cn adv = cn ** {s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ adv.s} ;
 
----- Nouns can also be modified by embedded sentences and questions.
----- For some nouns this makes little sense, but we leave this for applications
----- to decide. Sentential complements are defined in [Verb Verb.html].
-
---    SentCN  : CN -> SC  -> CN ;   -- question where she sleeps
+		-- CN -> SC -> CN
+		SentCN cn sc = {
+			s = \\n,s,d,c	=> cn.s ! n ! s ! d ! c ++ sc.s ;
+			g = cn.g
+		} ;
 
 		-- 2 Apposition
 
