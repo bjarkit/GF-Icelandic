@@ -202,11 +202,13 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 --    SentCN  : CN -> SC  -> CN ;   -- question where she sleeps
 
-----2 Apposition
+		-- 2 Apposition
 
----- This is certainly overgenerating.
-
---    ApposCN : CN -> NP -> CN ;    -- city Paris (, numbers x and y)
+		-- CN -> NP -> CN
+		ApposCN cn np = {
+			s = \\n,s,d,c	=>  cn.s ! n ! s ! d ! Nom ++ np.s ! NCase c ;
+			g = cn.g
+		} ;
 
 		-- 2 Possessive and partitive constructs
 
@@ -226,22 +228,14 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			s = \\n,s,d,c	=> cn.s ! n ! s ! d ! Nom ++ "af" ++ np.s ! NCase Dat ;
 			g = cn.g
 		} ;
-		
+
 		-- Det -> NP -> NP
 		CountNP det np = {
 			s = \\c	=> case np.a of {
-				Ag g n _	=> det.s ! g ! npcaseToCase c ++ np.s ! c
+				Ag g n p	=> det.s ! g ! npcaseToCase c ++ "af" ++  np.s ! NCase Dat
 			} ;
 			a = np.a
 		} ;
-
---    CountNP : Det -> NP -> NP ;    -- three of them, some of the boys
-		-- Work in progress :p
-		-- Det -> NP -> NP
---		CountNP det np = {
---			s = \\c	=> np.s ! c ;
---			a = np.a
---		} ;
 
 
 ----3 Conjoinable determiners and ones with adjectives
