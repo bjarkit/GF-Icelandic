@@ -26,6 +26,6 @@ concrete RelativeIce of Relative = CatIce ** open ResIce in {
 
 		-- Prep -> NP -> RP -> RP
 		FunRP prep np rp = {
-			s = prep.s ++ np.s ! prep.c ++ rp.s
+			s = prep.s ++ np.s ! NCase prep.c ++ rp.s
 		} ;
 }

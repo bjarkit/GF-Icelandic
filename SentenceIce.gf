@@ -4,7 +4,7 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 
 	lin
 		--NP -> VP -> Cl
-		PredVP np vp = mkClause (np.s ! Nom) vp np.a ;
+		PredVP np vp = mkClause (np.s ! NCase Nom) vp np.a ;
 
 ---- Using an embedded sentence as a subject is treated separately.
 ---- This can be overgenerating. E.g. "whether you go" as subject

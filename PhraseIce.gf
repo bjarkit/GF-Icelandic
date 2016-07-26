@@ -23,7 +23,7 @@ concrete PhraseIce of Phrase = CatIce ** open Prelude, ResIce in {
 		UttIAdv adv = adv ;
 
 		-- NP   -> Utt
-		UttNP np = {s = np.s ! Nom} ;
+		UttNP np = {s = np.s ! NCase Nom} ;
 
 		-- Adv -> Utt
 		UttAdv adv = adv ;
@@ -52,5 +52,5 @@ concrete PhraseIce of Phrase = CatIce ** open Prelude, ResIce in {
 		NoVoc = {s = []} ;
 
 		-- NP -> Voc
-		VocNP np = {s = "," ++ np.s ! Nom} ;
+		VocNP np = {s = "," ++ np.s ! NCase Nom} ;
 }

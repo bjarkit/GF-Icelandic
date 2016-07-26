@@ -16,24 +16,21 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		--Det -> CN -> NP
 		DetCN det cn = {
 			s = \\c => case <det.b,det.isPre> of {
-				<Suffix,True>		=> cn.s ! det.n ! det.b ! det.d ! c ;
-				<_,True>		=> det.s ! cn.g ! c ++ cn.s ! det.n ! det.b ! det.d ! c ; 
-				<_,False>		=> cn.s ! det.n ! det.b ! det.d ! c ++ det.s ! cn.g ! c
+				<Suffix,True>		=> cn.s ! det.n ! det.b ! det.d ! npcaseToCase c ;
+				<_,True>		=> det.s ! cn.g ! npcaseToCase c ++ cn.s ! det.n ! det.b ! det.d ! npcaseToCase c ; 
+				<_,False>		=> cn.s ! det.n ! det.b ! det.d ! npcaseToCase c ++ det.s ! cn.g ! npcaseToCase c
 			} ;
 			a = Ag cn.g det.n P3
 		} ;
 
 		-- PN -> NP
 		UsePN pn = {
-			s = \\c => pn.s ! c ;
+			s = \\c => pn.s ! npcaseToCase c ;
 			a = Ag pn.g Sg P3
 		} ;
 
     		-- Pron -> NP 
-		UsePron p = {
-			s = \\c => p.s ! PPers ! c ;
-			a = p.a
-		} ;
+		UsePron p = p ;
 
 ---- A noun phrase already formed can be modified by a $Predet$erminer.
 --
@@ -42,7 +39,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- NP -> V2  -> NP
 		PPartNP np v2 = {
 			s = \\c => case np.a of {
-				Ag g n p	=> np.s ! c ++ v2.pp ! PStrong n g c
+				Ag g n p	=> np.s ! c ++ v2.pp ! PStrong n g (npcaseToCase c)
 			} ;
 			a = np.a
 		} ;
@@ -58,7 +55,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- Det -> NP 
 		DetNP det = {
-			s = \\c => det.s ! Neutr ! c ;
+			s = \\c => det.s ! Neutr ! npcaseToCase c ;
 			a = Ag Neutr det.n P3
 		} ;
 
@@ -130,13 +127,13 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- CN -> NP
 		MassNP cn = {
-			s = \\c => cn.s ! Sg ! Indef ! Strong ! c ;
+			s = \\c => cn.s ! Sg ! Indef ! Strong ! npcaseToCase c ;
 			a =  Ag cn.g Sg P3
 		} ;
 
 		-- Pron -> Quant
 		PossPron p = {
-			s = \\n,g,c => p.s ! (PPoss n g) ! c ;
+			s = \\n,g,c => p.s ! NPPoss n g c ;
 			b = Suffix ;
 			d = Weak ;
 			isPre = False
@@ -152,13 +149,13 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- N2 -> NP -> CN
 		ComplN2 n2 np = {
-			s = \\n,s,_,c => n2.s ! n ! s ! c ++ np.s ! Acc ;
+			s = \\n,s,_,c => n2.s ! n ! s ! c ++ np.s ! NCase Acc ;
 			g = n2.g
 		} ;
 
 		-- N3 -> NP -> N2
 		ComplN3 n3 np = {
-			s = \\n,s,c => n3.s ! n ! s ! c ++ n3.c2 ++ np.s ! Dat ;
+			s = \\n,s,c => n3.s ! n ! s ! c ++ n3.c2 ++ np.s ! NCase Dat ;
 			g = n3.g ;
 			c2 = n3.c3
 	
@@ -202,29 +199,53 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 ---- Nouns can also be modified by embedded sentences and questions.
 ---- For some nouns this makes little sense, but we leave this for applications
 ---- to decide. Sentential complements are defined in [Verb Verb.html].
---
+
 --    SentCN  : CN -> SC  -> CN ;   -- question where she sleeps
 
 ----2 Apposition
---
----- This is certainly overgenerating.
---
---    ApposCN : CN -> NP -> CN ;    -- city Paris (, numbers x and y)
---
-----2 Possessive and partitive constructs
---
----- (New 13/3/2013 AR; Structural.possess_Prep and part_Prep should be deprecated in favour of these.)
---
---    PossNP  : CN -> NP -> CN ;     -- house of Paris, house of mine
---    PartNP  : CN -> NP -> CN ;     -- glass of wine
 
----- This is different from the partitive, as shown by many languages.
---
+---- This is certainly overgenerating.
+
+--    ApposCN : CN -> NP -> CN ;    -- city Paris (, numbers x and y)
+
+		-- 2 Possessive and partitive constructs
+
+		-- CN -> NP -> CN
+		PossNP cn np = {
+			-- The suffix (kona-an mín, hestur-inn minn) is always used 
+			-- for prossesive pronouns except when the subject is a member 
+			-- of the family, e.g., mother. However, I am not sure if this
+			-- is always the case when a possessive pronoun is not used, e.g.,
+			-- house of Paris.
+			s = \\n,s,d,c	=> cn.s ! n ! Suffix ! d ! Nom ++ np.s ! NPPoss n cn.g c ;
+			g = cn.g
+		} ;
+
+		-- CN -> NP -> CN
+		PartNP cn np = {
+			s = \\n,s,d,c	=> cn.s ! n ! s ! d ! Nom ++ "af" ++ np.s ! NCase Dat ;
+			g = cn.g
+		} ;
+		
+		-- Det -> NP -> NP
+		CountNP det np = {
+			s = \\c	=> case np.a of {
+				Ag g n _	=> det.s ! g ! npcaseToCase c ++ np.s ! c
+			} ;
+			a = np.a
+		} ;
+
 --    CountNP : Det -> NP -> NP ;    -- three of them, some of the boys
---
---
+		-- Work in progress :p
+		-- Det -> NP -> NP
+--		CountNP det np = {
+--			s = \\c	=> np.s ! c ;
+--			a = np.a
+--		} ;
+
+
 ----3 Conjoinable determiners and ones with adjectives
---
+
 --    AdjDAP : DAP -> AP -> DAP ;    -- the large (one)
 --    DetDAP : Det -> DAP ;          -- this (or that) 
 

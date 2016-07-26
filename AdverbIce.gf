@@ -4,7 +4,7 @@ concrete AdverbIce of Adverb = CatIce ** open ResIce, Prelude in {
 		PositAdvAdj a = { s = a.s ! AAdv} ;
 
 		-- Prep -> NP -> Adv
-		PrepNP p np = { s = p.s ++ np.s ! p.c} ;
+		PrepNP p np = { s = p.s ++ np.s ! NCase p.c} ;
 
 		-- CAdv -> A -> S -> Adv
 		ComparAdvAdjS cadv a s = {
@@ -13,7 +13,7 @@ concrete AdverbIce of Adverb = CatIce ** open ResIce, Prelude in {
 
 		-- CAdv -> A -> NP -> Adv
 		ComparAdvAdj cadv a np = {
-			s = cadv.s ++ a.s ! AAdv ++ cadv.p ++ np.s ! Nom
+			s = cadv.s ++ a.s ! AAdv ++ cadv.p ++ np.s ! NCase Nom
 		} ;
 
 		-- AdA -> Adv -> Adv
