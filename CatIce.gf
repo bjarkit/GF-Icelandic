@@ -8,6 +8,8 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		S = {s : Str} ;
 
+		QS = {s : QForm => Str} ;
+
 		RS = {
 			s : Agr => Str ;
 			c : Case
@@ -17,11 +19,24 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		Imp = {s : Polarity => Number => Str} ;
 
+		-- Question
+
+		QCl = {s : Tense => Anteriority => Polarity => QForm => Str} ; -- is Agr needed?
+
+		-- IP depend on gender, or should it be fixed and other things depending on them (i don think so)?
+		IP = {s : Str} ;
+
+		IComp = {s : Str} ;
+
+		IDet = {s : Str} ;	
+
+		IQuant = {s : Str} ;
+
 		-- Relative
 
-		RCl = {
-			s : Tense => Anteriority => Polarity => Order => Agr => Str
-		} ;
+		RCl = {s : Tense => Anteriority => Polarity => Order => Agr => Str} ;
+
+		RP = {s : Str} ;
 
 		-- Verb
 
@@ -53,6 +68,13 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			b : ResIce.Species ; 
 			d : ResIce.Declension ;
 			isPre : Bool
+		} ;
+
+		DAP = {
+			s : Gender => Case => Str ;
+			n : Number ;
+			b : ResIce.Species ;
+			d : ResIce.Declension
 		} ;
 
 		Num  = {

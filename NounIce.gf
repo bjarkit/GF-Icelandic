@@ -238,9 +238,16 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		} ;
 
 
-----3 Conjoinable determiners and ones with adjectives
+		-- 3 Conjoinable determiners and ones with adjectives
 
---    AdjDAP : DAP -> AP -> DAP ;    -- the large (one)
---    DetDAP : Det -> DAP ;          -- this (or that) 
+		-- DAP -> AP -> DAP
+		AdjDAP dap ap = {
+			s = \\g,c	=> dap.s ! g ! c ++ ap.s ! dap.n ! g ! dap.d ! c ;
+			n = dap.n ;
+			b = dap.b ;
+			d = dap.d
+		} ;
 
+		-- Det -> DAP
+		DetDAP det = det ;
 }
