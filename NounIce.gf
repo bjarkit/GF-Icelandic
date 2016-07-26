@@ -20,27 +20,25 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 				<_,True>		=> det.s ! cn.g ! npcaseToCase c ++ cn.s ! det.n ! det.b ! det.d ! npcaseToCase c ; 
 				<_,False>		=> cn.s ! det.n ! det.b ! det.d ! npcaseToCase c ++ det.s ! cn.g ! npcaseToCase c
 			} ;
-			a = Ag cn.g det.n P3
+			a = gennumperToAgr cn.g det.n P3
 		} ;
 
 		-- PN -> NP
 		UsePN pn = {
 			s = \\c => pn.s ! npcaseToCase c ;
-			a = Ag pn.g Sg P3
+			a = gennumperToAgr pn.g Sg P3
 		} ;
 
     		-- Pron -> NP 
 		UsePron p = p ;
 
----- A noun phrase already formed can be modified by a $Predet$erminer.
---
---    PredetNP : Predet -> NP -> NP ; -- only the man 
+		---- A noun phrase already formed can be modified by a $Predet$erminer.
+		--
+		--    PredetNP : Predet -> NP -> NP ; -- only the man 
 
 		-- NP -> V2  -> NP
 		PPartNP np v2 = {
-			s = \\c => case np.a of {
-				Ag g n p	=> np.s ! c ++ v2.pp ! PStrong n g (npcaseToCase c)
-			} ;
+			s = \\c => np.s ! c ++ v2.pp ! PStrong np.a.n np.a.g (npcaseToCase c) ;
 			a = np.a
 		} ;
 
@@ -56,7 +54,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- Det -> NP 
 		DetNP det = {
 			s = \\c => det.s ! Neutr ! npcaseToCase c ;
-			a = Ag Neutr det.n P3
+			a = gennumperToAgr Neutr det.n P3
 		} ;
 
 		-- Determiners
@@ -128,7 +126,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- CN -> NP
 		MassNP cn = {
 			s = \\c => cn.s ! Sg ! Indef ! Strong ! npcaseToCase c ;
-			a =  Ag cn.g Sg P3
+			a = gennumperToAgr cn.g Sg P3
 		} ;
 
 		-- Pron -> Quant
@@ -191,7 +189,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- CN -> RS -> CN
 		-- FIXME : not sure if this can be applyed more than once on each CN
 		-- FIXME : not sure if RS should always be in third person - might need to add person field to CN
-		RelCN cn rs = cn ** {s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ rs.s ! Ag cn.g n P3} ;
+		RelCN cn rs = cn ** {s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ rs.s ! gennumperToAgr cn.g n P3} ;
 
 		-- CN -> Adv -> CN
 		AdvCN cn adv = cn ** {s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ adv.s} ;
@@ -231,9 +229,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- Det -> NP -> NP
 		CountNP det np = {
-			s = \\c	=> case np.a of {
-				Ag g n p	=> det.s ! g ! npcaseToCase c ++ "af" ++  np.s ! NCase Dat
-			} ;
+			s = \\c	=> det.s ! np.a.g ! npcaseToCase c ++ "af" ++  np.s ! NCase Dat ;
 			a = np.a
 		} ;
 

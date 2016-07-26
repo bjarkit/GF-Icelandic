@@ -33,8 +33,8 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 
 		-- VP -> Imp
 		ImpVP vp = {s = \\pol,num => case pol of {
-			Pos	=> vp.verb ! VImp Active num ++ vp.obj ! Ag Masc num P2 ;
-			Neg	=> vp.verb ! VImp Active num  ++ "ekki" ++ vp.obj ! Ag Masc num P2
+			Pos	=> vp.verb ! VImp Active num ++ vp.obj ! gennumperToAgr Masc num P2 ;
+			Neg	=> vp.verb ! VImp Active num  ++ "ekki" ++ vp.obj ! gennumperToAgr Masc num P2
 			} ;
 		} ;
 
@@ -80,7 +80,7 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 		-- S -> RS -> S
 		-- TODO : Add Agr to S and Cl, otherwise RS will always 
 		-- have the same gender, person and number.
-		RelS s rs = { s = s.s ++ rs.s ! Ag Neutr Sg P3 } ;
+		RelS s rs = { s = s.s ++ rs.s ! gennumperToAgr Neutr Sg P3 } ;
 
 		-- S -> Subj -> S -> S
 		ModSubjS sx subj sy = {s = sx.s ++ "," ++ subj.s ++ sy.s} ;

@@ -34,7 +34,7 @@ resource ResIce = ParamX ** open Prelude in {
 		NPCase = NCase Case | NPPoss Number Gender Case ;
 	
 		-- Agreement of noun phrases has three parts
-		Agr = Ag Gender Number Person ;
+		-- Agr = Ag Gender Number Person ;
 
 
 	--2 For $Verb$
@@ -76,6 +76,10 @@ resource ResIce = ParamX ** open Prelude in {
 
 	-- For $Lex$.
 	oper
+		Agr : PType = {g : Gender ; n : Number ; p : Person} ;
+
+		gennumperToAgr : Gender -> Number -> Person -> Agr =
+			\g,n,p	-> {g = g ; n = n ; p = p} ;
 
 		caseList : (_,_,_,_ : Str) -> Case => Str =
 			\n,a,d,g -> table {
@@ -85,13 +89,10 @@ resource ResIce = ParamX ** open Prelude in {
 				Gen => g
 			} ;
 
-		-- NPCase = NCase Case | NPPoss Number Gender Case ;
-	
 		npcaseToCase : NPCase -> Case = \npc	-> case npc of {
 				NCase c	=> c ;
 				NPPoss _ _ c => c
 		} ;
-
 
 		-- For $Nouns$
 
@@ -265,41 +266,42 @@ resource ResIce = ParamX ** open Prelude in {
 		infVPPlus : VP -> Tense -> Anteriority -> Polarity -> Agr -> Str = \vp,ten,ant,pol,ag -> 
 			vp.s ! ten ! ant ! pol ! ag ++ vp.obj ! ag ;
 
-		--Agr = Ag Gender Number Person ;
+		-- Agr = Ag Gender Number Person ;
+		-- Agr : PType = {g : Gender ; n : Number ; p : Person} ;
 		predV : V -> VP = \v -> {
-			s = \\ten,ant,pol,agr => case <ten,ant,pol,agr> of {
+			s = \\ten,ant,pol,agr => case <ten,ant,pol> of {
 				-- hann sefur 'he sleeps'
-				<Pres,Simul,Pos,Ag g n p>	=> v.s ! VPres Active Indicative n p ;
+				<Pres,Simul,Pos>	=> v.s ! VPres Active Indicative agr.n agr.p ;
 				-- hann sefur ekki 'he doesn't sleep'
-				<Pres,Simul,Neg,Ag g n p>	=> v.s ! VPres Active Indicative n p ++ "ekki" ;
+				<Pres,Simul,Neg>	=> v.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ;
 				-- hann hefur sofið 'he has slept'
-				<Pres,Anter,Pos,Ag g n p>	=> verbHave.s ! VPres Active Indicative n p ++ v.s ! VSup Active ;
+				<Pres,Anter,Pos>	=> verbHave.s ! VPres Active Indicative agr.n agr.p ++ v.s ! VSup Active ;
 	 			-- hann hefur ekki sofið 'he hasn't slept'
-				<Pres,Anter,Neg,Ag g n p>	=> verbHave.s ! VPres Active Indicative n p ++ "ekki" ++ v.s ! VSup Active ;
+				<Pres,Anter,Neg>	=> verbHave.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ++ v.s ! VSup Active ;
 				-- hann svaf 'he slept'
-				<Past,Simul,Pos,Ag g n p> 	=> v.s ! VPast Active Indicative n p ;
+				<Past,Simul,Pos> 	=> v.s ! VPast Active Indicative agr.n agr.p ;
 	 			-- hann svaf ekki 'he didn't sleep'
-				<Past,Simul,Neg,Ag g n p> 	=> v.s ! VPast Active Indicative n p ++ "ekki" ;
+				<Past,Simul,Neg> 	=> v.s ! VPast Active Indicative agr.n agr.p ++ "ekki" ;
 				-- hann hafði sofið 'he had slept'
-				<Past,Anter,Pos,Ag g n p> 	=> verbHave.s ! VPast Active Indicative n p ++ v.s ! VSup Active ;
+				<Past,Anter,Pos> 	=> verbHave.s ! VPast Active Indicative agr.n agr.p ++ v.s ! VSup Active ;
 	 			-- hann hafði ekki sofið 'he hadn't slept'
-				<Past,Anter,Neg,Ag g n p> 	=> verbHave.s ! VPast Active Indicative n p ++ "ekki" ++ v.s ! VSup Active ;
+				<Past,Anter,Neg> 	=> verbHave.s ! VPast Active Indicative agr.n agr.p ++ "ekki" ++ v.s ! VSup Active ;
 	 			-- hann mun sofa 'he will sleep'
-				<Fut,Simul,Pos,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ v.s ! VInf ;
+				<Fut,Simul,Pos>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ v.s ! VInf ;
 	 			-- hann mun ekki sofa 'he won't sleep'
-				<Fut,Simul,Neg,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ "ekki" ++ v.s ! VInf ;
+				<Fut,Simul,Neg>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ++ v.s ! VInf ;
 				-- hann mun hafa sofið 'he will have slept'	
-				<Fut,Anter,Pos,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
+				<Fut,Anter,Pos>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
 				-- hann mun ekki hafa sofið 'he won't have slept'
-				<Fut,Anter,Neg,Ag g n p>	=> verbWill.s ! VPres Active Indicative n p ++ "ekki" ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
+				<Fut,Anter,Neg>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
 				-- hann myndi sofa 'he would sleep'
-				<Cond,Simul,Pos,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ v.s ! VInf ;
+				<Cond,Simul,Pos>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ v.s ! VInf ;
 				-- hann myndi ekki sofa 'he wouldn't sleep'
-				<Cond,Simul,Neg,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ "ekki" ++ v.s ! VInf ;
+				<Cond,Simul,Neg>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ "ekki" ++ v.s ! VInf ;
 				-- hann myndi hafa sofið 'he would have slept'
-				<Cond,Anter,Pos,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
+				<Cond,Anter,Pos>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
 				-- hann myndi ekki hafa sofið 'he wouldn't have slept'
-				<Cond,Anter,Neg,Ag g n p>	=> verbWill.s ! VPast Active Subjunctive n p ++ "ekki" ++  verbHave.s ! VInf ++ v.s ! VSup Active
+				<Cond,Anter,Neg>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ "ekki" ++  verbHave.s ! VInf ++ v.s ! VSup Active
 			} ;
 			verb = \\vform	=> v.s ! vform ;
 			pp = \\pform => v.pp ! pform ;
@@ -377,7 +379,7 @@ resource ResIce = ParamX ** open Prelude in {
 				NPPoss Sg Neutr c	=> caseList mitt1 mitt2 mínu mínsN ! c ;
 				NPPoss Pl Neutr c	=> caseList mínPl1 mínPl2 mínumPl minnaPl ! c
 				} ;
-			a = Ag g n p ;
+			a = gennumperToAgr g n p ;
 		} ;
 
 }

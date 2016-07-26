@@ -39,10 +39,8 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 				vp = (predV va)
 			in
 				vp ** {
-			obj = \\a => case a of {
-				Ag g n p 	=> ap.s ! n ! g ! Weak ! Nom ++ vp.obj ! a
-			}
-		} ;
+					obj = \\a => ap.s ! a.n ! a.g ! Weak ! Nom ++ vp.obj ! a
+				} ;
 
 		-- V2 -> VPSlash
 		SlashV2a v = predV v ** {
@@ -84,9 +82,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 
 		-- V2A -> AP -> VPSlash
 		SlashV2A v2a ap = predV v2a ** {
-			n = \\a => case a of {
-				Ag g n p 	=> ap.s ! n ! g ! Weak ! Nom 
-			} ;
+			n = \\a =>  ap.s ! a.n ! a.g ! Weak ! Nom  ;
 			c2 = v2a.c2
 		} ;
 
@@ -131,9 +127,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 				vp = predV verbBe
 			in
 				{
-					s = \\ten,ant,pol,agr => case <agr> of {
-						<Ag g n p>	=> vp.s ! ten ! ant ! pol ! agr ++ v2.pp ! PStrong n g Nom
-					} ;
+					s = \\ten,ant,pol,agr => vp.s ! ten ! ant ! pol ! agr ++ v2.pp ! PStrong agr.n agr.g Nom ;
 					verb = \\vform 	=> v2.s ! vform ;
 					pp = \\pform	=> v2.pp ! pform ;
 					obj = \\agr	=> vp.obj ! agr
@@ -155,9 +149,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 
 		-- AP -> Comp
 		CompAP ap = { 
-			s = \\a => case a of {
-				Ag g n _	=> ap.s ! n ! g ! Strong ! Nom
-			}
+			s = \\a => ap.s ! a.n ! a.g ! Strong ! Nom ;
 		} ;
 				
 		-- NP -> Comp
@@ -168,9 +160,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 
 		-- CN -> Comp
 		CompCN cn = {
-			s = \\a	=> case a of {
-				Ag _ n _	=> cn.s ! n ! Indef ! Strong ! Nom
-			}
+			s = \\a	=> cn.s ! a.n ! Indef ! Strong ! Nom ;
 		} ;
 
 		-- VP
