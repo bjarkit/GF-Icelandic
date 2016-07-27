@@ -61,7 +61,7 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 		-- Temp -> Pol -> RCl -> RS
 		UseRCl t p rcl = {
 			s = \\agr => t.s ++ p.s ++ rcl.s ! t.t ! t.a ! p.p ! ODir ! agr ;
-			c = Nom
+			c = NCase Nom
 		} ;
 
 --    UseQCl   : Temp -> Pol -> QCl -> QS ;  -- who had not slept

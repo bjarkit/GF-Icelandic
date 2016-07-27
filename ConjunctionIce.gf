@@ -101,6 +101,6 @@ concrete ConjunctionIce of Conjunction =
 		[NP] = {s1,s2 : NPCase => Str ; a : Agr} ;
 		[CN] = {s1,s2 : Number => Species => Declension => Case => Str} ;
 		[AP] = {s1,s2 : Number => Gender => Declension => Case => Str} ;
-		[RS] = {s1,s2 : Agr => Str ; c : Case} ;
+		[RS] = {s1,s2 : Agr => Str ; c : NPCase} ;
     		[DAP] = {s1,s2 : Gender => Case => Str ; n : Number ; b : Species ; d : Declension} ;
 }

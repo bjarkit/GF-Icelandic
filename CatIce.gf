@@ -12,7 +12,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		RS = {
 			s : Agr => Str ;
-			c : Case
+			c : NPCase
 		} ;
 
 		Cl = ResIce.Cl ;
