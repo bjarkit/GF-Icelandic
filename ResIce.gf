@@ -363,7 +363,6 @@ resource ResIce = ParamX ** open Prelude in {
 			a : Agr
 		} ;
 
-		-- NPCase = NCase Case | NPPoss Number Gender Case ;
 		-- I guess it is inevitable to have personal and possessive pronouns under the same definition and mk function.
 		mkPronPers : (ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2 : Str) -> Gender -> Number -> Person -> Pron =
 			\ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2,g,n,p -> {
@@ -379,10 +378,9 @@ resource ResIce = ParamX ** open Prelude in {
 			a = gennumperToAgr g n p ;
 		} ;
 
-		-- Agr : PType = {g : Gender ; n : Number ; p : Person} ;
 		-- There is only one relfective pronoun in icelandic "sig". It is the same in all genders and numbers and 
 		-- does not technically exist in the nominative - the personal pronoun of the subject is then used (in the nominative)
-		-- along with pronoun sjálfur (although I have a hard time thinking of a scenario where it is used as such).
+		-- (usually) along with pronoun sjálfur.
 		reflPron : Number -> Gender -> Case -> Str =
 			\n,g,c -> case <n,g,c> of {
 				<Sg,Masc,Nom>	=> "hann" ++ "sjálfur" ;
@@ -395,4 +393,16 @@ resource ResIce = ParamX ** open Prelude in {
 				<_,_,Dat>	=> "sér" ;
 				<_,_,Gen>	=> "sín"
 			};
+
+		conjGender : Gender -> Gender -> Gender = \g,h -> case <g,h> of {
+				<Masc,Masc>	=> Masc;
+				<Fem,Fem>	=> Fem;
+				_		=> Neutr
+		};
+
+		conjAgr : (_,_ : Agr) -> Agr = \a,b -> {
+			g = conjGender a.g b.g ;
+			n = conjNumber a.n b.n ;
+			p = conjPerson a.p b.p
+		} ;
 }

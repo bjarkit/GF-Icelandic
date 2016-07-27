@@ -8,7 +8,7 @@ concrete AdverbIce of Adverb = CatIce ** open ResIce, Prelude in {
 
 		-- CAdv -> A -> S -> Adv
 		ComparAdvAdjS cadv a s = {
-			s = cadv.s ++ a.s ! AAdv ++ cadv.p ++ s.s -- until S has been implemented
+			s = cadv.s ++ a.s ! AAdv ++ cadv.p ++ s.s
 		} ;
 
 		-- CAdv -> A -> NP -> Adv
