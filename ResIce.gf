@@ -263,8 +263,6 @@ resource ResIce = ParamX ** open Prelude in {
 		infVPPlus : VP -> Tense -> Anteriority -> Polarity -> Agr -> Str = \vp,ten,ant,pol,ag -> 
 			vp.s ! ten ! ant ! pol ! ag ++ vp.obj ! ag ;
 
-		-- Agr = Ag Gender Number Person ;
-		-- Agr : PType = {g : Gender ; n : Number ; p : Person} ;
 		predV : V -> VP = \v -> {
 			s = \\ten,ant,pol,agr => case <ten,ant,pol> of {
 				-- hann sefur 'he sleeps'
@@ -336,6 +334,14 @@ resource ResIce = ParamX ** open Prelude in {
 					"munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu"
 					"munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu"
 					"munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" ;
+
+		-- Not really an axuilary verb but then again there is no exclusive club of axuilary verbs in Icelandic (or so have I been told).
+		-- verbLet is nevertheless needed in Idiom.
+		verbLet : V = mkVerb "láta" "læt" "lætur" "lætur" "látum" "látið" "láta" "lét" "lést" "lét" "létum" "létuð" "létu"
+					"láti" "látir" "láti" "látum" "látið" "láti" "léti" "létir" "léti" "létum" "létuð" "létu" "láttu" "látið"
+					"látandi" "látinn" "látinn" "látnum" "látins" "látin" "látna" "látinni" "látinnar" "látið" "látið"
+					"látnu" "látins" "látnir" "látna" "látnum" "látinna" "látnar" "látnar" "látnum" "látinnar" "látin"
+					"látin" "látnum" "látinna" "látni" "látna" "látna" "látnu" "látna" "látnu" "látið" ;
 
 		Preposition : Type = {
 			s : Str ;
