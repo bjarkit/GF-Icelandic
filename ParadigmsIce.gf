@@ -65,33 +65,46 @@ resource ParadigmsIce = open
 		-- Nouns are constructed by the function $mkN$, which takes a varying
 		-- number of arguments.
 
+		-- new mk operation in progress ;)
 		mkN = overload {
-
-			---- The theoretical worst case, give all eight forms (four in 
-			---- Sg and four in Pl) and all eight forms with the suffixed
-			---- definite article.
-			mkN : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ :  Str) -> Gender -> N =
-				\hestur,hest,hesti,hests,
-				hesturinn,hestinn,hestinum,hestsins,
-				hestar,hestaAcc,hestum,hestaGen,
-				hestarnir,hestana,hestunum,hestanna,g -> 
-				lin N (mkNoun 
-				hestur hest hesti hests 
-				hesturinn hestinn hestinum hestsins
-				hestar hestaAcc hestum hestaGen 
-				hestarnir hestana hestunum hestanna g) ;
-
-			-- Given Nom.Sg., Nom.Pl, and Gender.
-			mkN : (_,_ : Str) -> Gender -> N =
-				\bóndi,bændur,g -> regN bóndi bændur g ;
-
-
-			-- Given Nom.Sg, Gen.Sg, Nom.Pl, and Gender.
-			mkN : (_,_,_ : Str) -> Gender -> N =
-				\steik,steikar,steikur,g -> reg3N steik steikar steikur g ;
-
+			-- Given Sg.Nom. - almost all neuter nouns and all weak declensions
+			mkN : Str -> Gender -> N = mk1N ;
 		} ;
 
+		mk1N : Str -> Gender -> N = \s,g -> case g of {
+			Neutr		=> lin N (nForms2NeutrNoun (neutrNForms1 s)) ;
+			Masc		=> lin N (nForms2MascNoun (mascNForms1 s)) ;
+			Fem		=> lin N (nForms2FemNoun (femNForms1 s))
+		} ;
+
+
+		neutrNForms1 : Str -> NForms = \s -> case s of {
+			front + middle@("g" | "k") + "j" + "a"	=> dAuga s (front + middle + "na") ;
+			_ + ("r" | "s" | "n" | "j") + "a"	=> dAuga s s ;
+			stem + "a"				=> dAuga s (stem + "na") ;
+			--  stem + "a" - I Don't think this is the general case, a counter example 
+			--  would be "þema" - "þema". Contacted a linguist about this and am waiting 
+			--  for an answer.
+			front + ("ki" | "gi")			=> dKvæði s ((uUmlaut front) + "jum") ;
+			front + "i"				=> dKvæði s ((uUmlaut front) + "um") ;
+			front + "ur"				=> dSumar s s ;
+			front + "ar"				=> dSumar s (front + "ur") ;
+			--front + end@("að" | "al" | "ald" | "an" | "ang") =>
+			_					=> dBarn s (uUmlaut s)
+		} ;
+
+		mascNForms1 : Str -> NForms = \s -> case s of {
+			front + "andi"			=> dNemandi s (front + "end") ;
+			front + "óndi"			=> dNemandi s (front + "ænd") ;
+			front + "ndi"			=> dNemandi s s ;
+			_ + "i" 			=> dSími s
+		} ;
+
+		femNForms1 : Str -> NForms = \s -> case s of {
+			front + middle@("g" | "k") + "j" + "a"	=> dSaga s (front + middle + "na") ;
+			_ + ("r" | "s" | "n" | "j") + "a"	=> dSaga s s ;--  I Don't think this is the general case
+			stem + "a"				=> dSaga s s
+		} ;
 
 		mkPN = overload {
 
@@ -235,118 +248,6 @@ resource ParadigmsIce = open
 		-- The suffix , "-inn","-in","-ið", loses the "-i-" when the noun ends with
 		-- "-a", "-i", "-u", and most cases of "-é".
 		noIVowel : pattern Str = #("a" | "i" | "u" | "é") ;
-
-		regN : (_,_ : Str) -> Gender -> N = \nomSg,nomPl,Gender -> case <nomSg,nomPl,Gender> of {
-			-- Weak Nouns --
-
-			-- aug-a , aug-u
-			<baseSg + "a",basePl + "u",Neutr>	=> lin N (mkNoun nomSg nomSg nomSg nomSg 
-								(nomSg + "ð") (nomSg + "ð") (nomSg + "nu") (nomSg + "ns") 
-								nomPl nomPl (nomPl + "m") (basePl + "na")
-								(nomPl + "n") (nomPl + "n") (nomPl + "num") (basePl +"nanna") Neutr ) ;
-			-- tím-i , tím-ar
-			<baseSg + "i",basePl + "ar",Masc>	=> lin N (mkNoun nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
-								(nomSg + "nn") (baseSg + "ann") (baseSg + "anum") (baseSg + "ans")
-								nomPl (basePl + "a") (basePl + "um") (basePl + "a") -- some nouns have the suffix -n-a
-								(nomPl + "nir") (basePl + "ana") (basePl + "unum") (basePl + "anna") Masc ) ;
-			-- bónd-i , bænd-ur
-			<baseSg + "i", basePl + "ur",Masc>	=> lin N (mkNoun nomSg (baseSg + "a") (baseSg + "a") (baseSg + "a")
-								(nomSg + "nn") (baseSg + "ann") (baseSg + "anum") (baseSg + "ans")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(basePl + "urnir") (basePl + "urnir") (basePl + "unum") (basePl + "anna") Masc ) ;
-			-- lilj-a , lilj-ur
-			<baseSg + "a", basePl + "ur",Fem>	=> lin N (mkNoun nomSg (baseSg + "u") (baseSg + "u") (baseSg + "u")
-								(nomSg + "n") (baseSg + "una") (baseSg + "unni") (baseSg + "unnar")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- æf-i , æf-ir
-			<baseSg + "i", basePl + "ir",Fem> 	=> lin N (mkNoun nomSg nomSg nomSg nomSg
-								(nomSg + "n") (nomSg + "na") (nomSg + "nni") (nomSg + "nnar")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- lyg-i , lyg-ar
-			<baseSg + "i", basePl + "ar",Fem>	=> lin N (mkNoun nomSg nomSg nomSg nomSg
-								(nomSg + "n") (nomSg + "na") (nomSg + "nni") (nomSg + "nnar")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- Strong Nouns --
-
-			-- kvæð-i- , kvæð-i-
-			<baseSg + "i", basePl + "i",Neutr>	=> lin N (mkNoun nomSg nomSg nomSg (nomSg + "s")
-								(nomSg + "ð") (nomSg + "ð") (nomSg + "nu") (nomSg + "ins")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(nomPl + "n") (nomPl + "n") (basePl + "unum") (basePl + "anna") Neutr ) ;
-			-- hreið-ur , hreið-ur
-			<baseSg + "ur", basePl + "ur",Neutr>	=> lin N (mkNoun nomSg nomSg (baseSg + "ri") (nomSg + "s")
-								(baseSg + "rið") (baseSg + "rið") (baseSg + "rinu") (nomSg + "sins")
-								nomPl nomPl (basePl + "rum") (basePl + "ra")
-								(basePl + "rin") (basePl + "rin") (basePl + "runum") (basePl + "ranna") Neutr ) ;
-			-- borð- , borð-
-			<_,_,Neutr>				=> lin N (mkNoun nomSg nomSg (nomSg + "i") (nomSg + "s")
-								(nomSg + "ið") (nomSg + "ið") (nomSg + "inu") (nomSg + "sins")
-								nomPl nomPl (nomPl + "um") (nomPl + "a")
-								(nomPl + "in") (nomPl + "in") (nomPl + "unum") (nomPl + "anna") Neutr ) ;
-			-- tíð- , tíð-ir
-			<_,basePl + "ir",Fem>			=> lin N (mkNoun nomSg nomSg nomSg (nomSg + "ar")
-								(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (nomSg + "arinnar")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- móð-ir , mæð-ur
-			<baseSg + "ir", basePl + "ur",Fem>	=> lin N (mkNoun nomSg (baseSg + "ur") (baseSg + "ur") (baseSg + "ur")
-								(nomSg + "in") (baseSg + "rina") (baseSg + "rinni") (baseSg + "rinnar")
-								nomPl nomPl (basePl + "rum") (basePl + "ra")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "runum") (basePl + "ranna") Fem ) ;
-			-- hest-ur , hest-ar
-			<baseSg + "ur" , basePl + "ar",Masc>	=> lin N (mkNoun nomSg baseSg (baseSg + "i") (baseSg + "s")
-								(nomSg + "inn") (baseSg + "inn") (baseSg + "inum") (baseSg + "sins")
-								nomPl (basePl + "a") (baseSg + "um") (baseSg + "a")
-								(nomPl + "nir") (basePl + "ana") (basePl + "unum") (basePl + "anna") Masc )
-		} ;
-
-		reg3N : (_,_,_ : Str) -> Gender -> N = \nomSg,genSg,nomPl,g -> case <nomSg,genSg,nomPl,g> of {
-			-- Strong Nouns -- 
-			
-			-- steik- , steik-ar , steik-ur
-			<_,_ + "ar",basePl + "ur",Fem>		=> lin N (mkNoun nomSg nomSg nomSg genSg
-								(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (genSg + "innar")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- sæng- , sæng-ur , sæng-ur
-			<_,_ + "ur", basePl + "ur",Fem>		=> lin N (mkNoun nomSg nomSg nomSg genSg
-								(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (genSg + "innar")
-								nomPl nomPl (basePl + "um") (basePl + "a")
-								(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- kerl-ing- , kerl-ing-ar , kerl-ing-ar
-			<_ + "ing", _ + "ing" + "ar", basePl + "ar",Fem>	=> lin N (mkNoun nomSg (nomSg + "u") (nomSg + "u") genSg
-										(nomSg + "in") (nomSg + "una") (nomSg + "unni") (genSg + "innar")
-										nomPl nomPl (basePl + "um") (basePl + "a")
-										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- lif-ur , lif-r-ar , lif-r-ar
-			<_ + "ur",baseSg + "r" + "ar", basePl + "ar",Fem>	=> lin N (mkNoun nomSg nomSg nomSg genSg
-										(baseSg + "rin") (baseSg + "rina") (baseSg + "rinni") (genSg + "innar")
-										nomPl nomPl (basePl + "um") (basePl + "a")
-										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- æð-ur , æð-ar , æð-ar
-			<_ + "ur" , baseSg + "ar" , basePl + "ar", Fem>		=> lin N (mkNoun nomSg (baseSg + "i") (baseSg + "i") genSg
-										(baseSg + "in") (baseSg + "ina") (baseSg + "innni") (genSg + "innar")
-										nomPl nomPl (basePl + "um") (basePl + "a")
-										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-			-- heið-i , heið-ar , heið-ar
-			<_ + "i" , baseSg + "ar" , basePl + "ar", Fem>		=> lin N (mkNoun nomSg nomSg nomSg genSg
-										(baseSg + "in") (baseSg + "ina") (baseSg + "inni") (genSg + "innar")
-										nomPl nomPl (basePl + "um") (basePl + "a")
-										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem ) ;
-
-			-- á- , á-r , á-r - not sure if á (e. river) is the only word that behaves like this or not..
-
-			-- stöð- , stöð-v-ar , stöð-v-ar 
-			-- skel- , skel-j-ar , skel-j-ar
-			-- kinn- , kinn-ar , kinn-ar
-			<_ , baseSg + "ar", basePl + "ar", Fem>			=> lin N (mkNoun nomSg nomSg nomSg genSg
-										(nomSg + "in") (nomSg + "ina") (nomSg + "inni") (genSg + "innar")
-										nomPl nomPl (basePl + "um") (basePl + "a")
-										(nomPl + "nar") (nomPl + "nar") (basePl + "unum") (basePl + "anna") Fem )
-		} ;
 
 		regPN : Str -> Gender -> PN = \name,g -> case <name,g> of {
 				<base + "i",Masc>	=> lin PN {s = caseList name (base + "a") (base + "a") (base + "a") ; g = Masc} ;

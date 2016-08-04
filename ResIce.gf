@@ -1,5 +1,3 @@
---# -path=.:../abstract:../common:../../prelude
-
 --1 Icelandic auxiliary operations.
 
 -- This module contains operations that are needed to make the
@@ -29,6 +27,8 @@ resource ResIce = ParamX ** open Prelude in {
 		-- article on the other hand can be either freestanding or used as a suffix (for all genders).
 		-- The freestanding version is rare and can only be followed by an adjective and the suffix 
 		-- depends on gender and the ending of the noun.
+
+		-- Will need to look at this again! not happy with so many forms of noun...
 		Species = Def | Indef | Suffix ;
 
 		NPCase = NCase Case | NPPoss Number Gender Case ;
@@ -101,24 +101,6 @@ resource ResIce = ParamX ** open Prelude in {
 		NP : Type = {
 			s : NPCase => Str ;
 			a : Agr
-		} ;
-
-		mkNoun : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ :  Str) -> Gender -> N =
-			\hestur,hest,hesti,hests,
-			hesturinn,hestinn,hestinum,hestsins,
-			hestar,hestaAcc,hestum,hestaGen,
-			hestarnir,hestana,hestunum,hestanna,g -> {
-				s = table {
-					Sg => table {
-						Suffix	=> caseList hesturinn hestinn hestinum hestsins ;
-						_ 	=> caseList hestur hest hesti hests
-					} ;
-					Pl => table {
-						Suffix	=> caseList hestarnir hestana hestunum hestanna ;
-						_	=> caseList hestar hestaAcc hestum hestaGen
-					}
-				} ;
-				g = g
 		} ;
 
 		-- For $Adjectives$
@@ -400,6 +382,7 @@ resource ResIce = ParamX ** open Prelude in {
 				<_,_,Gen>	=> "sín"
 			};
 
+		-- thoughts on "or" conjugation with agreement in gender
 		conjGender : Gender -> Gender -> Gender = \g,h -> case <g,h> of {
 				<Masc,Masc>	=> Masc;
 				<Fem,Fem>	=> Fem;
