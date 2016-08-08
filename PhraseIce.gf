@@ -32,7 +32,7 @@ concrete PhraseIce of Phrase = CatIce ** open Prelude, ResIce in {
 		UttVP vp = {s = "að" ++ vp.verb ! VInf} ;
 
 		-- CN -> Utt
-		UttCN cn = {s = cn.s ! Sg ! Indef ! Strong ! Nom} ;
+		UttCN cn = {s = cn.s ! Sg ! Free ! Strong ! Nom} ;
 
 		--    UttCard   : Card -> Utt ;               -- five
 

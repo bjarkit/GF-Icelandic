@@ -28,8 +28,7 @@ resource ResIce = ParamX ** open Prelude in {
 		-- The freestanding version is rare and can only be followed by an adjective and the suffix 
 		-- depends on gender and the ending of the noun.
 
-		-- Will need to look at this again! not happy with so many forms of noun...
-		Species = Def | Indef | Suffix ;
+		Species = Free | Suffix ;
 
 		NPCase = NCase Case | NPPoss Number Gender Case ;
 	

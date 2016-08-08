@@ -62,30 +62,35 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			c2 = v3.c2
 		} ;
 
+		-- nhere
 		-- V2V -> VP -> VPSlash
 		SlashV2V v2v vp = predV v2v ** {
 			n = \\a => v2v.c3.s ++ infVP vp a ;
 			c2 = v2v.c2 ;
 		} ;
 
+		-- nhere
 		-- V2S -> S -> VPSlash
 		SlashV2S v2s s = predV v2s ** {
 			n = \\_ => s.s ;
 			c2 = v2s.c2
 		} ;
 
+		-- nhere
 		-- V2Q -> QS -> VPSlash
 --		SlashV2Q v2q qs = predV v2q ** {
 --			n = \\_ => qs.s ;
 --			c2 = v2q.c2
 --		} ;
 
+		-- nhere
 		-- V2A -> AP -> VPSlash
 		SlashV2A v2a ap = predV v2a ** {
 			n = \\a =>  ap.s ! a.n ! a.g ! Weak ! Nom  ;
 			c2 = v2a.c2
 		} ;
 
+		-- nhere
 		-- VPSlash -> NP -> VP
 		ComplSlash vps np = {
 			s = vps.s ;
@@ -101,6 +106,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			c2 = vv.c2
 		} ;
 
+		-- nhere
 		-- V2V -> NP -> VPSlash -> VPSlash
 		SlashV2VNP v2v np vps = predV v2v ** {
 			obj = \\a => v2v.c2.s ++ np.s ! NCase v2v.c2.c ++ v2v.c3.s ++ infVP vps a ;
@@ -108,6 +114,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			c2 = v2v.c2
 		} ;
 
+		-- nhere
 		-- VPSlash -> VP
 		ReflVP vps = {
 			s = vps.s ;
@@ -143,9 +150,28 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		AdVVP adv vp = vp ** {obj = \\a => adv.s ++ vp.obj ! a} ;
 
 --    AdvVPSlash : VPSlash -> Adv -> VPSlash ;  -- use (it) here
+		-- VPSlash -> Adv -> VPSlash
+
+--		VP : Type = {
+--			s 	: Tense => Anteriority => Polarity => Agr => Str ;
+--			verb	: VForm => Str ; -- raw verbforms
+--			pp	: PForm => Str ; -- raw past particple
+--			obj 	: Agr => Str;
+--		} ;
+--		VPSlash = ResIce.VP ** {
+--			c2 : Preposition ;
+--			n  : Agr => Str
+--		} ;	
+--		Preposition : Type = {
+--			s : Str ;
+--			c : Case
+--		} ;
+
 --    AdVVPSlash : AdV -> VPSlash -> VPSlash ;  -- always use (it)
---   
+   
 --    VPSlashPrep : VP -> Prep -> VPSlash ;  -- live in (it)
+		-- VP -> Prep -> VPSlash
+	-- 	VPSlashPrep vp prep = vp ** {c2 = prep} ;
 
 		-- AP -> Comp
 		CompAP ap = { 
@@ -160,7 +186,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 
 		-- CN -> Comp
 		CompCN cn = {
-			s = \\a	=> cn.s ! a.n ! Indef ! Strong ! Nom ;
+			s = \\a	=> cn.s ! a.n ! Free ! Strong ! Nom ;
 		} ;
 
 		-- VP

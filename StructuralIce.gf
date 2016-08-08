@@ -21,7 +21,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "sérhvert" "sérhvert" "sérhverju" "sérhvers"
 			} ;
 			n = Sg ;
-			b = Indef ;
+			b = Free ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -33,7 +33,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "fáein" "fáein" "fáeinum" "fáeinna"
 			} ;
 			n = Pl ;
-			b = Indef ;
+			b = Free ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -54,7 +54,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "nokkurt" "nokkurt" "nokkru" "nokkurs"
 			} ;
 			n = Sg ;
-			b = Indef ;
+			b = Free ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -65,7 +65,7 @@ concrete StructuralIce of Structural = CatIce **
 				Neutr	=> caseList "nokkur" "nokkur" "nokkrum" "nokkurra"
 			} ;
 			n = Pl ;
-			b = Indef ;
+			b = Free ;
 			d = Strong ;
 			isPre = True
 		} ;
@@ -103,7 +103,7 @@ concrete StructuralIce of Structural = CatIce **
 						Neutr	=> caseList "þessi" "þessi" "þessum" "þessara"
 				}
 			} ;
-			b = Def ;
+			b = Free ;
 			d = Weak ;
 			isPre = True
 		} ;
@@ -120,7 +120,7 @@ concrete StructuralIce of Structural = CatIce **
 						Neutr	=> caseList "þau" "þau" "þeim" "þeirra"
 				}
 			} ;
-			b = Def ;
+			b = Free ;
 			d = Weak ;
 			isPre = True
 		} ;
@@ -147,6 +147,7 @@ concrete StructuralIce of Structural = CatIce **
 		-- used for thrid persons singular, but only if it is the subject 
 		-- of the sentence, otherwise the genitive of the personal pronoun 
 		-- (hans) is used.
+		-- dont be afraid to be awkward :)
 		--  he_Pron = mkPronPers "hann" "hann" "honum" "hans" Masc Sg P3 ;
 		--  she_Pron = mkPronPers "hún" "hana" "henni" "hennar" Fem Sg P3 ;
 		--  it_Pron = mkPronPers "það" "það" "því" "þess" Neutr Sg P3 ;

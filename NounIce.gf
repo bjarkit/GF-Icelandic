@@ -120,14 +120,14 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- Quant
 		IndefArt = {
 			s = \\_,_,_ => [] ;
-			b = Indef;
+			b = Free ;
 			d = Strong ;
 			isPre = True
 		} ;
 
 		-- CN -> NP
 		MassNP cn = {
-			s = \\c => cn.s ! Sg ! Indef ! Strong ! npcaseToCase c ;
+			s = \\c => cn.s ! Sg ! Free ! Strong ! npcaseToCase c ;
 			a = gennumperToAgr cn.g Sg P3
 		} ;
 
