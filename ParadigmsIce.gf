@@ -131,6 +131,7 @@ resource ParadigmsIce = open
 		} ;
 
 		femNForms1 : Str -> NForms = \s -> case s of {
+			_ + "ing"				=> dFylking s (s + "ar") ;
 			front + middle@("g" | "k") + "j" + "a"	=> dSaga s (front + middle + "na") ;
 			_ + ("r" | "s" | "n" | "j") + "a"	=> dSaga s s ; --  I Don't think this is the general case
 			stem + "a"				=> dSaga s s --  I Don't think this is the general case
@@ -141,7 +142,6 @@ resource ParadigmsIce = open
 			<_ + "i",_ + "ir">				=> dKeppni sg pl ;
 			<_ + "ur",_ + "ir">				=> dBrúður sg pl ;
 			<_,_ + "ir">					=> dÞökk sg pl ;
-			<_ + "ing",_ + "ar">				=> dFylking sg pl ;
 			<_,_ + ("rar" | "var" | "jar")>			=> dLifur sg pl ;
 			<_ + "ur", _ + "ar">				=> dÆður sg pl ;
 			<_,_ + "ar">					=> dNál sg pl ;

@@ -12,9 +12,9 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 
 	oper 
 
-		-----------------------------
-		-- Neuter Noun Declensions --
-		-----------------------------
+	-----------------------------
+	-- Neuter Noun Declensions --
+	-----------------------------
 
 		dAuga : Str -> Str -> NForms = \auga,augna ->
 			let
@@ -52,9 +52,9 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				tré tré tré (tré + "s")
 				tré tré (tr + "jám") (tr + "jáa") ;
 
-		-------------------------------
-		-- Feminine Noun Declensions --
-		-------------------------------
+	-------------------------------
+	-- Feminine Noun Declensions --
+	-------------------------------
 
 		dSaga : (_,_ : Str) -> NForms = \saga,sagna ->
 			let
@@ -167,9 +167,9 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				mús mús mús (mús + "ar")
 				mýs mýs (mús + "um") (mús + "a") ;
 
-		--------------------------------
-		-- Masculine Noun Declensions -- 
-		--------------------------------
+	--------------------------------
+	-- Masculine Noun Declensions -- 
+	--------------------------------
 
 		dSími : Str -> NForms = \sími ->
 			let
@@ -199,11 +199,33 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				dani dana dana dana
 				danir dana (udan + "um") dana ;
 
+	-----------------------
+	-- Noun Construction -- 
+	-----------------------
+
 		nForms2NeutrNoun : NForms -> N = \nfs -> nForms2Noun nfs (nForms2Suffix nfs Neutr) Neutr ;
 
 		nForms2MascNoun : NForms -> N = \nfs -> nForms2Noun nfs (nForms2Suffix nfs Neutr) Masc ;
 
 		nForms2FemNoun : NForms -> N = \nfs -> nForms2Noun nfs (nForms2Suffix nfs Fem) Fem ;
+
+		nForms2Noun : NForms -> NForms -> Gender -> N = \free,suffix,g -> {
+				s = table {
+					Sg => table {
+						Suffix	=> caseList (suffix ! 0) (suffix ! 1) (suffix ! 2) (suffix ! 3) ;
+						_	=> caseList (free ! 0) (free ! 1) (free ! 2) (free ! 3)
+					} ;
+					Pl => table {
+						Suffix	=> caseList (suffix ! 4) (suffix ! 5) (suffix ! 6) (suffix ! 7) ;
+						_	=> caseList (free ! 4) (free ! 5) (free ! 6) (free ! 7)
+					}
+				} ;
+				g = g
+		} ;
+
+	-----------------------------------
+	-- Suffixed Article Construction --
+	-----------------------------------
 
 		nForms2Suffix : NForms -> Gender -> NForms = \nfs,g -> 
 				let
@@ -289,20 +311,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		suffixPlGen : Str -> Gender -> Str = \s,g -> case <s,g> of {
 			<front + end@("á" | "ó" | "ú") + "a",_>	=> front + end + "nna" ; -- not entirely sure if this goes for all masculine and neuter nouns
 			<_, _>			=> s + "nna"
-		} ;
-
-		nForms2Noun : NForms -> NForms -> Gender -> N = \free,suffix,g -> {
-				s = table {
-					Sg => table {
-						Suffix	=> caseList (suffix ! 0) (suffix ! 1) (suffix ! 2) (suffix ! 3) ;
-						_	=> caseList (free ! 0) (free ! 1) (free ! 2) (free ! 3)
-					} ;
-					Pl => table {
-						Suffix	=> caseList (suffix ! 4) (suffix ! 5) (suffix ! 6) (suffix ! 7) ;
-						_	=> caseList (free ! 4) (free ! 5) (free ! 6) (free ! 7)
-					}
-				} ;
-				g = g
 		} ;
 
 	---------------------
