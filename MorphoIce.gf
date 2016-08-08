@@ -16,7 +16,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 	-- Neuter Noun Declensions --
 	-----------------------------
 
-		dAuga : Str -> Str -> NForms = \auga,augna ->
+		dAuga : (SgNom,PlGen : Str) -> NForms = \auga,augna ->
 			let
 				aug = init auga ;
 				uaug = a2ö aug
@@ -24,7 +24,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				auga auga auga auga
 				(uaug + "u") (uaug + "u") (uaug + "um") augna ;
 
-		dKvæði : (_,_ : Str) -> NForms = \kvæði,kvæðum ->
+		dKvæði : (SgNom,PlDat : Str) -> NForms = \kvæði,kvæðum ->
 			let kvæð = init kvæði
 			in nForms8
 				kvæði kvæði kvæði (kvæði + "s")
@@ -56,7 +56,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 	-- Feminine Noun Declensions --
 	-------------------------------
 
-		dSaga : (_,_ : Str) -> NForms = \saga,sagna ->
+		dSaga : (SgNom,PlGen : Str) -> NForms = \saga,sagna ->
 			let
 				sag = init saga ;
 				sög = a2ö sag ;
@@ -82,6 +82,14 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			in nForms8
 				keppni keppni keppni keppni
 				keppnir keppnir (keppn + "um") (keppn + "a") ;
+
+		dFjöður : (_,_ : Str) -> NForms = \fjöður,fjaðrir ->
+			let
+				fjöð = init (init fjöður) ;
+				fjaðr = init (init fjaðrir)
+			in nForms8
+				fjöður fjöður fjöður (fjaðr + "ar")
+				fjaðrir fjaðrir (fjöð + "rum") (fjaðr + "a") ;
 
 		dBrúður : (_,_ : Str) -> NForms = \brúður,brúðir ->
 			let brúð = init (init brúður)
@@ -112,11 +120,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				æður (æð + "i") (æð + "i") æðar
 				æðar æðar (æð + "um") (æð + "a") ;
 
------------------------------------------------------------------------------------------------
-		-- Words with -i and -ar are ambiguous, they either get -ar or -null in Sg.Gen.
-		-- Most words have the tendency to get -null in Sg.Gen. but I cannot see (atm) 
-		-- the pattern when they do not.
-		-- NOTE : strictly speaking the -i is a part of the stem (in Sg.Nom).
 		dHeiði : (_,_ : Str) -> NForms = \heiði,heiðar ->
 			let heið = init heiði
 			in nForms8
@@ -129,16 +132,18 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				lygi lygi lygi lygi
 				lygar lygar (lyg + "um") (lyg + "ar") ;
 
------------------------------------------------------------------------------------------------
+		dNögl : (_,_,_ : Str) -> NForms = \nögl,naglar,neglur ->
+			let
+				nagl = init (init naglar)
+			in nForms8
+				nögl nögl nögl naglar
+				neglur neglur (nögl + "um") (nagl + "a") ;
 
-		-- feminine nouns with -ur in Pl.Nom. are a problem atm
-
-		dBók : (_,_ : Str) -> NForms = \bók,bækur ->
+		dMörk : (SgNom,SgGen,PlGen : Str) -> NForms = \mörk,merkur,marka ->
 			nForms8
-				bók bók bók (bók + "ar")
-				bækur bækur (bók + "um") (bók + "a") ;
+				mörk mörk mörk merkur
+				merkur merkur (mörk + "um") marka ;
 
-		-- Only three words decline like this, "móðir" ("mother"), "dóttir" ("daughter"), and "systir" ("sister").
 		dMóðir : (_,_ : Str) -> NForms = \móðir,mæður ->
 			let
 				móð = init (init móðir) ;
@@ -148,9 +153,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				móðir móður móður móður
 				mæður mæður (mæð + "rum") (mæð + "ra") ;
 
------------------------------------------------------------------------------------------------
-
-		-- this might be merged with some other case
 		dTá : (_,_ : Str) -> NForms = \tá,tær ->
 			nForms8
 				tá tá tá (tá + "ar")
@@ -161,7 +163,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				á á á ár
 				ár ár (á + "m") (á + "a") ;
 
-		-- I feel like this should be merged with some other case, just cant see it atm
 		dMús : (_,_ : Str) -> NForms = \mús,mýs ->
 			nForms8
 				mús mús mús (mús + "ar")
@@ -229,9 +230,9 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 
 		nForms2Suffix : NForms -> Gender -> NForms = \nfs,g -> 
 				let
-					sgNom = suffixSgNom (nfs ! 0) g ;
-					sgAcc = suffixSgAcc (nfs ! 1) g ;
-					sgDat = suffixSgDat (nfs ! 2) g ;
+					sgNom = suffixSgNom (nfs ! 0) (nfs ! 4) g ;
+					sgAcc = suffixSgAcc (nfs ! 1) (nfs ! 4) g ;
+					sgDat = suffixSgDat (nfs ! 2) (nfs ! 4) g ;
 					sgGen = suffixSgGen (nfs ! 3) g ;
 					plNom = suffixPlNom (nfs ! 4) g ;
 					plAcc = suffixPlAcc (nfs ! 5) g ;
@@ -241,65 +242,70 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 					sgNom sgAcc sgDat sgGen
 					plNom plAcc plDat plGen ;
 
-		-- One problem/pattern remains undone for the suffix:
-		--
-		-- Problem with some feminine and neuter nouns ending in -ur, if the -ur is part of the stem,
-		-- then it is an expended -r and will go like "lifur" - "lifrin", but some times -ur is not part
-		-- of the stem, e.g., "brúður" - "brúðurin". This needs to be catched in some way, probably before
-		-- in the d operations or when patternmatching in Paradigms...
+		-- The plural form is given to deterimine if "-ur" is a part of the stem, i.e. an extened "-r", for
+		-- feminine nouns. In that case the "-u-" drops before the suffixed article. The "-u-" also drops
+		-- for neuter nouns, but that seems to be in general for neuter nouns with "-ur" in the stem - I
+		-- am no entirely sure about this and can't find much in literature about this...
 
 		--  hinn - hin - hið
-		suffixSgNom : Str -> Gender -> Str = \s,g -> case <s,g> of {
-			<_ + ("a" | "i" | "u" | "é"), Masc>	=> s + "nn" ;
-			<_, Masc>				=> s + "inn" ;
-			<_ + ("a" | "i" | "u" | "é"), Fem>	=> s + "n" ;
-			<_ , Fem>				=> s + "in" ;
-			<_ + ("a" | "i" | "u" | "é"), Neutr>	=> s + "ð" ;
-			<_ , Neutr>				=> s + "ið"
+		suffixSgNom : (Nom,Pl : Str) -> Gender -> Str = \s,p,g -> case <s,p,g> of {
+			<_ + ("a" | "i" | "u" | "é"),_,Masc>		=> s + "nn" ;
+			<_,_,Masc>					=> s + "inn" ;
+			<_ + ("a" | "i" | "u" | "é"),_,Fem>		=> s + "n" ;
+			<front + "ur",_ + ("rar" | "rur" | "rir"),Fem>	=> front + "rin" ;
+			<_,_,Fem>					=> s + "in" ;
+			<_ + ("a" | "i" | "u" | "é"),_,Neutr>		=> s + "ð" ;
+			<front + "ur",_,Neutr>				=> front + "rið" ;
+			<_,_,Neutr>					=> s + "ið"
 		} ;
 
 		-- hinn - hina - hið
-		suffixSgAcc : Str -> Gender -> Str = \s,g -> case <s,g> of {
-			<_ + ("a" | "i" | "u" | "é"), Masc>	=> s + "nn" ;
-			<_ , Masc>				=> s + "inn" ;
-			<_ + #consonant , Fem>			=> s + "ina" ;
-			<_ , Fem>				=> s + "na" ;
-			<_ + ("a" | "i" | "u" | "é"), Neutr>	=> s + "ð" ;
-			<_ , Neutr>				=> s + "ið"
+		suffixSgAcc : (Acc,Pl : Str) -> Gender -> Str = \s,p,g -> case <s,p,g> of {
+			<_ + ("a" | "i" | "u" | "é"),_,Masc>		=> s + "nn" ;
+			<_,_,Masc>					=> s + "inn" ;
+			<front + "ur",_ + ("rar" | "rur" | "rir"),Fem>	=> front + "rina" ;
+			<_ + #consonant,_,Fem>				=> s + "ina" ;
+			<_,_,Fem>					=> s + "na" ;
+			<_ + ("a" | "i" | "u" | "é"),_,Neutr>		=> s + "ð" ;
+			<front + "ur",_,Neutr>				=> front + "rið" ;
+			<_,_,Neutr>					=> s + "ið"
 		} ;
 
 		-- hinum - hinni - hinu
-		suffixSgDat : Str -> Gender -> Str = \s,g -> case <s,g> of {
-			<_ , Masc>			=> s + "num" ;
-			<_ + #consonant , Fem>		=> s + "inni" ;
-			<_ , Fem>			=> s + "nni" ;
-			<_ , Neutr>			=> s + "nu"
+		suffixSgDat : (Dat,Pl : Str) -> Gender -> Str = \s,p,g -> case <s,p,g> of {
+			<_,_,Masc>					=> s + "num" ;
+			<front + "ur",_ + ("rar" | "rur" | "rir"),Fem>	=> front + "rinni" ;
+			<_ + #consonant,_,Fem>				=> s + "inni" ;
+			<_,_,Fem>					=> s + "nni" ;
+			<_,_,Neutr>					=> s + "nu"
 		} ;
 
 		-- hins - hinnar - hins
 		suffixSgGen : Str -> Gender -> Str = \s,g -> case <s,g> of {
-			<_ + ("a" | "i" | "u" | "é"), Masc>	=> s + "ns" ;
-			<_ , Masc>				=> s + "ins" ;
-			<_ + #consonant , Fem>			=> s + "innar" ;
-			<_ , Fem>				=> s + "nnar" ;
-			<_ + ("a" | "i" | "u" | "é"), Neutr>	=> s + "ns" ;
-			<_ , Neutr>				=> s + "ins"
+			<_ + ("a" | "i" | "u" | "é"),Masc>	=> s + "ns" ;
+			<_,Masc>				=> s + "ins" ;
+			<_ + #consonant,Fem>			=> s + "innar" ;
+			<_,Fem>					=> s + "nnar" ;
+			<_ + ("a" | "i" | "u" | "é"),Neutr>	=> s + "ns" ;
+			<_,Neutr>				=> s + "ins"
 		} ;
 
 		-- hinir - hinar - hin
 		suffixPlNom : Str -> Gender -> Str = \s,g -> case <s,g> of {
 			<_ , Masc>				=> s + "nir" ;
 			<_ , Fem>				=> s + "nar" ;
-			<_ + ("a" | "i" | "u" | "é"), Neutr>	=> s + "n" ;
-			<_ , Neutr>				=> s + "in"
+			<_ + ("a" | "i" | "u" | "é"),Neutr>	=> s + "n" ;
+			<front + "ur",Neutr>			=> front + "rin" ;
+			<_,Neutr>				=> s + "in"
 		} ;
 
 		-- hina - hinar - hin
 		suffixPlAcc : Str -> Gender -> Str = \s,g -> case <s,g> of {
-			<_ , Masc>				=> s + "na" ;
-			<_ , Fem>				=> s + "nar" ;
-			<_ + ("a" | "i" | "u" | "é"), Neutr>	=> s + "n" ;
-			<_ , Neutr>				=> s + "in"
+			<_,Masc>				=> s + "na" ;
+			<_,Fem>					=> s + "nar" ;
+			<_ + ("a" | "i" | "u" | "é"),Neutr>	=> s + "n" ;
+			<front + "ur",Neutr>			=> front + "rin" ;
+			<_,Neutr>				=> s + "in"
 		} ;
 
 		-- hinum

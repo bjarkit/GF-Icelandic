@@ -75,13 +75,14 @@ resource ParadigmsIce = open
 			mkN : (_,_ : Str) -> Gender -> N = mk2N ;
 
 			-- Given Sg.Nom, Sg.Gen, and Pl.Nom - also different Sg.Gen part
-			--mkN : (_,_,_ : Str) -> Gender -> N = mk3N ;
+			mkN : (_,_,_ : Str) -> Gender -> N = mk3N ;
 
 			-- Given Sg.Nom, Sg.Gen, Pl.Nom and Pl.Gen - also different Pl.Gen part
-			--mkN : (_,_,_,_ : Str) -> Gender -> N = mk4N ;
+			mkN : (_,_,_,_ : Str) -> Gender -> N = mk4N ;
 
 			-- Worst case, all eight forms.
 			mkN : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = mk8N ;
+
 		} ;
 
 		mk1N : Str -> Gender -> N = \s,g -> case g of {
@@ -95,6 +96,19 @@ resource ParadigmsIce = open
 			Masc		=> lin N (nForms2MascNoun (mascNForms2 x y)) ;
 			Fem		=> lin N (nForms2FemNoun (femNForms2 x y))
 		} ;
+
+		mk3N : (_,_,_ : Str) -> Gender -> N =\x,y,z,g -> case g of {
+			Neutr		=> lin N (nForms2NeutrNoun (neutrNForms3 x y z)) ;
+			Masc		=> lin N (nForms2MascNoun (mascNForms3 x y z)) ;
+			Fem		=> lin N (nForms2FemNoun (femNForms3 x y z))
+		} ;
+
+		mk4N : (_,_,_,_ : Str) -> Gender -> N =\a,b,c,d,g -> case g of {
+			Neutr		=> lin N (nForms2NeutrNoun (neutrNForms4 a b c d)) ;
+			Masc		=> lin N (nForms2MascNoun (mascNForms4 a b c d)) ;
+			Fem		=> lin N (nForms2FemNoun (femNForms4 a b c d))
+		} ;
+			
 
 		mk8N : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = \a,b,c,d,e,f,g,h,gend ->
 			let nfs = nForms8 a b c d e f g h
@@ -115,8 +129,17 @@ resource ParadigmsIce = open
 			_					=> dBarn s (a2ö s)
 		} ;
 
+		-- both neutrNForms2 and 3 are unfinished
 		neutrNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
 			_					=> dBarn sg pl
+		} ;
+
+		neutrNForms3 : (_,_,_ : Str) -> NForms = \nom,gen,pl -> case <nom,gen,pl> of {
+			_					=> dBarn nom pl
+		} ;
+
+		neutrNForms4 : (_,_,_,_ : Str) -> NForms = \sgNom,sgGen,plNom,plGen -> case <sgNom,sgGen,plNom,plGen> of {
+			_					=> dBarn sgNom plNom
 		} ;
 
 		mascNForms1 : Str -> NForms = \s -> case s of {
@@ -126,8 +149,17 @@ resource ParadigmsIce = open
 			_ + "i" 			=> dSími s
 		} ;
 
+		--- both mascNForms2 and 3 are unfinished
 		mascNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
 			_					=> dNemandi sg pl
+		} ;
+
+		mascNForms3 : (_,_,_ : Str) -> NForms =\nom,gen,pl -> case <nom,gen,pl> of {
+			_					=> dNemandi nom pl
+		} ;
+
+		mascNForms4 : (_,_,_,_ : Str) -> NForms = \sgNom,sgGen,plNom,plGen -> case <sgNom,sgGen,plNom,plGen> of {
+			_					=> dNemandi sgNom plNom
 		} ;
 
 		femNForms1 : Str -> NForms = \s -> case s of {
@@ -140,20 +172,37 @@ resource ParadigmsIce = open
 		femNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
 			<_ + "un",_ + "ir">				=> dVerslun sg pl ;
 			<_ + "i",_ + "ir">				=> dKeppni sg pl ;
+			<_ + "ur",_ + "rir">				=> dFjöður sg pl ;
 			<_ + "ur",_ + "ir">				=> dBrúður sg pl ;
 			<_,_ + "ir">					=> dÞökk sg pl ;
 			<_,_ + ("rar" | "var" | "jar")>			=> dLifur sg pl ;
 			<_ + "ur", _ + "ar">				=> dÆður sg pl ;
 			<_,_ + "ar">					=> dNál sg pl ;
-			<_ + ("í" | "ú" | "ei" | "æ" | "á" | "ó" | "au") + ("t"* | "k"*),_>	=> dBók sg pl ;
-			<"móðir" | "dóttir" | "systir",_>		=> dMóðir sg pl ;-- not sure if this is good practice, but there are only these three words that go like this
+
+			-- this is not general
+			--<_ + ("í" | "ú" | "ei" | "æ" | "á" | "ó" | "au") + ("t"* | "k"*),_>	=> dBók sg pl ;
+
+			<"móðir" | "dóttir" | "systir",_>		=> dMóðir sg pl ;
 			<_ + "á", _ + "ær">				=> dTá sg pl ;
 			<_ + "ó", _ + "ær">				=> dTá sg pl ;
 			<_ + "ú", _ + "ýr">				=> dTá sg pl ;
 			<_ + "á", _ + "á" + _>				=> dÁ sg pl ;
 			<_ + "ó", _ + "ó" + _>				=> dÁ sg pl ;
+
 			<_ + "ú", _ + "ú" + _>				=> dÁ sg pl ;-- in some cases the Sg.Gen becomes ú-ar instead of ú-r, I do not know atm why.
+
 			<_ + "ús",_>					=> dMús sg pl
+		} ;
+
+		femNForms3 : (_,_,_ : Str) -> NForms = \nom,gen,pl -> case <nom,gen,pl> of {
+			<_ + "i" , _ + "ar", _ + "ar">			=> dHeiði nom pl ;
+			<_ + "i" , _ , _ + "ar">			=> dLygi nom pl ;
+			<_ , _ + "ar" , _ + "ur">			=> dNögl nom gen pl ;
+			<_ , _ + "ur" , _ + "ur">			=> dMörk nom gen pl -- this is wrong :(
+		} ;
+
+		femNForms4 : (_,_,_,_ : Str) -> NForms = \sgNom,sgGen,plNom,plGen -> case <sgNom,sgGen,plNom,plGen> of {
+			<_ , _ + "ur" , _ + "ur", _ + "na">		=> dMörk sgNom sgGen plGen -- this is bound to go wrong as well :(
 		} ;
 
 		mkPN = overload {
