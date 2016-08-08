@@ -67,8 +67,21 @@ resource ParadigmsIce = open
 
 		-- new mk operation in progress ;)
 		mkN = overload {
-			-- Given Sg.Nom. - almost all neuter nouns and all weak declensions
+
+			-- Given Sg.Nom. 
 			mkN : Str -> Gender -> N = mk1N ;
+
+			-- Given Sg.Nom and Pl.Nom - different Pl.Nom part
+			mkN : (_,_ : Str) -> Gender -> N = mk2N ;
+
+			-- Given Sg.Nom, Sg.Gen, and Pl.Nom - also different Sg.Gen part
+			--mkN : (_,_,_ : Str) -> Gender -> N = mk3N ;
+
+			-- Given Sg.Nom, Sg.Gen, Pl.Nom and Pl.Gen - also different Pl.Gen part
+			--mkN : (_,_,_,_ : Str) -> Gender -> N = mk4N ;
+
+			-- Worst case, all eight forms.
+			mkN : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = mk8N ;
 		} ;
 
 		mk1N : Str -> Gender -> N = \s,g -> case g of {
@@ -77,6 +90,15 @@ resource ParadigmsIce = open
 			Fem		=> lin N (nForms2FemNoun (femNForms1 s))
 		} ;
 
+		mk2N : (_,_ : Str) -> Gender -> N = \x,y,g -> case g of {
+			Neutr		=> lin N (nForms2NeutrNoun (neutrNForms2 x y)) ;
+			Masc		=> lin N (nForms2MascNoun (mascNForms2 x y)) ;
+			Fem		=> lin N (nForms2FemNoun (femNForms2 x y))
+		} ;
+
+		mk8N : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = \a,b,c,d,e,f,g,h,gend ->
+			let nfs = nForms8 a b c d e f g h
+			in lin N (nForms2Noun nfs nfs gend) ;
 
 		neutrNForms1 : Str -> NForms = \s -> case s of {
 			front + middle@("g" | "k") + "j" + "a"	=> dAuga s (front + middle + "na") ;
@@ -85,25 +107,53 @@ resource ParadigmsIce = open
 			--  stem + "a" - I Don't think this is the general case, a counter example 
 			--  would be "þema" - "þema". Contacted a linguist about this and am waiting 
 			--  for an answer.
-			front + ("ki" | "gi")			=> dKvæði s ((uUmlaut front) + "jum") ;
-			front + "i"				=> dKvæði s ((uUmlaut front) + "um") ;
+			front + ("ki" | "gi")			=> dKvæði s ((a2ö front) + "jum") ;
+			front + "i"				=> dKvæði s ((a2ö front) + "um") ;
 			front + "ur"				=> dSumar s s ;
 			front + "ar"				=> dSumar s (front + "ur") ;
 			--front + end@("að" | "al" | "ald" | "an" | "ang") =>
-			_					=> dBarn s (uUmlaut s)
+			_					=> dBarn s (a2ö s)
+		} ;
+
+		neutrNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
+			_					=> dBarn sg pl
 		} ;
 
 		mascNForms1 : Str -> NForms = \s -> case s of {
-			front + "andi"			=> dNemandi s (front + "end") ;
-			front + "óndi"			=> dNemandi s (front + "ænd") ;
+			front + "andi"			=> dNemandi s (front + "endur") ;
+			front + "óndi"			=> dNemandi s (front + "ændur") ;
 			front + "ndi"			=> dNemandi s s ;
 			_ + "i" 			=> dSími s
 		} ;
 
+		mascNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
+			_					=> dNemandi sg pl
+		} ;
+
 		femNForms1 : Str -> NForms = \s -> case s of {
 			front + middle@("g" | "k") + "j" + "a"	=> dSaga s (front + middle + "na") ;
-			_ + ("r" | "s" | "n" | "j") + "a"	=> dSaga s s ;--  I Don't think this is the general case
-			stem + "a"				=> dSaga s s
+			_ + ("r" | "s" | "n" | "j") + "a"	=> dSaga s s ; --  I Don't think this is the general case
+			stem + "a"				=> dSaga s s --  I Don't think this is the general case
+		} ;
+
+		femNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
+			<_ + "un",_ + "ir">				=> dVerslun sg pl ;
+			<_ + "i",_ + "ir">				=> dKeppni sg pl ;
+			<_ + "ur",_ + "ir">				=> dBrúður sg pl ;
+			<_,_ + "ir">					=> dÞökk sg pl ;
+			<_ + "ing",_ + "ar">				=> dFylking sg pl ;
+			<_,_ + ("rar" | "var" | "jar")>			=> dLifur sg pl ;
+			<_ + "ur", _ + "ar">				=> dÆður sg pl ;
+			<_,_ + "ar">					=> dNál sg pl ;
+			<_ + ("í" | "ú" | "ei" | "æ" | "á" | "ó" | "au") + ("t"* | "k"*),_>	=> dBók sg pl ;
+			<"móðir" | "dóttir" | "systir",_>		=> dMóðir sg pl ;-- not sure if this is good practice, but there are only these three words that go like this
+			<_ + "á", _ + "ær">				=> dTá sg pl ;
+			<_ + "ó", _ + "ær">				=> dTá sg pl ;
+			<_ + "ú", _ + "ýr">				=> dTá sg pl ;
+			<_ + "á", _ + "á" + _>				=> dÁ sg pl ;
+			<_ + "ó", _ + "ó" + _>				=> dÁ sg pl ;
+			<_ + "ú", _ + "ú" + _>				=> dÁ sg pl ;-- in some cases the Sg.Gen becomes ú-ar instead of ú-r, I do not know atm why.
+			<_ + "ús",_>					=> dMús sg pl
 		} ;
 
 		mkPN = overload {

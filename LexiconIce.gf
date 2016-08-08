@@ -5,22 +5,16 @@ concrete LexiconIce of Lexicon = CatIce **
 
 	lin
 		-- New paradigms (WORK IN PROGRESS)
-		bank_N = mkN "höfuð" neuter ;
-		--bank_N = mkN "banki" masculine ;
+		bank_N = mkN "banki" masculine ;
 		boss_N = mkN "stjóri" masculine ;
 		cap_N = mkN "húfa" feminine ;
 		cat_N = mkN "kisa" feminine ;
-		computer_N = mkN "tölva" feminine ;
-		coat_N = mkN "kápa" feminine ;
 		cousin_N = mkN "frændi" masculine ; -- frænka is the feminine equivalent
 		factory_N = mkN "verksmiðja" feminine ;
 		glove_N = mkN "hanski" masculine ;
 		lamp_N = mkN "lampi" masculine ;
-		oil_N = mkN "olía" feminine ;
 		pen_N = mkN "penni" masculine ;
-		planet_N = mkN "pláneta" feminine ;
 		school_N = mkN "skóli" masculine ;
-		shirt_N = mkN "skyrta" feminine ;
 		student_N = mkN "nemandi" masculine ;
 		teacher_N = mkN "kennari" masculine ;
 		university_N = mkN "háskóli" masculine ;
@@ -28,7 +22,6 @@ concrete LexiconIce of Lexicon = CatIce **
 		fat_N = mkN "fita" feminine ;
 		fog_N = mkN "þoka" feminine ;
 		tail_N = mkN "rófa" feminine ;
-		rule_N = mkN "regla" feminine ;
 		apple_N = mkN "epli" neuter ;
 		baby_N = mkN "barn" neuter ;
 		bike_N = mkN "hjól" neuter ;
@@ -89,6 +82,66 @@ concrete LexiconIce of Lexicon = CatIce **
 		gold_N = mkN "gull" neuter ;
 		iron_N = mkN "járn" neuter ;
 		leather_N = mkN "leður" neuter ;
+
+
+		airplane_N = mkN "flugvél" "flugvélar" feminine ;
+		apartment_N = mkN "íbúð" "íbúðir" feminine ;
+		art_N = mkN "list" "listir" feminine ;
+		camera_N = mkN "myndavél" "myndavélar" feminine ;
+		church_N = mkN "kirkja" feminine ;
+		city_N = mkN "borg" "borgir" feminine ;
+		coat_N = mkN "kápa" feminine ;
+		computer_N = mkN "tölva" feminine ;
+		door_N = mkN "hurð" "hurðir" feminine ;
+		girl_N = mkN "stelpa" feminine ; -- FIXME should have -na in Pl.Gen.
+		harbour_N = mkN "höfn" "hafnir" feminine ;
+		hill_N = mkN "hæð" "hæðir" feminine ;
+		love_N = mkN "ást" "ástir" feminine ;
+		oil_N = mkN "olía" feminine ;
+		planet_N = mkN "pláneta" feminine ;
+		queen_N = mkN "drottning" "drottningar" feminine ;
+		shirt_N = mkN "skyrta" feminine ;
+		shop_N = mkN "búð" "búðir" feminine ;
+		sister_N = mkN "systir" "systur" feminine ;
+		star_N = mkN "stjarna" feminine ;
+		stove_N = mkN "eldavél" "eldavélar" feminine ;
+		sun_N = mkN "sól" "sólir" feminine ;
+		train_N = mkN "lest" "lestir" feminine ;
+		earth_N = mkN "jörð" "jarðir" feminine ;
+		feather_N = mkN "fjöður" "fjaðrir" feminine ; -- FIXME wrong declension!
+		fog_N = mkN "þoka" feminine ;
+		guts_N = mkN "görn" "garnir" feminine ;
+		liver_N = mkN "lifur" "lifrar" feminine ;
+		person_N = mkN "persóna" feminine ;
+		rain_N = mkN "rigning" "rigningar" feminine ;
+		skin_N = mkN "húð" "húðir" feminine ;
+		tongue_N = mkN "tunga" feminine ; -- FIXME should have -na in Pl.Gen.
+		rule_N = mkN "regla" feminine ;
+		question_N = mkN "spurning" "spurningar" feminine ;
+		reason_N = mkN "ástæða" feminine ; -- FIXME should have -na in Pl.Gen.
+		river_N = mkN "á" "ár" feminine ;
+		louse_N = mkN "lús" "lýs" feminine ;
+		book_N = mkN "bók" "bækur" feminine ;
+		night_N = mkN "nótt" "nætur" feminine ; -- FIXME shoul be "nætur" in Sg.Gen
+		root_N = mkN "rót" "rætur" feminine ;
+{-
+		cow_N = regN "cow" ;
+		distance_N3 = mkN3 (regN "distance") fromP toP ;
+		factory_N = regN "factory" ;
+		milk_N = regN "milk" ;
+		mother_N2 = mkN2 (mkN feminine (mkN "mother")) (mkPrep "of") ;
+		music_N = regN "music" ;
+		sheep_N = mk2N "sheep" "sheep" ;
+		woman_N = mkN feminine (mk2N "woman" "women") ;
+		ashes_N = regN "ash" ; -- FIXME: plural only?
+		fat_N = regN "fat" ;
+		fingernail_N = regN "fingernail" ;
+		hand_N = regN "hand" ;
+		tooth_N = mk2N "tooth" "teeth" ;
+		wife_N = mkN feminine (mk2N "wife" "wives") ;
+		grammar_N = regN "grammar" ;
+-}
+
 
 		-- Old paradigms
 		already_Adv = mkAdv "þegar" ;
