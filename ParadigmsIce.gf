@@ -65,7 +65,6 @@ resource ParadigmsIce = open
 		-- Nouns are constructed by the function $mkN$, which takes a varying
 		-- number of arguments.
 
-		-- new mk operation in progress ;)
 		mkN = overload {
 
 			-- Given Sg.Nom. 
@@ -84,6 +83,17 @@ resource ParadigmsIce = open
 			mkN : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = mk8N ;
 
 		} ;
+
+
+		-- Some weak declensions of neuter and feminine nouns differ in the Pl Gen
+		-- with a "-n-" in the ending but differ in no other way.
+		-- This goes only for weak feminine and neuter nouns, the operation is not for
+		-- masculine nouns.
+		mkNPlGen : Str -> Gender -> N = \stelpa,g -> case <stelpa,g> of {
+			<front + "a",Fem>		=> lin N (nForms2FemNoun (dSaga stelpa (front + "na"))) ;
+			<front + "a",_>			=> lin N (nForms2NeutrNoun (dAuga stelpa (front + "na")))
+		} ;
+		
 
 		mk1N : Str -> Gender -> N = \s,g -> case g of {
 			Neutr		=> lin N (nForms2NeutrNoun (neutrNForms1 s)) ;
@@ -197,12 +207,11 @@ resource ParadigmsIce = open
 		femNForms3 : (_,_,_ : Str) -> NForms = \nom,gen,pl -> case <nom,gen,pl> of {
 			<_ + "i" , _ + "ar", _ + "ar">			=> dHeiði nom pl ;
 			<_ + "i" , _ , _ + "ar">			=> dLygi nom pl ;
-			<_ , _ + "ar" , _ + "ur">			=> dNögl nom gen pl ;
-			<_ , _ + "ur" , _ + "ur">			=> dMörk nom gen pl -- this is wrong :(
+			<_ , _ + "ar" , _ + "ur">			=> dNögl nom gen pl
 		} ;
 
 		femNForms4 : (_,_,_,_ : Str) -> NForms = \sgNom,sgGen,plNom,plGen -> case <sgNom,sgGen,plNom,plGen> of {
-			<_ , _ + "ur" , _ + "ur", _ + "na">		=> dMörk sgNom sgGen plGen -- this is bound to go wrong as well :(
+			<_,_ + "ur",_ + "ur",_>		=> dMörk sgNom plNom plGen
 		} ;
 
 		mkPN = overload {
