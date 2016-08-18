@@ -57,7 +57,7 @@ resource ResIce = ParamX ** open Prelude in {
 			  APosit Declension Number Gender Case
 			| ACompar Number Gender Case
 			| ASuperl Declension Number Gender Case
-			| AAdv
+			--| AAdv
 			;
 		
 	--2 For $Sentence$
@@ -106,55 +106,6 @@ resource ResIce = ParamX ** open Prelude in {
 
 		A : Type = {
 			s : AForm => Str
-		} ;
-
-		mkAdjective : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
-			\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
-			sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
-			sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
-			plMascNom,plMascAcc,plMascDat,plMascGen,
-			plFemNom,plFemAcc,plFemDat,plFemGen,
-			plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
-			weakSgMascNom,weakSgMascAccDatGen,
-			weakSgFemNom,weakSgFemAccDatGen,
-			weakSgNeut,weakPl,
-			comSgMascNom,comSgNeutrNom,comPl,
-			supSgMascNom,supSgMascAcc,supSgMascDat,supSgMascGen,
-			supSgFemNom,supSgFemAcc,supSgFemDat,supSgFemGen,
-			supSgNeutNom,supSgNeutAcc,supSgNeutDat,supSgNeutGen,
-			supPlMascNom,supPlMascAcc,supPlMascDat,supPlMascGen,
-			supPlFemNom,supPlFemAcc,supPlFemDat,supPlFemGen,
-			supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
-			supWeakSgMascNom,supWeakSgMascAccDatGen,
-			supWeakSgFemNom,supWeakSgFemAccDatGen,
-			supWeakSgNeut,supWeakPl,adv -> {
-				s = table {
-					APosit Weak Sg Masc c		=> caseList weakSgMascNom weakSgMascAccDatGen weakSgMascAccDatGen weakSgMascAccDatGen ! c ;
-					APosit Weak Sg Fem c		=> caseList weakSgFemNom weakSgFemAccDatGen weakSgFemAccDatGen weakSgFemAccDatGen ! c ;
-					APosit Weak Sg Neutr c		=> caseList weakSgNeut weakSgNeut weakSgNeut weakSgNeut ! c ;
-					APosit Weak Pl _ c 		=> caseList weakPl weakPl weakPl weakPl ! c ;
-					APosit Strong Sg Masc c		=> caseList sgMascNom sgMascAcc sgMascDat sgMascGen ! c ;
-					APosit Strong Sg Fem c		=> caseList sgFemNom sgFemAcc sgFemDat sgFemGen ! c ;
-					APosit Strong Sg Neutr c	=> caseList sgNeutNom sgNeutAcc sgNeutDat sgNeutGen ! c ;
-					APosit Strong Pl Masc c		=> caseList plMascNom plMascAcc plMascDat plMascGen ! c ;
-					APosit Strong Pl Fem c		=> caseList plFemNom plFemAcc plFemDat plFemGen ! c ;
-					APosit Strong Pl Neutr c	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ! c ;
-					ACompar Sg Masc c		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ! c ;
-					ACompar Sg Fem c		=> caseList comSgMascNom comSgMascNom comSgMascNom comSgMascNom ! c ;
-					ACompar Sg Neutr c		=> caseList comSgNeutrNom comSgNeutrNom comSgNeutrNom comSgNeutrNom ! c ;
-					ACompar Pl _ c			=> caseList comPl comPl comPl comPl ! c ;
-					ASuperl Weak Sg Masc c		=> caseList supWeakSgMascNom supWeakSgMascAccDatGen supWeakSgMascAccDatGen supWeakSgMascAccDatGen ! c ;
-					ASuperl Weak Sg Fem c		=> caseList supWeakSgFemNom supWeakSgFemAccDatGen supWeakSgFemAccDatGen supWeakSgFemAccDatGen ! c ;
-					ASuperl Weak Sg Neutr c		=> caseList supWeakSgNeut supWeakSgNeut supWeakSgNeut supWeakSgNeut ! c ;
-					ASuperl Weak Pl _ c 		=> caseList supWeakPl supWeakPl supWeakPl supWeakPl ! c ;
-					ASuperl Strong Sg Masc c	=> caseList supSgMascNom supSgMascAcc supSgMascDat supSgMascGen ! c ;
-					ASuperl Strong Sg Fem c		=> caseList supSgFemNom supSgFemAcc supSgFemDat supSgFemGen ! c ;
-					ASuperl Strong Sg Neutr c	=> caseList supSgNeutNom supSgNeutAcc supSgNeutDat supSgNeutGen ! c ;
-					ASuperl Strong Pl Masc c	=> caseList supPlMascNom supPlMascAcc supPlMascDat supPlMascGen ! c ;
-					ASuperl Strong Pl Fem c		=> caseList supPlFemNom supPlFemAcc supPlFemDat supPlFemGen ! c ;
-					ASuperl Strong Pl Neutr c	=> caseList supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen ! c ;
-					AAdv				=> adv
-				}
 		} ;
 
 		-- For $Verb$.

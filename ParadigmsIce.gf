@@ -118,11 +118,6 @@ resource ParadigmsIce = open
 			Masc		=> lin N (nForms2MascNoun (mascNForms4 a b c d)) ;
 			Fem		=> lin N (nForms2FemNoun (femNForms4 a b c d))
 		} ;
-			
-
-		mk8N : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = \a,b,c,d,e,f,g,h,gend ->
-			let nfs = nForms8 a b c d e f g h
-			in lin N (nForms2Noun nfs nfs gend) ;
 
 		neutrNForms1 : Str -> NForms = \s -> case s of {
 			front + middle@("g" | "k") + "j" + "a"	=> dAuga s (front + middle + "na") ;
@@ -139,7 +134,6 @@ resource ParadigmsIce = open
 			_					=> dBarn s (a2ö s)
 		} ;
 
-		-- both neutrNForms2 and 3 are unfinished
 		neutrNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
 			_					=> dBarn sg pl
 		} ;
@@ -153,23 +147,33 @@ resource ParadigmsIce = open
 		} ;
 
 		mascNForms1 : Str -> NForms = \s -> case s of {
-			front + "andi"			=> dNemandi s (front + "endur") ;
-			front + "óndi"			=> dNemandi s (front + "ændur") ;
-			front + "ndi"			=> dNemandi s s ;
-			_ + "i" 			=> dSími s
+			front + "andi"					=> dNemandi s (front + "endur") ;
+			front + "óndi"					=> dNemandi s (front + "ændur") ;
+			front + "ndi"					=> dNemandi s s ;
+			front + middle@("ing" | "ung" | "dóm") + "ur"	=> dArmur s (front + middle + "ar") ;
+			front + middle@"und" + "ur"			=> dHöfundur s (front + middle + "ar") ;
+			front + middle@("ang" | "ald") + "ur"		=> dAkur s (front + middle + "rar") ;
+			front + ("a" | "i" | "u") + end@("nn" | "ll")	=> dHiminn s (front + (init end) + "ar") ;
+			#consonant* + #vowel + ("ll" | "nn")		=> dStóll s ;
+			stem + "ur"					=> dArmur s (stem + "ar") ; -- the most common masc noun type
+			_ + "ór"					=> dMór s ; -- some words ending in "ór" do not behave like this, e.g., "kór"
+			_ + "i" 					=> dSími s
 		} ;
 
-		--- both mascNForms2 and 3 are unfinished
 		mascNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
-			_					=> dNemandi sg pl
+			<_ + "i",_ + "ir">			=> dDani sg pl ;
+			<_ + "ur",_ + "rar">			=> dAkur sg pl ;
+			<_ + "ur",_ + "ar">			=> dArmur sg pl ; -- maybe not needed since stem + "ur" is already catched?
+			<_ + ("a" | "i" | "u") + end@("nn" | "ll"), _ + "ar">	=> dHiminn sg pl -- for words like himinn that have a i-shift in the plural
 		} ;
 
 		mascNForms3 : (_,_,_ : Str) -> NForms =\nom,gen,pl -> case <nom,gen,pl> of {
-			_					=> dNemandi nom pl
+			<_ + "ur", _ + "ar", _ + "ar">		=> dHöfundur nom pl ;
+			<_ + "ur", _ + "ar", _ + "ir">		=> dSöfnuður nom gen pl
 		} ;
 
 		mascNForms4 : (_,_,_,_ : Str) -> NForms = \sgNom,sgGen,plNom,plGen -> case <sgNom,sgGen,plNom,plGen> of {
-			_					=> dNemandi sgNom plNom
+			_					=> dNemandi sgNom plNom -- dummy case so the operation doesn't give error
 		} ;
 
 		femNForms1 : Str -> NForms = \s -> case s of {
@@ -214,6 +218,10 @@ resource ParadigmsIce = open
 			<_,_ + "ur",_ + "ur",_>		=> dMörk sgNom plNom plGen
 		} ;
 
+		mk8N : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = \a,b,c,d,e,f,g,h,gend ->
+			let nfs = nForms8 a b c d e f g h
+			in lin N (nForms2Noun nfs nfs gend) ;
+
 		mkPN = overload {
 
 			mkPN : Str -> Gender -> PN = 
@@ -223,61 +231,112 @@ resource ParadigmsIce = open
 
 		--2 Adjectives
 
+		-- Adjectives are constructed by the function $mkA$, which takes a varying
+		-- number of arguments.
+
+
 		mkA = overload {
 
-			-- The theoretical worst case
-			mkA : (_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_ : Str) -> A =
-				\sgMascNom,sgMascAcc,sgMascDat,sgMascGen,
-				sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
-				sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,
-				plMascNom,plMascAcc,plMascDat,plMascGen,
-				plFemNom,plFemAcc,plFemDat,plFemGen,
-				plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
-				weakSgMascNom,weakSgMascAccDatGen,
-				weakSgFemNom,weakSgFemAccDatGen,
-				weakSgNeut,weakPl,
-				comSgMascNom,comSgNeutrNom,comPl,
-				supSgMascNom,supSgMascAcc,supSgMascDat,supSgMascGen,
-				supSgFemNom,supSgFemAcc,supSgFemDat,supSgFemGen,
-				supSgNeutNom,supSgNeutAcc,supSgNeutDat,supSgNeutGen,
-				supPlMascNom,supPlMascAcc,supPlMascDat,supPlMascGen,
-				supPlFemNom,supPlFemAcc,supPlFemDat,supPlFemGen,
-				supPlNeutNom,supPlNeutAcc,supPlNeutDat,supPlNeutGen,
-				supWeakSgMascNom,supWeakSgMascAccDatGen,
-				supWeakSgFemNom,supWeakSgFemAccDatGen,
-				supWeakSgNeut,supWeakPl,adv -> 
-				lin A (mkAdjective
-				sgMascNom sgMascAcc sgMascDat sgMascGen 
-				sgFemNom sgFemAcc sgFemDat sgFemGen 
-				sgNeutNom sgNeutAcc sgNeutDat sgNeutGen 
-				plMascNom plMascAcc plMascDat plMascGen 
-				plFemNom plFemAcc plFemDat plFemGen 
-				plNeutNom plNeutAcc plNeutDat plNeutGen 
-				weakSgMascNom weakSgMascAccDatGen 
-				weakSgFemNom weakSgFemAccDatGen 
-				weakSgNeut weakPl 
-				comSgMascNom comSgNeutrNom comPl 
-				supSgMascNom supSgMascAcc supSgMascDat supSgMascGen 
-				supSgFemNom supSgFemAcc supSgFemDat supSgFemGen 
-				supSgNeutNom supSgNeutAcc supSgNeutDat supSgNeutGen 
-				supPlMascNom supPlMascAcc supPlMascDat supPlMascGen 
-				supPlFemNom supPlFemAcc supPlFemDat supPlFemGen 
-				supPlNeutNom supPlNeutAcc supPlNeutDat supPlNeutGen 
-				supWeakSgMascNom supWeakSgMascAccDatGen 
-				supWeakSgFemNom supWeakSgFemAccDatGen 
-				supWeakSgNeut supWeakPl adv) ;
+			-- Given Sg.Masc.Nom of the positive comparision
+			-- FIXME - generic adverb operation - I havent really found much research on this matter. Therefore
+			-- I took it out in the whole resource grammar until I find something more than a couple of lines on
+			-- wikipedia.
+			mkA : Str -> A = mk1A ;
 
+--			-- Given Sg.Masc.Nom of the positive comparision and the adverb derived from the adjective
+--			mkA : Str -> Str -> A = mk1A ;
 
-			-- Given the positive strong Sg.Masc.Nom. and Sg.Fem.Nom.
-			mkA : (_,_ : Str) -> A = \sgMascNom,sgFemNom ->
-				regA sgMascNom sgFemNom ;
+			-- Given also the Sg.fem.Nom of the positive comparision
+			mkA : (_,_ : Str) -> A = mk2A ;
 
+			-- Given also the Sg.Masc.Nom of the comparitive comparision
+			mkA : (_,_,_ : Str) -> A = mk3A ;
+		} ;
 
-			-- Irregular comparison and i-umlaut patterns
-			-- Given the positive strong Sg.Masc.Nom. and Sg.Fem.Nom. and
-			-- the comparitive Sg.Masc
-			-- mkA : (_,_,_ : Str) -> A = \sgMascNom,sgFemNom,comSgMascNom ->
-			--	irreg sgMascNom sgFemNom comSgMascNom ;
+		mk1A : Str -> A = \s -> lin A (aForms2Adjective 
+			(strongPosit1 s) (weakPosit s []) (compar1 s) (weakSuperl s []) (strongSuperl1 s)) ;
+
+		mk2A : (_,_ : Str) -> A = \mas,fem -> lin A (aForms2Adjective
+			(strongPosit2 mas fem) (weakPosit mas fem) (compar2 mas fem) (weakSuperl mas fem) (strongSuperl2 mas fem)) ;
+
+		mk3A : (_,_,_ : Str) -> A = \mas,fem,com -> lin A (aForms2Adjective
+			(strongPosit2 mas fem) (weakPosit mas fem) (compar1 com) (weakSuperl com []) (strongSuperl1 com)) ;
+
+		strongPosit1 : Str -> AForms = \s -> case s of {
+			#consonant* + "ei" + ("ll" | "nn")	=> dSeinn s ;
+			_ + "inn"				=> dFarinn s ;
+			_ + "ill"				=> dLítill s ;
+			#consonant* + #vowel + ("ll" | "nn")	=> dSeinn s ;
+			stem + "ur"				=> dFalur s (a2ö stem)
+		} ;
+
+		strongPosit2 : (_,_ : Str) -> AForms = \mas,fem -> case <mas,fem> of {
+			<_,_ + ("á" | "ó" | "ú")>	=> dSmár fem ;
+			<front + "ur",_ + "ur"> 	=> dFagur mas fem ;
+			<front + "ur",_>		=> dFalur mas fem ;
+			<_,_ + ("r" | "s" | (#consonant + "n"))>	=> dDýr mas ; -- Should this also be moved to strongPosit1 ?
+			<_, _ + ("ý" | "æ")>		=> dNýr fem ;
+			<_ + "ill",_>			=> dLítill mas ;
+			<_ + "inn",_>			=> dFarinn mas
+		} ;
+
+		weakPosit : (_,_ : Str) -> AForms = \mas,fem -> case <mas,fem> of {
+			<front + "ur",_ + "ur">		=> dPositW (front + "r") ;
+			<stem + "ur",_>			=> dPositW stem ;
+			<front + "ill",_>		=> dPositW (í2i front + "l") ;
+			<front + "inn",_>		=> dPositW (front + "n") ;
+			_				=> dPositW fem
+		} ;
+
+		compar1 : Str -> AForms = \s -> case s of {
+			front + "ni"		=> dI (init s) ;
+			stem + "ari"		=> dAri stem ;
+			stem + "ri"		=> dRi stem ;
+			front + mid@("leg" | "ug") + "ur"	=> dRi (front + mid) ;
+			stem + "ur"		=> dAri s ;
+			front + "inn"		=> dAri (front + "n") ;
+			_ + ("ll" | "nn")	=> dI s
+		} ;
+
+		compar2 : (_,_ : Str) -> AForms = \mas,fem -> case <mas,fem> of {
+			<front + "ur",_ + "ur">		=> dAri (front + "r") ;
+			<front + mid@("leg" | "ug") + "ur",_>	=> dRi (front + mid) ;
+			<stem + "ur", _>		=> dAri stem ;
+			<front + "inn",_>		=> dAri (front + "n") ;
+			<_ + ("ll" | "nn"),_>		=> dI mas ;
+			<_ + "r", _ + ("á" | "ó" | "ú" | "ý" | "æ")>	=> dRi fem ; 
+			<_,_ + ("r" | "s" | (#consonant + "n"))>	=> dAri fem
+		} ;
+
+		weakSuperl : (_,_ : Str) -> AForms = \mas,fem -> case <mas,fem> of {
+			<front + "ni",_>		=> dSuperlW (front + "nst") (front + "nust") ;
+			<stem + "ari",_>		=> dSuperlW (stem + "ast") (stem + "ust") ;
+			<stem + "rri",_>		=> dSuperlW (stem + "st") (stem + "st") ;
+			<stem + "ri",_>			=> dSuperlW (stem + "st") (stem + "st") ;
+			<frontm + "ur",frontf + "ur">	=> dSuperlW (frontm + "rast") (frontf + "rust") ;
+			<front + "ur",_>		=> dSuperlW (front + "ast") (fem + "ust") ;
+			<front + end@("ll" | "nn"),_>	=> dSuperlW (front + (init end) + "ast") ((a2ö front) + (init end) + "ust") ;
+			<_,_ + ("ý" | "æ")>		=> dSuperlW (fem + "jast") (fem + "just") ;
+			_				=> dSuperlW (fem + "ast") (fem + "ust")
+		} ;
+
+		strongSuperl1 : Str -> AForms = \s -> case s of {
+			front + "ni"		=> dFalastur (front + "nstur") (front + "nst") ;
+			stem + "ari"		=> dFalastur (stem + "astur") (stem + "ust") ;
+			stem + "rri"		=> dFalastur (stem + "stur") (stem + "st") ;
+			stem + "ri"		=> dFalastur (stem + "stur") (stem + "st") ;
+			front + "inn" 		=> dFalastur (front + "nastur") ((a2ö front) + "nust") ;
+			stem + "ur"		=> dFalastur (stem + "astur") ((a2ö stem) + "ust") ;
+			front + end@("ll" | "nn")	=> dFalastur (front + (init end) + "astur") ((a2ö front) + (init end) + "ust")
+		} ;
+
+		strongSuperl2 : (_,_ : Str) -> AForms = \mas,fem -> case <mas,fem> of {
+			<frontm + "ur",frontf + "ur">		=> dFalastur (frontm + "rastur") (frontf + "rust") ;
+			<frontm + "ur", _>			=> dFalastur (frontm + "astur") (fem + "ust") ;
+			<_, _ + ("á" | "ú" | "ó")>		=> dFalastur (fem + "astur") (fem + "ust") ;
+			<_, _ + ("ý" | "æ")>			=> dFalastur (fem + "jastur") (fem + "just") ;
+			<front + end@("ll" | "nn"),_>		=> dFalastur (front + (init end) + "astur") ((a2ö front) + (init end) + "ust") ;
+			<_,_ + ("r" | "s" | (#consonant + "n"))>	=> dFalastur (fem + "astur") (fem + "ust")
 		} ;
 
 		--2 Verbs
@@ -365,177 +424,6 @@ resource ParadigmsIce = open
 				<base + "s",Masc>	=> lin PN {s = caseList name name (name + "i") (name + "ar") ; g = Masc} ;
 				<base + #consonant,Masc>	=> lin PN {s = caseList name name (name + "i") (name + "s") ; g = Masc}
 		} ;
-
-		-- Most adjectives can be predicted from the Sg.Fem.Nom in the positive. Here we denote
-		-- the positive Sg.Fem.Nom. with fem and the positve Sg.Masc.Nom. with mas.
-		regA : (_,_ : Str) -> A = \mas,fem -> case <mas,fem> of {
-
-		-- note on u-shift :
-		-- Adjectives with a in the root syllable u-shifts it ö. All other root vowels
-		-- are unchanged throughout the inflexion (in the positve). 
-		-- a in suffixes is similarly u-shifted to u.
-		-- i-shift is note taken into account here.
-		
-		-- 2 Adjectives having -(u)r (expanded -r) 
-		<baseA + "ur", baseÖ + "ur">		=> lin A ( mkAdjective mas (baseA + "ran") (baseÖ + "rum") (mas + "s") -- strong Sg.Masc.
-							fem (baseA + "ra") (mas + "ri") (mas + "rar") -- strong Sg.Fem.
-							(mas + "t") (mas + "t") (baseÖ + "ru") (mas + "s") -- strong Sg.Netur.
-							(baseA + "rir") (baseA + "ra") (baseÖ + "rum") (mas + "ra") -- strong Pl.Masc.
-							(baseA + "rar") (baseA + "rar") (baseÖ + "rum") (mas + "ra") -- strong Pl.Fem.
-							fem fem (baseÖ + "rum") (mas + "ra") -- strong Pl.Neutr.
-							(baseA + "ri") (baseA + "ra") -- weak Sg.Masc.
-							(baseA + "ra") (baseÖ + "ru") -- weak Sg.Fem.
-							(baseA + "ra") -- weak Sg.Neutr.
-							(baseÖ + "ru") -- weak Pl.
-							(baseA + "rari") (baseA + "rara") (baseA + "rari") -- comparative
-							(baseA + "rastur") (baseA + "rastan") (baseÖ + "rustum") (baseA + "rasts") -- superlative strong Sg.Masc.
-							(baseÖ + "rust") (baseA + "rasta") (baseA + "rastri") (baseA + "rastrar") -- superlative strong Sg.Fem.
-							(baseA + "rast") (baseA + "rast") (baseÖ + "rustu") (baseA + "rasts") -- superlative strong Sg.Neutr.
-							(baseA + "rastir") (baseA + "rasta") (baseÖ + "rustum") (baseA + "rasta") -- superlative strong Pl.Masc.
-							(baseA + "rar") (baseA + "rar") (baseÖ + "rustum") (baseA + "rasta") -- superlative strong Pl.Fem.
-							(baseÖ + "rust") (baseÖ + "rust") (baseÖ + "rustum") (baseA + "rasta") -- superlative strong Pl.Neutr.
-							(baseA + "rasti") (baseA + "rasta") -- superlative weak Sg.Masc.
-							(baseA + "rasta") (baseÖ + "rustu") -- superlative weak Sg.Fem.
-							(baseA + "rasta") -- superlative weak Sg.Neutr.
-							(baseÖ + "rustu") -- superlative weak Pl.
-							(baseÖ + "lega")) ; 
-		-- 1 Adjectives ending in -ur in the Sg.Masc.Nom.
-		<baseA + "ur", baseÖ> 		=> lin A (mkAdjective
-							(baseA + "ur") (baseA + "an") (baseÖ + "um") (baseA + "s") -- strong Sg.Masc.
-							baseÖ (baseA + "a") (baseA + "ri") (baseA + "rar") -- strong Sg.Fem.
-							(baseA + "t") (baseA + "t") (baseÖ + "u") (baseA + "s") -- strong Sg.Netur.
-							(baseA + "ir") (baseA + "a") (baseÖ + "um") (baseA + "ra") -- strong Pl.Masc.
-							(baseA + "ar") (baseA + "ar") (baseÖ + "um") (baseA + "ra") -- strong Pl.Fem.
-							baseÖ baseÖ (baseÖ + "um") (baseA + "ra") -- strong Pl.Neutr.
-							(baseA + "i") (baseA + "a") -- weak Sg.Masc.
-							(baseA + "a") (baseÖ + "u") -- weak Sg.Fem.
-							(baseA + "a") -- weak Sg.Neutr.
-							(baseA + "u") -- weak Pl.
-							(baseA + "ari") (baseA + "ara") (baseA + "ari") -- comparative
-							(baseA + "astur") (baseA + "astan") (baseÖ + "ustum") (baseA + "asts") -- superlative strong Sg.Masc.
-							(baseÖ + "ust") (baseA + "asta") (baseA + "astri") (baseA + "astrar") -- superlative strong Sg.Fem.
-							(baseA + "ast") (baseA + "ast") (baseÖ + "ustu") (baseA + "asts") -- superlative strong Sg.Neutr.
-							(baseA + "astir") (baseA + "asta") (baseÖ + "ustum") (baseA + "astra") -- superlative strong Pl.Masc.
-							(baseA + "ar") (baseA + "ar") (baseÖ + "ustum") (baseA + "astra") -- superlative strong Pl.Fem.
-							(baseÖ + "ust") (baseÖ + "ust") (baseÖ + "ustum") (baseA + "astra") -- superlative strong Pl.Neutr.
-							(baseA + "asti") (baseA + "asta") -- superlative weak Sg.Masc.
-							(baseA + "asta") (baseÖ + "ustu") -- superlative weak Sg.Fem.
-							(baseA + "asta") -- superlative weak Sg.Neutr.
-							(baseÖ + "ustu") -- superlative weak Pl.
-							(baseÖ + "lega") ) ;
-		
-		-- 5 Adjectives having stems that end in -r, -s, (consonant +) -n 
-		<baseA + "r", baseÖ + "r">		=> sameStem mas fem ;
-		<baseA + "s", baseÖ + "s">		=> sameStem mas fem ;
-		-- <baseA + #consonant + "n", baseÖ + #consonant + "n">		=> sameStem mas fem ;
-
-		-- 4  Adjectivs having stem vowels -ý or -æ
-		<base + "r", _ + ("ý" | "æ")>	=> lin A (mkAdjective
-							(base + "r") (base + "jan") (base + "jum") (base + "s") -- strong Sg.Masc.
-							base (base + "a") (base + "rri") (base + "rrar") -- strong Sg.Fem.
-							(base + "tt") (base + "t") (base + "ju") (base + "s") -- strong Sg.Netur.
-							(base + "ir") (base + "ja") (base + "jum") (base + "rra") -- strong Pl.Masc.
-							(base + "jar") (base + "jar") (base + "jum") (base + "rra") -- strong Pl.Fem.
-							base base (base + "jum") (base + "rra") -- strong Pl.Neutr.
-							(base + "i") (base + "ja") -- weak Sg.Masc.
-							(base + "ja") (base + "ju") -- weak Sg.Fem.
-							(base + "ja") -- weak Sg.Neutr.
-							(base + "ju") -- weak Pl.
-							(base + "rri") (base + "rra") (base + "rri") -- comparative
-							(base + "jastur") (base + "jastan") (base + "justum") (base + "jasts") -- superlative strong Sg.Masc.
-							(base + "just") (base + "jasta") (base + "jastri") (base + "jastrar") -- superlative strong Sg.Fem.
-							(base + "jast") (base + "jast") (base + "justu") (base + "jasts") -- superlative strong Sg.Neutr.
-							(base + "jastir") (base + "jasta") (base + "justum") (base + "jastra") -- superlative strong Pl.Masc.
-							(base + "jar") (base + "jar") (base + "justum") (base + "jastra") -- superlative strong Pl.Fem.
-							(base + "just") (base + "just") (base + "justum") (base + "jastra") -- superlative strong Pl.Neutr.
-							(base + "jasti") (base + "jasta") -- superlative weak Sg.Masc.
-							(base + "jasta") (base + "justu") -- superlative weak Sg.Fem.
-							(base + "jasta") -- superlative weak Sg.Neutr.
-							(base + "justu") -- superlative weak Pl.
-							(base + "lega") ) ;
-
-		-- 3 Adjectives having stem vowels -á, -ó, -ú 
-		<base + "r", _ + ("á" | "ó" | "ú")>	=> lin A (mkAdjective
-							(base + "r") (base + "an") (base + "um") (base + "s") -- strong Sg.Masc.
-							base (base + "a") (base + "rri") (base + "rrar") -- strong Sg.Fem.
-							(base + "tt") (base + "tt") (base + "u") (base + "s") -- strong Sg.Netur.
-							(base + "ir") (base + "a") (base + "um") (base + "rra") -- strong Pl.Masc.
-							(base + "ar") (base + "ar") (base + "um") (base + "rra") -- strong Pl.Fem.
-							base base (base + "um") (base + "rra") -- strong Pl.Neutr.
-							(base + "i") (base + "a") -- weak Sg.Masc.
-							(base + "a") (base + "u") -- weak Sg.Fem.
-							(base + "a") -- weak Sg.Neutr.
-							(base + "u") -- weak Pl.
-							(base + "rri") (base + "rra") (base + "rri") -- comparative
-							(base + "astur") (base + "astan") (base + "ustum") (base + "asts") -- superlative strong Sg.Masc.
-							(base + "ust") (base + "asta") (base + "astri") (base + "astrar") -- superlative strong Sg.Fem.
-							(base + "ast") (base + "ast") (base + "ustu") (base + "asts") -- superlative strong Sg.Neutr.
-							(base + "astir") (base + "asta") (base + "ustum") (base + "astra") -- superlative strong Pl.Masc.
-							(base + "ar") (base + "ar") (base + "ustum") (base + "astra") -- superlative strong Pl.Fem.
-							(base + "ust") (base + "ust") (base + "ustum") (base + "astra") -- superlative strong Pl.Neutr.
-							(base + "asti") (base + "asta") -- superlative weak Sg.Masc.
-							(base + "asta") (base + "ustu") -- superlative weak Sg.Fem.
-							(base + "asta") -- superlative weak Sg.Neutr.
-							(base + "ustu") -- superlative weak Pl.
-							(base + "lega") ) ;
-
-		<_ + "inn" , base + "in">		=> lin A (mkAdjective
-							(base + "inn") (base + "inn") (base + "num") (base + "ins") -- strong Sg.Masc.
-							(base + "in")  (base + "na") (base + "inni") (base + "innar") -- strong Sg.Fem.
-							(base + "ið") (base + "ið") (base + "nu") (base + "ins") -- strong Sg.Netur.
-							(base + "nir") (base + "na") (base + "num") (base + "inna") -- strong Pl.Masc.
-							(base + "nar") (base + "nar") (base + "num") (base + "inna") -- strong Pl.Fem.
-							(base + "in") (base + "in") (base + "num") (base + "inna") -- strong Pl.Neutr.
-							(base + "ni") (base + "na") -- weak Sg.Masc.
-							(base + "na") (base + "nu") -- weak Sg.Fem.
-							(base + "na") -- weak Sg.Neutr.
-							(base + "nu") -- weak Pl.
-							(base + "nari") (base + "nara") (base + "nari") -- comparative
-							(base + "nastur") (base + "nastan") (base + "nustum") (base + "nasts") -- superlative strong Sg.Masc.
-							(base + "nust") (base + "nasta") (base + "nastri") (base + "nastrar") -- superlative strong Sg.Fem.
-							(base + "nast") (base + "nast") (base + "nustu") (base + "nasts") -- superlative strong Sg.Neutr.
-							(base + "nastir") (base + "nasta") (base + "nustum") (base + "nastra") -- superlative strong Pl.Masc.
-							(base + "nar") (base + "nar") (base + "nustum") (base + "nastra") -- superlative strong Pl.Fem.
-							(base + "nust") (base + "nust") (base + "nustum") (base + "nastra") -- superlative strong Pl.Neutr.
-							(base + "nasti") (base + "nasta") -- superlative weak Sg.Masc.
-							(base + "nasta") (base + "nustu") -- superlative weak Sg.Fem.
-							(base + "nasta") -- superlative weak Sg.Neutr.
-							(base + "nustu") -- superlative weak Pl.
-							(base + "lega") )
-		} ;
-
-		sameStem : (_,_ : Str) -> A = \baseA,baseÖ-> lin A (mkAdjective 
-			baseA (baseA + "an") (baseÖ + "um") (baseA + "s") -- strong Sg.Masc.
-			baseÖ (baseA + "a") (baseA + "ri") (baseA + "rar") -- strong Sg.Fem.
-			(baseA + "t") (baseA + "t") (baseÖ + "u") (baseA + "s") -- strong Sg.Netur.
-			(baseA + "ir") (baseA + "a") (baseÖ + "um") (baseA + "ra") -- strong Pl.Masc.
-			(baseA + "ar") (baseA + "ar") (baseÖ + "um") (baseA + "ra") -- strong Pl.Fem.
-			baseÖ baseÖ (baseÖ + "um") (baseA + "ra") -- strong Pl.Neutr.
-			(baseA + "i") (baseA + "a") -- weak Sg.Masc.
-			(baseA + "a") (baseÖ + "u") -- weak Sg.Fem.
-			(baseA + "a") -- weak Sg.Neutr.
-			(baseÖ + "u") -- weak Pl.
-			(baseA + "ari") (baseA + "ara") (baseA + "ari") -- comparative
-			(baseA + "astur") (baseA + "astan") (baseÖ + "ustum") (baseA + "asts") -- superlative strong Sg.Masc.
-			(baseÖ + "ust") (baseA + "asta") (baseA + "astri") (baseA + "astrar") -- superlative strong Sg.Fem.
-			(baseA + "ast") (baseA + "ast") (baseÖ + "ustu") (baseA + "asts") -- superlative strong Sg.Neutr.
-			(baseA + "astir") (baseA + "asta") (baseÖ + "ustum") (baseA + "asta") -- superlative strong Pl.Masc.
-			(baseA + "ar") (baseA + "ar") (baseÖ + "ustum") (baseA + "asta") -- superlative strong Pl.Fem.
-			(baseÖ + "ust") (baseÖ + "ust") (baseÖ + "ustum") (baseA + "asta") -- superlative strong Pl.Neutr.
-			(baseA + "asti") (baseA + "asta") -- superlative weak Sg.Masc.
-			(baseA + "asta") (baseÖ + "ustu") -- superlative weak Sg.Fem.
-			(baseA + "asta") -- superlative weak Sg.Neutr.
-			(baseÖ + "ustu") -- superlative weak Pl.
-			(baseÖ + "lega") ) ;
-
-		-- A helper function that can take in and list out all cases in the positive degree would be nice.
-
-		-- Irregular comparison and i-umlaut patterns
-		-- Here (as for regA) mas and fem stand for the positive Sg.Masc.Nom. and Sg.Fem.Nom.,
-		-- but com for the comparative Sg.Masc.Nom.
-		-- irregA : (_,_,_ : Str) -> \mas,fem,com -> case <mas,fem> of {
-		--}
-
 
 		-- 3 Determiners and quantifiers
 

@@ -139,7 +139,8 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				nögl nögl nögl naglar
 				neglur neglur (nögl + "um") (nagl + "a") ;
 
-		dMörk : (SgNom,SgGen,PlGen : Str) -> NForms = \mörk,merkur,marka ->
+		-- FIXME - this and words like kýr and hönd are only remaining for feminine nouns
+		dMörk : (SgNom,PlNom,PlGen : Str) -> NForms = \mörk,merkur,marka ->
 			nForms8
 				mörk mörk mörk merkur
 				merkur merkur (mörk + "um") marka ;
@@ -190,7 +191,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				nemandi nemanda nemanda nemanda
 				nemendur nemendur (nemend + "um") (nemend + "a") ;
 
-		-- Very few words go like this. Currently not used.
 		dDani : (_,_ : Str) -> NForms = \dani,danir ->
 			let
 				dan = init dani ;
@@ -200,13 +200,96 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				dani dana dana dana
 				danir dana (udan + "um") dana ;
 
+		-- this is by far the most common type for masculine nouns. Maybe it should be 
+		-- pattern matched also as just "-ur" in paradigms? then catch the other cases?
+		dArmur : (_,_ : Str) -> NForms = \armur,armar ->
+			let
+				arm = init (init armur) ;
+				örm = a2ö arm
+			in nForms8
+				armur arm (arm + "i") (arm + "s")
+				armar (arm + "a") (örm + "um") (arm + "a") ;
+
+		dHöfundur : (_,_ : Str) -> NForms = \höfundur,höfundar ->
+			let
+				höfund = init (init höfundur)
+			in nForms8
+				höfundur höfund (höfund + "i") höfundar
+				höfundar (höfund + "a") (höfund + "um") (höfund + "a") ;
+
+		dAkur : (_,_ : Str) -> NForms = \akur,akrar ->
+			let
+				akr = init (init akrar) ;
+				ökr = a2ö akr
+			in nForms8
+				akur akur (akr + "i") (akur + "s")
+				akrar (akr + "a") (ökr + "um") (akr + "a") ;
+
+		-- Not used atm
+		dFótur : (_,_ : Str) -> NForms = \fótur,fætur ->
+			let
+				fót = init (init fótur) ;
+				fæt = init (init fætur)
+			in nForms8
+				fótur fót (fæt + "i") (fót + "ar")
+				fætur fætur (fót + "um") (fót + "a") ;
+
+		dStóll : Str -> NForms = \stóll ->
+			let
+				stól = init stóll
+			in nForms8
+				stóll stól stól (stól + "s")
+				(stól + "ar") (stól + "a") (stól + "um") (stól + "a") ;
+
+		dSöfnuður : (_,_,_ : Str) -> NForms = \söfnuður,safnaðar,söfnuðir ->
+			let
+				söfnuð = init (init söfnuðir) ;
+				safnað = init (init safnaðar)
+			in nForms8
+				söfnuður söfnuð (söfnuð + "i") (safnað + "ar")
+				söfnuðir (söfnuð + "i") (söfnuð + "um") (safnað + "a") ;
+
+		dHiminn : (_,_ : Str) -> NForms = \himinn,himnar ->
+			let
+				himin = init himinn ;
+				himn = init (init himnar) ;
+				uhimn = a2ö himn
+			in nForms8
+				himinn himin (himn + "i") (himin + "s")
+				himnar (himn + "a") (uhimn + "um") (himn + "a") ;
+
+		-- is this more of an exception for words ending in -ór?
+		-- "skór" does not go like this...
+		dMór : Str -> NForms = \mór ->
+			let
+				mó = init mór
+			in nForms8
+				mór mó mó (mó + "s")
+				(mó + "ar") (mó + "a") (mó + "um") (mó + "a") ;
+
+		-- is this an exception from dalur?
+		dVinur : (_,_ : Str) -> NForms = \vinur,vinir ->
+			let
+				vin = init (init vinur)
+			in nForms8
+				vinur vin (vin + "i") (vin + "ar")
+				vinir (vin + "i") (vin + "um") (vin + "a") ;
+
+		dDalur : (_,_ : Str) -> NForms = \dalur,dalir ->
+			let
+				dal = init (init dalur) ;
+				döl = a2ö dal
+			in nForms8
+				dalur dal dal (dal + "s")
+				dalir (dal + "i") (döl + "um") (dal + "a") ;
+
 	-----------------------
 	-- Noun Construction -- 
 	-----------------------
 
 		nForms2NeutrNoun : NForms -> N = \nfs -> nForms2Noun nfs (nForms2Suffix nfs Neutr) Neutr ;
 
-		nForms2MascNoun : NForms -> N = \nfs -> nForms2Noun nfs (nForms2Suffix nfs Neutr) Masc ;
+		nForms2MascNoun : NForms -> N = \nfs -> nForms2Noun nfs (nForms2Suffix nfs Masc) Masc ;
 
 		nForms2FemNoun : NForms -> N = \nfs -> nForms2Noun nfs (nForms2Suffix nfs Fem) Fem ;
 
@@ -319,6 +402,292 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			<_, _>			=> s + "nna"
 		} ;
 
+	---------------------------
+	-- Adjective Declensions -- 
+	---------------------------
+
+		--------------------------
+		-- Positive declensions --
+		--------------------------
+
+		-- takes in the stem - i.e. Sg.Fem.Nom - except in the case of an u-umlaut
+		dPositW : Str -> AForms = \góð ->
+			let
+				góða = addJ (góð + "a") ;
+				góðu = addJ ((a2ö góð) + "u") ;
+				mas = nForms8 (góð + "i") góða góða góða góðu góðu góðu góðu ;
+				fem = nForms8 góða góðu góðu góðu góðu góðu góðu góðu ;
+				neut = nForms8 góða góða góða góða góðu góðu góðu góðu
+			in nForms2AForms mas fem neut ;
+
+		-- -d+t = t, e.g., vondur - vond - vont (not vondt)
+		-- and similarily -ð+t = t, góður - góð - gott (not goðt) - also the ó goes to o for some reason here...
+
+		dFalur : (_,_ : Str) -> AForms = \falur,föl ->
+			let
+				fal = init (init falur) ;
+				mas = nForms8
+					falur (fal + "an") (föl + "um") (fal + "s")
+					(fal + "ir") (fal + "a") (föl + "um") (fal + "ra") ;
+				fem = nForms8
+					föl (fal + "a") (föl + "ri") (fal + "rar")
+					(fal + "ar") (fal + "ar") (föl + "um") (fal + "ra") ;
+				neut = nForms8
+					(fal + "t") (fal + "t") (föl + "u") (fal + "s")
+					föl föl (föl + "um") (fal + "ra") ;
+			in nForms2AForms mas fem neut ;
+
+		dFagur : (_,_ : Str) -> AForms = \fagur,fögur ->
+			let
+				fög = init (init fögur) ;
+				fag = init (init fagur) ;
+				mas = nForms8
+					fagur (fag + "ran") (fög + "rum") (fagur + "s")
+					(fag + "rir") (fag + "ra") (fög + "rum") (fagur + "ra") ;
+				fem = nForms8
+					fögur (fag + "ra") (fagur + "ri") (fagur + "rar")
+					(fag + "rar") (fag + "rar") (fög + "rum") (fagur + "ra") ;
+				neut = nForms8
+					(fagur + "t") (fagur + "t") (fög + "ru") (fag + "urs")
+					(fög + "ur") (fög + "ur") (fög + "rum") (fagur + "ra") ;
+			in nForms2AForms mas fem neut ;
+
+		-- takes in the stem - Sg.Fem.Nom
+		dSmár : Str -> AForms = \smá ->
+			let
+				mas = nForms8
+					(smá + "r") (smá + "an") (smá + "um") (smá + "s")
+					(smá + "ir") (smá + "a") (smá + "um") (smá + "rra") ;
+				fem = nForms8
+					smá (smá + "a") (smá + "rri") (smá + "rrar")
+					(smá + "ar") (smá + "ar") (smá + "um") (smá + "rrar") ;
+				neut = nForms8
+					(smá + "tt") (smá + "tt") (smá + "u") (smá + "s")
+					smá smá (smá + "um") (smá + "rra") ;
+			in nForms2AForms mas fem neut ;
+
+		dFarinn : Str -> AForms = \farinn ->
+			let
+				farin = init farinn ;
+				far = init (init farin) ;
+				för = a2ö far ;
+				mas = nForms8
+					(farin + "n") (farin + "n") (för + "num") (farin + "s")
+					(far + "nir") (far + "na") (för + "num") (farin + "na") ;
+				fem = nForms8
+					farin (far + "na") (farin + "ni") (farin + "nar")
+					(far + "nar") (far + "nar") (för + "num") (farin + "na") ;
+				neut = nForms8
+					(far + "ið") (far + "ið") (för + "nu") (farin + "s")
+					farin farin (för + "num") (farin + "na") ;
+			in nForms2AForms mas fem neut ;
+
+		dLítill : Str -> AForms = \lítill ->
+			let
+				lítil = init lítill ;
+				líti = init lítil ;
+				litl = í2i ((init líti) + "l") ;
+				mas =  nForms8
+					lítill (líti + "nn") (litl + "um") (lítil + "s")
+					(litl + "ir") (litl + "a") (litl + "um") (lítil + "la") ;
+				fem = nForms8
+					lítil (litl + "a") (lítil + "li") (lítil + "lar")
+					(litl + "ar") (litl + "ar") (litl + "um") (lítil + "la") ;
+				neut = nForms8
+					(líti + "ð") (líti + "ð") (litl + "u") (lítil + "s")
+					lítil lítil (litl + "um") (lítil + "la") ;
+			in nForms2AForms mas fem neut ;
+
+		-- This only applies to adjective that are really the present particple of a verb.
+		-- so this will be mostly (only) used with verb paradigms - but kept here.
+		dTalinn : Str -> AForms = \talinn ->
+			let
+				talin = init talinn ;
+				tal = init (init talin) ;
+				tald = dorð tal ;
+				töl = a2ö tal ;
+				töl = dorð töl ;
+				mas = nForms8
+					(talin + "n") (talin + "n") (töl + "dum") (talin + "s")
+					(tal + "dir") (tal + "da") (töl + "dum") (talin + "na") ;
+				fem = nForms8
+					talin (tal + "da") (talin + "ni") (talin + "nar")
+					(tal + "dar") (tal + "dar") (töl + "dum") (talin + "na") ;
+				neut = nForms8
+					(tal + "ið") (tal + "ið") (töl + "du") (talin + "s")
+					talin talin (töl + "dum") (tal + "inna") ;
+			in nForms2AForms mas fem neut ;
+
+		dSeinn : Str -> AForms = \seinn ->
+			let
+				sein = init seinn ;
+				mas = nForms8
+					seinn (sein + "an") (sein + "um") (sein + "s")
+					(sein + "ir") (sein + "a") (sein + "um") (sein + "na") ;
+				fem = nForms8
+					sein (sein + "a") (sein + "ni") (sein + "nar")
+					(sein + "ar") (sein + "ar") (sein + "um") (sein +"na") ;
+				neut = nForms8
+					(sein + "t") (sein + "t") (sein + "u") (sein + "s")
+					sein sein (sein + "um") (sein + "na") ;
+			in nForms2AForms mas fem neut ;
+
+		-- takes in the stem - Sg.Fem.Nom
+		dNýr : Str -> AForms = \ný ->
+			let 
+				mas = nForms8
+					(ný + "r") (ný + "jan") (ný + "jum") (ný + "s")
+					(ný + "ir") (ný + "ja") (ný + "jum") (ný + "rra") ;
+				fem = nForms8
+					ný (ný + "ja") (ný + "rri") (ný + "rrar")
+					(ný + "jar") (ný + "jar") (ný + "jum") (ný + "rra") ;
+				neut = nForms8
+					(ný + "tt") (ný + "tt") (ný + "ju") (ný + "s")
+					ný ný (ný + "jum") (ný + "rra") ;
+			in nForms2AForms mas fem neut ;
+
+		dDýr : Str -> AForms = \dýr ->
+			let
+				udýr = a2ö dýr ;
+				mas = nForms8
+					dýr (dýr + "an") (udýr + "um") (dýr + "s")
+					(dýr + "ir") (dýr + "a") (udýr + "um") (dýr + "ra") ;
+				fem = nForms8
+					udýr (dýr + "a") (dýr + "ri") (dýr + "rar")
+					(dýr + "ar") (dýr + "ar") (udýr + "um") (dýr + "ra") ;
+				neut = nForms8
+					(dýr + "t") (dýr + "t") (udýr + "u") (dýr + "s")
+					udýr udýr (udýr + "um") (dýr + "ra") ;
+			in nForms2AForms mas fem neut ;
+
+		-- Currently not used, I am not sure if all words ening in -all and -ull behave like this.
+		dGamall : (_,_ : Str) -> AForms = \gamall,gömul ->
+			let
+				gamal = init gamall ;
+				gaml = (init (init gamal)) + "l" ;
+				göml = (init (init gömul)) + "l" ;
+				mas = nForms8
+					gamall (gaml + "an") (göml + "um") (gamal + "s")
+					(gaml + "ir") (gaml + "a") (göml + "um") (gamal + "la") ;
+				fem = nForms8
+					gömul (gaml + "a") (gamal + "li") (gamal + "lar")
+					(gaml + "ar") (gaml + "ar") (göml + "um") (gamal + "la") ;
+				neut = nForms8
+					(gamal + "t") (gamal + "t") (göml + "u") (gamal + "s")
+					gömul gömul (göml + "um") (gamal + "la") ;
+			in nForms2AForms mas fem neut ;
+
+		-----------------------------
+		-- Comparitive declensions --
+		-----------------------------
+		
+		-- Here declension operations are named after their suffixed ending
+		-- and are given the stem of the word as input. The masculine and feminine
+		-- are identical in all cases and numbers.
+
+		dAri : Str -> AForms = \gul -> 
+			let
+				gulari = gul + "ari" ;
+				gulara = gul + "ara" ;
+				mas = nForms8
+					gulari gulari gulari gulari
+					gulari gulari gulari gulari ;
+				neut = nForms8
+					gulara gulara gulara gulara
+					gulari gulari gulari gulari ;
+			in nForms2AForms mas mas neut ;
+
+		dRi : Str -> AForms = \þynn ->
+			let
+				þynnri = þynn + "ri" ;
+				þynnra = þynn + "ra" ;
+				mas = nForms8
+					þynnri þynnri þynnri þynnri
+					þynnri þynnri þynnri þynnri ;
+				neut = nForms8
+					þynnra þynnra þynnra þynnra
+					þynnri þynnri þynnri þynnri ;
+			in nForms2AForms mas mas neut ;
+
+		dI : Str -> AForms = \seinn ->
+			let
+				seinni = seinn + "i" ;
+				seinna = seinn + "a" ;
+				mas = nForms8
+					seinni seinni seinni seinni
+					seinni seinni seinni seinni ;
+				neut = nForms8
+					seinna seinna seinna seinna
+					seinni seinni seinni seinni ;
+			in nForms2AForms mas mas neut ;
+
+		-----------------------------
+		-- Superlative declensions -- 
+		-----------------------------
+
+		dFalastur : (_,_ : Str) -> AForms = \falastur,fölust ->
+			let
+				falast = init (init falastur) ;
+				mas = nForms8
+					falastur (falast + "an") (fölust + "um") (falast + "s")
+					(falast + "ir") (falast + "a") (fölust + "um") (falast + "ra") ;
+				fem = nForms8
+					fölust (falast + "a") (falast + "ri") (falast + "rar")
+					(falast + "ar") (falast + "ar") (fölust + "um") (falast + "ra") ;
+				neut = nForms8
+					falast falast (fölust + "u") (falast + "s")
+					fölust fölust (fölust + "um") (falast + "ra") ;
+			in nForms2AForms mas fem neut ;
+		
+		dSuperlW : (_,_ : Str) -> AForms = \falast,fölust ->
+			let
+				falasti = falast + "i" ;
+				falasta = falast + "a" ;
+				fölustu = fölust + "u" ;
+				mas = nForms8
+					falasti falasta falasta falasta
+					fölustu fölustu fölustu fölustu ;
+				fem = nForms8
+					falasta fölustu fölustu fölustu
+					fölustu fölustu fölustu fölustu ;
+				neut = nForms8
+					falasta falasta falasta falasta
+					fölustu fölustu fölustu fölustu ;
+			in nForms2AForms mas fem neut ;
+
+	----------------------------
+	-- Adjective Construction -- 
+	----------------------------
+
+		aForms2Adjective : (x1,_,_,_,x5 : AForms) -> A = \positw,posits,compar,superlw,superls -> {
+				s = table {
+					APosit Weak Sg Masc c		=> caseList (positw ! Masc ! 0) (positw ! Masc ! 1) (positw ! Masc ! 2) (positw ! Masc ! 3) ! c ;
+					APosit Weak Sg Fem c		=> caseList (positw ! Fem ! 0) (positw ! Fem ! 1) (positw ! Fem ! 2) (positw ! Fem ! 3) ! c ;
+					APosit Weak Sg Neutr c		=> caseList (positw ! Neutr ! 0) (positw ! Neutr ! 1) (positw ! Neutr ! 2) (positw ! Neutr ! 3) ! c ;
+					APosit Weak Pl _ c 		=> caseList (positw ! Masc ! 4) (positw ! Masc ! 5) (positw ! Masc ! 6) (positw ! Masc ! 7) ! c ;
+					APosit Strong Sg Masc c		=> caseList (posits ! Masc ! 0) (posits ! Masc ! 1) (posits ! Masc ! 2) (posits ! Masc ! 3) ! c ;
+					APosit Strong Sg Fem c		=> caseList (posits ! Fem ! 0) (posits ! Fem ! 1) (posits ! Fem ! 2) (posits ! Fem ! 3) ! c ;
+					APosit Strong Sg Neutr c	=> caseList (posits ! Neutr ! 0) (posits ! Neutr ! 1) (posits ! Neutr ! 2) (posits ! Neutr ! 3) ! c ;
+					APosit Strong Pl Masc c		=> caseList (posits ! Masc ! 4) (posits ! Masc ! 5) (posits ! Masc ! 6) (posits ! Masc ! 7) ! c ;
+					APosit Strong Pl Fem c		=> caseList (posits ! Fem ! 4) (posits ! Fem ! 5) (posits ! Fem ! 6) (posits ! Fem ! 7) ! c ;
+					APosit Strong Pl Neutr c	=> caseList (posits ! Neutr ! 4) (posits ! Neutr ! 5) (posits ! Neutr ! 6) (posits ! Neutr ! 7) ! c ;
+					ACompar Sg Masc c		=> caseList (compar ! Masc ! 0) (compar ! Masc ! 1) (compar ! Masc ! 2) (compar ! Masc ! 3) ! c ;
+					ACompar Sg Fem c		=> caseList (compar ! Fem ! 0) (compar ! Fem ! 1) (compar ! Fem ! 2) (compar ! Fem ! 3) ! c ;
+					ACompar Sg Neutr c		=> caseList (compar ! Neutr ! 0) (compar ! Neutr ! 1) (compar ! Neutr ! 2) (compar ! Neutr ! 3) ! c ;
+					ACompar Pl _ c			=> caseList (compar ! Masc ! 4) (compar ! Masc ! 5) (compar ! Masc ! 6) (compar ! Masc ! 7) ! c ;
+					ASuperl Weak Sg Masc c		=> caseList (superlw ! Masc ! 0) (superlw ! Masc ! 1) (superlw ! Masc ! 2) (superlw ! Masc ! 3) ! c ;
+					ASuperl Weak Sg Fem c		=> caseList (superlw ! Fem ! 0) (superlw ! Fem ! 1) (superlw ! Fem ! 2) (superlw ! Fem ! 3) ! c ;
+					ASuperl Weak Sg Neutr c		=> caseList (superlw ! Neutr ! 0) (superlw ! Neutr ! 1) (superlw ! Neutr ! 2) (superlw ! Neutr ! 3) ! c ;
+					ASuperl Weak Pl _ c 		=> caseList (superlw ! Masc ! 4) (superlw ! Masc ! 5) (superlw ! Masc ! 6) (superlw ! Masc ! 7) ! c ;
+					ASuperl Strong Sg Masc c	=> caseList (superls ! Masc ! 0) (superls ! Masc ! 1) (superls ! Masc ! 2) (superls ! Masc ! 3) ! c ;
+					ASuperl Strong Sg Fem c		=> caseList (superls ! Fem ! 0) (superls ! Fem ! 1) (superls ! Fem ! 2) (superls ! Fem ! 3) ! c ;
+					ASuperl Strong Sg Neutr c	=> caseList (superls ! Neutr ! 0) (superls ! Neutr ! 1) (superls ! Neutr ! 2) (superls ! Neutr ! 3) ! c ;
+					ASuperl Strong Pl Masc c	=> caseList (superls ! Masc ! 4) (superls ! Masc ! 5) (superls ! Masc ! 6) (superls ! Masc ! 7) ! c ;
+					ASuperl Strong Pl Fem c		=> caseList (superls ! Fem ! 4) (superls ! Fem ! 5) (superls ! Fem ! 6) (superls ! Fem ! 7) ! c ;
+					ASuperl Strong Pl Neutr c	=> caseList (superls ! Neutr ! 4) (superls ! Neutr ! 5) (superls ! Neutr ! 6) (superls ! Neutr ! 7) ! c
+				} ;
+		} ;
+
 	---------------------
 	-- Noun Auxilaries --
 	---------------------
@@ -328,9 +697,12 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		consonant : pattern Str = #("b" | "d" | "ð" | "f" | "g" | "h" | "j" | "k" | "l" | "m" | "n" | "p" | "r" | "s" | "t" | "v" | "x" | "þ") ;
 
 		-- This function is still naive. Only takes into count words where only one "a" changes to "ö".
-		-- Therefore words like "banani - bönunum" are not included. And even in such cases there are
-		-- must also be taken into account compound words. Then only the last word should decline and
-		-- experience any shift in a to ö.
+		-- Therefore words like "banani - bönunum" are not included. And even in such cases there it
+		-- can be ambiguous ho the shift should be, e.g., "ananas" - "ananösum" and "arabi" - "aröbum"
+		-- but "banani" - "bönunum". But maybe such cases should be caught with more input variables 
+		-- in the patternmatching of paradigms and in the noun declensions above.
+		-- It must also be taken account for compound words. Then only the last word should decline and
+		-- experience any shift in a to ö. 
 	
 		a2ö : Str -> Str = \barn -> case barn of {
 			-- is this powerful enough?
@@ -339,13 +711,12 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		} ;
 
 		-- I am fairly certain it works the same way as a2ö
+		-- currently not used
 		ö2a : Str -> Str = \þökk -> case þökk of {
 			front + "ö" + back@(#consonant*)		=> front + "a" + back ;
 			_						=> þökk
 		} ;
 
-
-		-- this is still naive - fewer forms are possible needed.
 		NForms : Type = Predef.Ints 7 => Str ; 
 
 		-- another (maybe) possible option (and maybe more optimal) would be to have nForms just two, Sg.Nom and Pl.Nom
@@ -360,4 +731,35 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				6	=> plDat ;
 				7	=> plGen
 			} ;
+
+	--------------------------
+	-- Adjective Auxilaries --
+	--------------------------
+
+		-- Not to be confused with ResIce.AForm 
+		-- I find this name fitting but it can lead to confusions.
+		AForms : Type = Gender => NForms ;
+
+		nForms2AForms : (x1,_,x3 : NForms) -> AForms = \mas,fem,neut -> table {
+				Masc	=> mas ;
+				Fem	=> fem ;
+				Neutr	=> neut
+		} ;
+
+		í2i : Str -> Str = \lítl -> case lítl of {
+			front + "í" + back@(#consonant*)	=> front + "i" + back ;
+			_					=> lítl
+		} ;
+
+		addJ : Str -> Str = \nýa -> case nýa of {
+			front + vow@("ý" | "æ") + end@("a" | "u")	=> front + vow + "j" + end ;
+			_						=> nýa
+		} ;
+
+		dorð : Str -> Str = \tal -> case tal of {
+			_ + ("l" | "m" | "n") 	=> tal + "d" ;
+			_ + "r"			=> tal + "ð" ;
+			_			=> tal
+		} ;
+
 } ;
