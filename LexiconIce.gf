@@ -4,13 +4,9 @@ concrete LexiconIce of Lexicon = CatIce **
   open ParadigmsIce, IrregIce, Prelude in {
 
 	lin
-		-- New paradigms (WORK IN PROGRESS)
 		bank_N = mkN "banki" masculine ;
 		boss_N = mkN "stjóri" masculine ;
-		cap_N = mkN "húfa" feminine ;
-		cat_N = mkN "kisa" feminine ;
 		cousin_N = mkN "frændi" masculine ; -- frænka is the feminine equivalent
-		factory_N = mkN "verksmiðja" feminine ;
 		glove_N = mkN "hanski" masculine ;
 		lamp_N = mkN "lampi" masculine ;
 		pen_N = mkN "penni" masculine ;
@@ -19,6 +15,67 @@ concrete LexiconIce of Lexicon = CatIce **
 		teacher_N = mkN "kennari" masculine ;
 		university_N = mkN "háskóli" masculine ;
 		window_N = mkN "gluggi" masculine ;
+		boat_N = mkN "bátur" masculine ;
+		boy_N = mkN "strákur" masculine ;
+		cheese_N = mkN "ostur" masculine ;
+		dog_N = mkN "hundur" masculine ;
+		fish_N = mkN "fiskur" masculine ;
+		garden_N = mkN "garður"  masculine ;
+		glove_N = mkN "hanski" masculine ;
+		hat_N = mkN "hattur" masculine ;
+		horse_N = mkN "hestur" masculine ;
+		king_N = mkN "konungur" masculine ;
+		priest_N = mkN "prestur" masculine ;
+		snake_N = mkN "snákur" masculine ;
+		sock_N = mkN "sokkur" masculine ;
+		belly_N = mkN "magi" masculine ;
+		fire_N = mkN "eldur" "eldar" masculine ;
+		chair_N = mkN "stóll" masculine ;
+		car_N = mkN "bíll" masculine ;
+		--stone_N = mkN "steinn" masculine ;
+		--rock_N = mkN "klettur" masculine ;
+		mouth_N = mkN "munnur" masculine ;
+		sand_N = mkN "sandur" masculine ;
+		wind_N = mkN "vindur" masculine ;
+		worm_N = mkN "ormur" masculine ;
+{-
+		beer_N = regN "beer" ;
+		bird_N = regN "bird" ;
+		brother_N2 = mkN2 (mkN masculine (mkN "brother")) (mkPrep "of") ;
+		cat_N = regN "cat" ;
+		doctor_N = mkN human (regN "doctor") ;
+		enemy_N = regN "enemy" ;
+		father_N2 = mkN2 (mkN masculine (mkN "father")) (mkPrep "of") ;
+		fridge_N = regN "fridge" ;
+		friend_N = mkN human (regN "friend") ;
+		fruit_N = mkN "fruit" "fruit" ; --- was: fruit, fruits before 7/12/2012
+		industry_N = regN "industry" ;
+		man_N = mkN masculine (mk2N "man" "men") ;
+		paper_N = regN "paper" ;
+		peace_N = regN "peace" ;
+		policeman_N = mkN masculine (mkN "policeman" "policemen") ;
+		restaurant_N = regN "restaurant" ;
+		sea_N = regN "sea" ;
+		shoe_N = regN "shoe" ;
+		wood_N = regN "wood" ;
+		bark_N = regN "bark" ;
+		day_N = regN "day" ;
+		foot_N = mk2N "foot" "feet" ;
+		forest_N = regN "forest" ;
+		head_N = regN "head" ;
+		husband_N = mkN masculine (regN "husband") ;
+		ice_N = regN "ice" ;
+		leg_N = regN "leg" ;
+		neck_N = regN "neck" ;
+		road_N = regN "road" ;
+		sky_N = regN "sky" ;
+		smoke_N = regN "smoke" ;
+		snow_N = regN "snow" ;
+		wing_N = regN "wing" ;
+-}
+		cap_N = mkN "húfa" feminine ;
+		cat_N = mkN "kisa" feminine ;
+		factory_N = mkN "verksmiðja" feminine ;
 		fat_N = mkN "fita" feminine ;
 		fog_N = mkN "þoka" feminine ;
 		tail_N = mkN "rófa" feminine ;
@@ -143,6 +200,57 @@ concrete LexiconIce of Lexicon = CatIce **
 		grammar_N = regN "grammar" ;
 -}
 
+		bad_A = mkA "vondur" "vond" "verri" ;
+		beautiful_A = mkA "fallegur" ;
+		big_A = mkA "stór" "stór" "stærri" ;
+		black_A = mkA "svartur" ;
+		blue_A = mkA "blár" "blá" ;
+		broad_A = mkA "breiður" ;
+		brown_A = mkA "brúnn" ;
+		clean_A = mkA "hreinn" ;
+		clever_A = mkA "klár" "klár" ;
+		cold_A = mkA "kaldur" ;
+		dirty_A = mkA "skítugur" ;
+		--easy_A2V = mkA2V (regA "easy") forP ;
+		empty_A = mkA "tómur" ;
+		--fun_AV = mkAV (regA "fun") ;
+		good_A = mkA "góður" "góð" "betri" ;
+		green_A = mkA "grænn" ;
+		hot_A = mkA "heitur" ;
+		important_A = mkA "mikilvægur" ;
+		long_A = mkA "langur" ;
+		--married_A2 = mkA2 (regA "married") toP ;
+		narrow_A = mkA "þröngur" ;
+		new_A = mkA "nýr" "ný" ;
+		--old_A = mkA "gamall"
+		--probable_AS = mkAS (regA "probable") ;
+		red_A = mkA "rauður" ;
+		short_A = mkA "stuttur" "stutt" "syttri" ;
+		small_A = mkA "lítill" "lítil" "minni" ;
+		stupid_A = mkA "heimskur" ;
+		thick_A = mkA "þykkur" ;
+		thin_A = mkA "þunnur" "þunn" "þynnri" ;
+		ugly_A = mkA "ljótur" ;
+		warm_A = mkA "heitur" ;
+		white_A = mkA "hvítur" ;
+		yellow_A = mkA "gulur" ;
+		young_A = mkA "ungur" "ung" "yngri" ;
+		correct_A = mkA "réttur" ;
+		dry_A = mkA "þurr" "þurr" ;
+		dull_A = mkA "leðinilegur" ;
+		full_A = mkA "fullur" ;
+		heavy_A = mkA "þungur" "þung" "þyngri" ;
+		near_A = mkA "nálægur" ;
+		rotten_A = mkA "rotinn" ;
+		round_A = mkA "kringlóttur" ;
+		sharp_A = mkA "beittur" ;
+		smooth_A = mkA "sléttur" ;
+		straight_A = mkA "beinn" ;
+		wet_A = mkA "blautur" ;
+		wide_A = mkA "víður" ;
+		--  other_A = regA "other" ;
+		ready_A = mkA "tilbúinn" ;
+		uncertain_A = mkA "óviss" "óviss" "óvissari" ;
 
 		-- Old paradigms
 		already_Adv = mkAdv "þegar" ;
@@ -151,8 +259,6 @@ concrete LexiconIce of Lexicon = CatIce **
 			"komdu" "komið" "komandi" "kominn" "kominn" "komnum" "komins" "komin" "komna" "kominni" "kominnar" "komið" "komið" "komnu" "komins"
 			"komnir" "komna" "komnum" "kominna" "komnar" "komnar" "komnum" "kominna" "komin" "komin" "komnum" "kominna" "komni" "komna" "komna" 
 			"komnu" "komna" "komnu" "komið" ;
-		cold_A = mkA "kaldur" "köld" ;
-		dirty_A = mkA "skítugur" "skítug" ;
 		far_Adv = mkAdv "langt" ;
 		fly_V = mkV "fljúga" "flýg" "flýgur" "flýgur" "fljúgum" "fljúgið" "fljúga" "flaug1" "flaugst" "flaug" "flugum" "fluguð" "flugu" 
 			"fljúgi" "fljúgir" "fljúgi" "fljúgum" "fljúgið" "fljúgi" "flygi" "flygir" "flygi" "flygjum" "flygjuð" "flygju" 
@@ -160,14 +266,8 @@ concrete LexiconIce of Lexicon = CatIce **
 			"flogið" "flogið" "flognu" "flogins" "flognir" "flogna" "flognum" "floginna" 
 			"flognar" "flognar" "flognum" "floginna" "flogin" "flogin" "flognum" "floginna" 
 			"flogni" "flogna" "flogna" "flognu" "flogna" "flognu" "flogið" ;
-		hot_A = mkA "heitur" "heit" ;
-		important_A = mkA "mikilvægur" "mikilvæg" ;
 		john_PN = mkPN "Jón" masculine ;
---		love_V2 = mkV2 "elska" "elska" "elskar" "elskar" "elskum" "elskið" "elska" "elskaði" "elskaðir" "elskaði" "elskuðum" "elskuðuð" "elskuðu" 
---			"elski" "elskir" "elski" "elskum" "elskið" "elski" "elskaði" "elskaðir" "elskaði" "elskuðum" "elskuðuð" "elskuðu"
---			"elskaður" "elskið" "elskandi" "elskaður" "elskað" accusative;
 
 		now_Adv = mkAdv "núna" ;
 		today_Adv = mkAdv "í dag" ;
---		walk_V = mkV "ganga" "geng" "gengur" "gengur" "göngum" "gangið" "ganga" "gekk" "gekkst" "gekk" "gengum" "genguð" "gengu" "gengið";
 } ;
