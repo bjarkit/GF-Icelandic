@@ -134,6 +134,7 @@ resource ParadigmsIce = open
 			_					=> dBarn s (a2ö s)
 		} ;
 
+		-- Currently not used! Should be added at least some cases for 2 forms and maybe for 3 forms as well.
 		neutrNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
 			_					=> dBarn sg pl
 		} ;
@@ -220,7 +221,7 @@ resource ParadigmsIce = open
 
 		mk8N : (x1,_,_,_,_,_,_,x8 : Str) -> Gender -> N = \a,b,c,d,e,f,g,h,gend ->
 			let nfs = nForms8 a b c d e f g h
-			in lin N (nForms2Noun nfs nfs gend) ;
+			in lin N (nForms2Noun nfs (nForms2Suffix nfs gend) gend) ;
 
 		mkPN = overload {
 
@@ -442,11 +443,14 @@ resource ParadigmsIce = open
 
 
 		-- 3 Adverbs
+
 		mkAdv : Str -> Adv = \x -> lin Adv (ss x) ;
 
 		mkAdA : Str -> AdA = \x -> lin AdA (ss x) ;
 		
 		mkAdN : Str -> AdN = \x -> lin AdN (ss x) ;
+
+		mkAdV : Str -> AdV = \x -> lin AdV (ss x) ;
 
 		-- 3 Prepositions
 
