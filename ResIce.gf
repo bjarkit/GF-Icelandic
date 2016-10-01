@@ -181,58 +181,80 @@ resource ResIce = ParamX ** open Prelude in {
 				}
 		} ;
 
+		-- New VP definition, work in progress...
 		VP : Type = {
-			s 	: Tense => Anteriority => Polarity => Agr => Str ;
+			s	: Tense => Anteriority => Polarity => Agr => {
+				fin	: Str ;
+				inf	: Str ;
+				a1	: Str
+			} ;
 			verb	: VForm => Str ; -- raw verbforms
-			pp	: PForm => Str ; -- raw past particple
-			obj 	: Agr => Str;
+			pp	: PForm => Str ; -- raw past participle
+			obj	: Agr => Str ; -- object of the verb phrase
+			a2	: Str ;
 		} ;
 
-
-		-- FIXME : Hardcoded VInf for the sake of testing -> todo general VForm
 		infVP : VP -> Agr -> Str = \vp,agr -> infVPPlus vp Pres Simul Pos agr ;
 
 		infVPPlus : VP -> Tense -> Anteriority -> Polarity -> Agr -> Str = \vp,ten,ant,pol,ag -> 
-			vp.s ! ten ! ant ! pol ! ag ++ vp.obj ! ag ;
+			let
+				s = vp.s ! ten ! ant ! pol ! ag ;
+			in
+				s.fin ++ s.a1 ++ s.inf ++ vp.obj ! ag ;
+
+		-- negation ( not sure where to place this atm)
+		negation : Polarity -> Str = \pol -> case pol of {
+			Pos	=> [] ;
+			Neg	=> "ekki"
+		} ;
+
+		-- helper funciton for predV
+		vf : Str -> Str -> Str -> { fin,inf,a1 : Str } =\fin,inf,a1 -> {
+				fin = fin ;
+				inf = inf ;
+				a1 = a1 ;
+		} ;
+
+--		-- FIXME : the verb needs to have an easy seperation of the first auxiliary verb and the rest, since that is where
+--		--         the adverb should be placed [se p. 70ish in Höskuldurs book]
+--		--         ex: jón mun -aldrei- hafa lesið ...
+--		--             johsn will never have read
+--		--	   ex: það munu -aldrei margir- hafa lesið
+--		--	       it will never many have read
+--		--	   ex: jón las hana ekki but not jón las ekki hana
+--		--	       john read it not
 
 		predV : V -> VP = \v -> {
-			s = \\ten,ant,pol,agr => case <ten,ant,pol> of {
-				-- hann sefur 'he sleeps'
-				<Pres,Simul,Pos>	=> v.s ! VPres Active Indicative agr.n agr.p ;
-				-- hann sefur ekki 'he doesn't sleep'
-				<Pres,Simul,Neg>	=> v.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ;
-				-- hann hefur sofið 'he has slept'
-				<Pres,Anter,Pos>	=> verbHave.s ! VPres Active Indicative agr.n agr.p ++ v.s ! VSup Active ;
-	 			-- hann hefur ekki sofið 'he hasn't slept'
-				<Pres,Anter,Neg>	=> verbHave.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ++ v.s ! VSup Active ;
-				-- hann svaf 'he slept'
-				<Past,Simul,Pos> 	=> v.s ! VPast Active Indicative agr.n agr.p ;
-	 			-- hann svaf ekki 'he didn't sleep'
-				<Past,Simul,Neg> 	=> v.s ! VPast Active Indicative agr.n agr.p ++ "ekki" ;
-				-- hann hafði sofið 'he had slept'
-				<Past,Anter,Pos> 	=> verbHave.s ! VPast Active Indicative agr.n agr.p ++ v.s ! VSup Active ;
-	 			-- hann hafði ekki sofið 'he hadn't slept'
-				<Past,Anter,Neg> 	=> verbHave.s ! VPast Active Indicative agr.n agr.p ++ "ekki" ++ v.s ! VSup Active ;
-	 			-- hann mun sofa 'he will sleep'
-				<Fut,Simul,Pos>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ v.s ! VInf ;
-	 			-- hann mun ekki sofa 'he won't sleep'
-				<Fut,Simul,Neg>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ++ v.s ! VInf ;
-				-- hann mun hafa sofið 'he will have slept'	
-				<Fut,Anter,Pos>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
-				-- hann mun ekki hafa sofið 'he won't have slept'
-				<Fut,Anter,Neg>		=> verbWill.s ! VPres Active Indicative agr.n agr.p ++ "ekki" ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
-				-- hann myndi sofa 'he would sleep'
-				<Cond,Simul,Pos>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ v.s ! VInf ;
-				-- hann myndi ekki sofa 'he wouldn't sleep'
-				<Cond,Simul,Neg>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ "ekki" ++ v.s ! VInf ;
-				-- hann myndi hafa sofið 'he would have slept'
-				<Cond,Anter,Pos>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ verbHave.s ! VInf ++ v.s ! VSup Active ;
-				-- hann myndi ekki hafa sofið 'he wouldn't have slept'
-				<Cond,Anter,Neg>	=> verbWill.s ! VPast Active Subjunctive agr.n agr.p ++ "ekki" ++  verbHave.s ! VInf ++ v.s ! VSup Active
+			-- Could I do this even better/more complex so the raw verb forms below are not needed? 
+			s = \\ten,ant,pol,agr => case <ten,ant> of {
+				-- hann sefur []/ekki - he []/doesn't sleep
+				<Pres,Simul>	=> vf (v.s ! VPres Active Indicative agr.n agr.p) [] (negation pol) ;
+
+				-- hann hefur []/ekki sofið - he has/hasn't slept
+				<Pres,Anter>	=> vf (verbHave.s ! VPres Active Indicative agr.n agr.p) (v.s ! VSup Active) (negation pol) ;
+
+				-- hann svaf []/ekki - he []/didn't sleep
+				<Past,Simul> 	=> vf (v.s ! VPast Active Indicative agr.n agr.p) [] (negation pol) ;
+
+				-- hann hafði []/ekki sofið - he had/hadn't slept
+				<Past,Anter> 	=> vf (verbHave.s ! VPast Active Indicative agr.n agr.p) (v.s ! VSup Active) (negation pol) ;
+
+				-- hann mun []/ekki sofa - he will/won't sleep
+				<Fut,Simul>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (v.s ! VInf) (negation pol) ;
+
+				-- hann mun []/ekki hafa sofið - 'he will/won't have slept'	
+				<Fut,Anter>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (verbHave.s ! VInf ++ v.s ! VSup Active) (negation pol) ;
+
+				-- hann myndi []/ekki sofa 'he would/wouldn't sleep'
+				<Cond,Simul>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (v.s ! VInf) (negation pol) ;
+
+				-- hann myndi []/ekki hafa sofið 'he would/wouldn't have slept'
+				<Cond,Anter>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (verbHave.s ! VInf ++ v.s ! VSup Active) (negation pol)
 			} ;
 			verb = \\vform	=> v.s ! vform ;
 			pp = \\pform => v.pp ! pform ;
-			obj = \\_ => []
+			obj = \\_ => [] ;
+			a2 = []
 		} ;
 
 		-- Auxilary verbs --
@@ -290,7 +312,7 @@ resource ResIce = ParamX ** open Prelude in {
 					verb = vp.s ! ten ! ant ! pol ! agr ;
 					obj = vp.obj ! agr
 				in case order of {
-					_	=> subj ++ verb ++ obj
+					_	=> subj ++ verb.fin ++ verb.a1 ++ verb.inf ++ obj
 				} ;
 		} ;
 
