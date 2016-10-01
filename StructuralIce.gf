@@ -3,6 +3,7 @@ concrete StructuralIce of Structural = CatIce **
 	(C = ConstructX), Prelude in {
 
 	lin
+		always_AdV = mkAdV "alltaf" ;
 		above_Prep = mkPrep "ofan" genitive ;
 		after_Prep = mkPrep "eftir" dative ;
 		almost_AdA = mkAdA "næstum" ;
@@ -89,7 +90,11 @@ concrete StructuralIce of Structural = CatIce **
 		-- e.g., with an adverb "þessi hlutur hérna" = "this object here" and "þessi hlutur þarna" = "that object there".
 		-- But one could argue that "þessi/sá" =~ "this/that". There is also another demonstrative determiner in 
 		-- Icelandic, "hinn" = "the other one". Atm I use the "þessi/sá" = "this/that". 
-		-- Later I will change to "þessi hér" == "this" and "þessi þarna" == "that".
+		-- Later I will change to "þessi hér" == "this" and "þessi þarna" == "that". But that raises further questions on how
+		-- it should then treat some situations e.g. "..þessi guli maður..."/"..this yellow man.." 
+		-- to "..þessi hérna guli maður.." ?
+		-- or "..þessi guli maður hérna.." ?
+		-- I think/feel that "..þessi guli maður.." is the most natural/right one to use.
 		this_Quant = {
 			s = table {
 				Sg	=> table {
@@ -177,6 +182,20 @@ concrete StructuralIce of Structural = CatIce **
 				}
 			};
 		};
+		all_Predet = {
+			s = table {
+				Sg	=> table {
+					Masc	=> caseList "allur" "allan" "öllum" "alls" ;
+					Fem	=> caseList "öll" "alla" "allri" "allrar" ;
+					Neutr	=> caseList "allt" "allt" "öllu" "alls"
+				} ;
+				Pl	=> table {
+					Masc	=> caseList "allir" "alla" "öllum" "allra" ;
+					Fem	=> caseList "allar" "allar" "öllum" "allra" ;
+					Neutr	=> caseList "öll" "öll" "öllum" "allra"
+				}
+			} ;
+		} ;
 					
 		-- not sure atm how this will translate : aðeins is an adverb that does not inflect and eini is a weak form of the adjective einn (e. one)
 		-- only_Predet =
