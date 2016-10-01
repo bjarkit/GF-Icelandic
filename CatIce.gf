@@ -30,6 +30,8 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		--2 Questions and interrogatives
 
+		-- FIXME : Questions are not implemented !
+
 		QCl = {s : Tense => Anteriority => Polarity => QForm => Str} ; -- is Agr needed?
 
 		-- IP depend on gender, or should it be fixed and other things depending on them (i don think so)?
@@ -57,9 +59,9 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		VPSlash = ResIce.VP ** {
 			c2 : Preposition ;
-			n  : Agr => Str
+			n1 : Agr => Str ;
+			n2 : Agr => Str
 		} ;	
-
 
 		--2 Adjectival phrases
 

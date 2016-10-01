@@ -44,83 +44,83 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 
 		-- V2 -> VPSlash
 		SlashV2a v = predV v ** {
-			n = \\_	=> [] ;
-			c2 = v.c2
+			c2 = v.c2 ;
+			n1,n2 = \\_ => [] ;
 		} ;
 
 		-- V3 -> NP -> VPSlash
 		Slash2V3 v3 np = predV v3 ** {
-			obj = \\_ => v3.c2.s ++ np.s ! NCase v3.c2.c ;
-			n = \\_	=> [] ; 
+			n1 = \\a => v3.c2.s ++ np.s ! NCase v3.c2.c ;
+			n2 = \\_ => [] ;
 			c2 = v3.c3
 		} ;
 
 		-- V3 -> NP -> VPSlash
 		Slash3V3 v3 np = predV v3 ** {
-			obj = \\_ => v3.c3.s ++ np.s ! NCase v3.c3.c ;
-			n = \\_ => [] ;
+			n1 = \\_ => [] ;
+			n2 = \\a => v3.c3.s ++ np.s ! NCase v3.c3.c ;
 			c2 = v3.c2
 		} ;
 
-		-- nhere
 		-- V2V -> VP -> VPSlash
 		SlashV2V v2v vp = predV v2v ** {
-			n = \\a => v2v.c3.s ++ infVP vp a ;
+			n1 = \\_ => [] ;
+			n2 = \\a => v2v.c3.s ++ infVP vp a ;
 			c2 = v2v.c2 ;
 		} ;
 
-		-- nhere
 		-- V2S -> S -> VPSlash
 		SlashV2S v2s s = predV v2s ** {
-			n = \\_ => s.s ;
+			n1 = \\_ => [] ;
+			n2 = \\_ => s.s ;
 			c2 = v2s.c2
 		} ;
 
-		-- nhere
+		--    SlashV2Q : V2Q -> QS -> VPSlash ;  -- ask (him) who came
 		-- V2Q -> QS -> VPSlash
 --		SlashV2Q v2q qs = predV v2q ** {
---			n = \\_ => qs.s ;
+--			n1 = \\_ => [] ;
+--			n2 = \\_ => qs.s ;
 --			c2 = v2q.c2
 --		} ;
 
-		-- nhere
 		-- V2A -> AP -> VPSlash
 		SlashV2A v2a ap = predV v2a ** {
-			n = \\a =>  ap.s ! a.n ! a.g ! Weak ! Nom  ;
+			n1 = \\_ => [] ;
+			n2 = \\a =>  ap.s ! a.n ! a.g ! Weak ! v2a.c2.c ; -- or is it always Acc ?
 			c2 = v2a.c2
 		} ;
 
-		-- nhere
 		-- VPSlash -> NP -> VP
 		ComplSlash vps np = {
 			s = vps.s ;
-			obj = \\a => vps.n ! a ++ vps.obj ! a ++ np.s ! NCase vps.c2.c ;
+			obj = \\a => vps.n1 ! a ++ vps.c2.s ++ np.s ! NCase vps.c2.c ++ vps.n2 ! a ;
 			verb = vps.verb ;
-			pp = vps.pp
+			pp = vps.pp ;
+			a2 = vps.a2
 		} ;
 
 		-- VV -> VPSlash -> VPSlash
 		SlashVV vv vps = predV vv ** {
-			obj = \\a => vv.c2.s ++ infVP vps a ;
-			n = \\_ => [] ;
-			c2 = vv.c2
+			n1 = \\a => vv.c2.s ++ infVP vps a ;
+			n2 = \\_ => [] ;
+			c2 = vps.c2
 		} ;
 
-		-- nhere
 		-- V2V -> NP -> VPSlash -> VPSlash
 		SlashV2VNP v2v np vps = predV v2v ** {
-			obj = \\a => v2v.c2.s ++ np.s ! NCase v2v.c2.c ++ v2v.c3.s ++ infVP vps a ;
-			n = \\_ => [] ;
-			c2 = v2v.c2
+			n1 = \\a => v2v.c2.s ++ np.s ! NCase v2v.c2.c ++ v2v.c3.s ++ infVP vps a ;
+			n2 = \\_ => [] ;
+			c2 = vps.c2
 		} ;
 
-		-- nhere
 		-- VPSlash -> VP
 		ReflVP vps = {
 			s = vps.s ;
-			obj = \\a => vps.c2.s ++ vps.n ! a ++ vps.obj ! a ;
+			obj = \\a => vps.n1 ! a ++ vps.c2.s ++ vps.n2 ! a ;
 			verb = vps.verb ;
-			pp = vps.pp
+			pp = vps.pp ;
+			a2 = vps.a2
 		} ;
 
 		-- Comp -> VP
@@ -134,44 +134,31 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 				vp = predV verbBe
 			in
 				{
-					s = \\ten,ant,pol,agr => vp.s ! ten ! ant ! pol ! agr ++ v2.pp ! PStrong agr.n agr.g Nom ;
+					s = \\ten,ant,pol,agr => vf (vp.s ! ten ! ant ! pol ! agr).fin (v2.pp ! PStrong agr.n agr.g Nom) (negation pol) ;
 					verb = \\vform 	=> v2.s ! vform ;
 					pp = \\pform	=> v2.pp ! pform ;
-					obj = \\agr	=> vp.obj ! agr
+					obj = \\agr	=> vp.obj ! agr ;
+					a2 = [] ;
 				} ;
 
 		-- VP -> Adv -> VP
-		AdvVP vp adv = vp ** {obj = \\a => vp.obj ! a ++ adv.s} ;
+		AdvVP vp adv = vp ** {a2 = vp.a2 ++ adv.s} ;
 
+		-- I am not sure about this function.
 		-- VP -> Adv -> VP 
 		ExtAdvVP vp adv = vp ** {obj = \\a => adv.s ++ vp.obj ! a} ;
 
 		-- AdV -> VP -> VP
-		AdVVP adv vp = vp ** {obj = \\a => adv.s ++ vp.obj ! a} ;
+		AdVVP adv vp = insertAdV adv.s vp ;
 
---    AdvVPSlash : VPSlash -> Adv -> VPSlash ;  -- use (it) here
 		-- VPSlash -> Adv -> VPSlash
+		AdvVPSlash vps adv = vps ** {a2 = vps.a2 ++ adv.s} ;
 
---		VP : Type = {
---			s 	: Tense => Anteriority => Polarity => Agr => Str ;
---			verb	: VForm => Str ; -- raw verbforms
---			pp	: PForm => Str ; -- raw past particple
---			obj 	: Agr => Str;
---		} ;
---		VPSlash = ResIce.VP ** {
---			c2 : Preposition ;
---			n  : Agr => Str
---		} ;	
---		Preposition : Type = {
---			s : Str ;
---			c : Case
---		} ;
+		-- AdV -> VPSlash -> VPSlash
+		AdVVPSlash adv vps = (insertAdV adv.s vps) ** {c2 = vps.c2 ; n1 = vps.n1 ; n2 = vps.n2} ;
 
---    AdVVPSlash : AdV -> VPSlash -> VPSlash ;  -- always use (it)
-   
---    VPSlashPrep : VP -> Prep -> VPSlash ;  -- live in (it)
 		-- VP -> Prep -> VPSlash
-	-- 	VPSlashPrep vp prep = vp ** {c2 = prep} ;
+		VPSlashPrep vp prep = vp ** {c2 = prep ; n1,n2 = \\_ => []} ;
 
 		-- AP -> Comp
 		CompAP ap = { 
@@ -191,4 +178,16 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 
 		-- VP
 		UseCopula = predV verbBe ;
+
+	oper
+		insertAdV  : Str -> VP -> VP = \adv,vp -> vp ** {
+			s = \\ten,ant,pol,agr => 
+				let
+					vps = vp.s ! ten ! ant ! pol ! agr
+				in {
+					fin = vps.fin ;
+					inf = vps.inf ;
+					a1 = vps.a1 ++ adv;
+				} ;
+		};
 }
