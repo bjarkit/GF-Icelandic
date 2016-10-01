@@ -294,7 +294,7 @@ resource ParadigmsIce = open
 			stem + "ari"		=> dAri stem ;
 			stem + "ri"		=> dRi stem ;
 			front + mid@("leg" | "ug") + "ur"	=> dRi (front + mid) ;
-			stem + "ur"		=> dAri s ;
+			stem + "ur"		=> dAri stem ;
 			front + "inn"		=> dAri (front + "n") ;
 			_ + ("ll" | "nn")	=> dI s
 		} ;

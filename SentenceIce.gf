@@ -25,7 +25,7 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 		--2 Embedded sentences
 
 		-- S -> SC
-		EmbedS ss = {s = "sem" ++ ss.s} ;
+		EmbedS ss = {s = "að" ++ ss.s} ;
 
 		--    EmbedQS   : QS -> SC ;               -- who goes
 		-- TODO
