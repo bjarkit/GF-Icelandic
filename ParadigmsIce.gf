@@ -400,16 +400,6 @@ resource ParadigmsIce = open
 			stem + "a"			=> cDæma inf (stem + "i") (ðiditi stem)
 		} ;
 
-		-- cTelja : (_,_,_,_ : Str) -> MForms = \telja,tel,taldi ->
-
-		-- dæma - dæmdi - dæmdur
-		-- duga - dugði - dugaður (does not contain the past participle)
-
-		-- cDæma : (_,_,_ : Str) -> MForms = \dæma,dæmi,dæmdi ->
-
-		-- kalla - kallaði - kallaður 
-		-- dKalla : (_,_ : Str) -> MForms = \kalla,kallaði ->
-
 		indsub2 : (_,_ : Str) -> MForms = \telja,tel -> case <telja,tel> of {
 			<_ + "a",stem + "i">	=> cDæma telja tel (ðiditi stem) ;
 			<_ + "a",_ + "a">	=> cKalla telja (ðiditi telja) ;

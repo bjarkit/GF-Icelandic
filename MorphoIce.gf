@@ -934,7 +934,8 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		-- merge with ðiditi ?
 		sti : Str -> Str = \stem -> case stem of {
 			front + ("j" | "v")		=> front ;
-			front@(_ + #consonant) + ("ð" | "d" | "t") => front
+			front@(_ + #consonant) + ("ð" | "d" | "t") => front ;
+			_	=> stem
 		} ;
 		
 		-- get the past ending (of week verbs) - only used for cTelja patterns

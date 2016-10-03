@@ -270,4 +270,42 @@ concrete LexiconIce of Lexicon = CatIce **
 
 		now_Adv = mkAdv "núna" ;
 		today_Adv = mkAdv "í dag" ;
+
+		
+		live_V = mkV "lifa" ;
+		stop_V = mkV "stansa" "stansa" "stansaði" "stansaður" ;
+		jump_V = mkV "hoppa" "hoppa" ;
+		--breathe_V = mkV "anda" "anda" "andaði" "andaður"; -- some bug somewhere...
+		sew_V = mkV "sauma" "sauma" "saumaði" "saumaður" ;
+		smell_V = mkV "þefa" "þefa" "þefaði" "þefaður" ;
+		spit_V = mkV "hrækja" ;
+		swell_V = mkV "bólgna" "bólgna" "bólgnaði" "bólgnaður" ;
+		swim_V = mkV "synda" ;
+		think_V = mkV "hugsa" "hugsa" "hugsaði" "hugsaður" ;
+		vomit_V = mkV "æla" ;
+{-
+		come_V = (irregV "come" "came" "come") ;
+		die_V = (regV "die") ;
+		go_V = mk5V "go" "goes" "went" "gone" "going" ;
+		run_V = (irregDuplV "run" "ran" "run") ;
+		sleep_V = (irregV "sleep" "slept" "slept") ;
+		travel_V = (regDuplV "travel") ; -- tricky! so called middle or st-verb
+		walk_V = (regV "walk") ;
+		blow_V = IrregIce.blow_V ;
+		burn_V = IrregIce.burn_V ;
+		dig_V = IrregIce.dig_V ;
+		fall_V = IrregIce.fall_V ;
+		float_V = regV "float" ;
+		flow_V = regV "flow" ;
+		fly_V = IrregIce.fly_V ;
+		freeze_V = IrregIce.freeze_V ;
+		give_V3 = mkV3 give_V noPrep noPrep ;
+		laugh_V = regV "laugh" ;
+		lie_V = IrregIce.lie_V ;
+		play_V = regV "play" ;
+		sing_V = IrregIce.sing_V ;
+		sit_V = IrregIce.sit_V ;
+		stand_V = IrregIce.stand_V ;
+		turn_V = regV "turn" ;
+-} 
 } ;
