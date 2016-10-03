@@ -498,8 +498,9 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 					lítil lítil (litl + "um") (lítil + "la") ;
 			in nForms2AForms mas fem neut ;
 
-		-- This only applies to adjective that are really the present particple of a verb.
-		-- so this will be mostly (only) used with verb paradigms - but kept here.
+		-- This only applies to adjective that are really the present particple of a verb,
+		-- which has the tendency to "change" into an adjective at times. So this will be 
+		-- mostly (only) used with verb paradigms - but kept here.
 		dTalinn : Str -> AForms = \talinn ->
 			let
 				talin = init talinn ;
@@ -688,9 +689,118 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				} ;
 		} ;
 
-	---------------------
-	-- Noun Auxilaries --
-	---------------------
+
+	----------------------
+	-- Verb Conjugation --
+	----------------------
+
+		--------------------------------
+		-- Weak/regular verb patterns --
+		--------------------------------
+
+		-- the principal part for weak patterns is :
+		-- infinitive - first person singular past tense indicative mood - past participle
+		-- the present participle is not used in these patterns 
+
+		-- telja - taldi - talinn
+		cTelja : (_,_,_ : Str) -> MForms = \telja,tel,taldi ->
+			let
+				telj = init telja ;
+				tald = init taldi ;
+				töld = a2ö tald ;
+				teld = tel + (getðiditi taldi) ;
+				presInd = tForms6 tel (tel + "ur") (tel + "ur") (telj + "um") (telj + "ið") (telj + "a") ;
+				pastInd = tForms6 taldi (taldi + "r") taldi (töld + "um") (töld + "uð") (töld + "u") ;
+				presSub = tForms6 (telj + "i") (telj + "ir") (telj + "i") (telj + "um") (telj + "ið") (telj + "i") ;
+				pastSub = tForms6 (teld + "i") (teld + "ir") (teld + "i") (teld + "um") (teld + "uð") (teld + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+		-- dæma - dæmdi - dæmdur
+		-- duga - dugði - dugaður (does not contain the past participle)
+		cDæma : (_,_,_ : Str) -> MForms = \dæma,dæmi,dæmdi ->
+			let
+				dæm = init dæma ;
+				udæm = a2ö dæm ;
+				dæmd = init dæmdi ;
+				udæmd = a2ö dæmd ;
+				presInd = tForms6 dæmi (dæmi + "r") (dæmi + "r") (udæm + "um") (dæmi + "ð") dæma ;
+				pastInd = tForms6 dæmdi (dæmdi + "r") dæmdi (udæmd + "um") (udæmd + "uð") (udæmd + "u") ;
+				presSub = tForms6 dæmi (dæmi + "r") dæmi (udæm + "um") (dæmi + "ð") dæmi ;
+				pastSub = tForms6 dæmdi (dæmdi + "r") dæmdi (udæmd + "um") (udæmd + "uð") (udæmd + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+		-- kalla - kallaði - kallaður 
+		cKalla : (_,_ : Str) -> MForms = \kalla,kallaði ->
+			let
+				kall = init kalla ;
+				köll = a2ö kall ;
+				kölluð = köll + "uð";
+				presInd = tForms6 kalla (kalla + "r") (kalla + "r") (köll + "um") (kall + "ið") kalla ;
+				pastInd = tForms6 kallaði (kallaði + "r") kallaði (kölluð + "um") (kölluð + "u") (kölluð + "u") ;
+				presSub = tForms6 (kall + "i") (kall + "ir") (kall + "i") (köll + "um") (kall + "ið") (kall + "i") ;
+				pastSub = tForms6 kallaði (kallaði + "r") kallaði (kölluð + "um") (kölluð + "uð") (kölluð + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+
+		------------------------------------
+		-- Strong/irregular verb patterns --
+		------------------------------------
+
+		-- the principal part for strong patterns is :
+		-- infinitive - first person singular past tense indicative mood - first person plural past tense indicative mood - past participle
+		-- the present participle is not used in these patterns..
+
+
+		----------------------------
+		-- Núþálegar og ri-sagnir --
+		----------------------------
+
+
+	-----------------------
+	-- Verb Construction -- 
+	-----------------------
+
+		vForms2Verb : Str -> MForms -> (x5,x6,x7,x8 : Str) -> (x9,x10 : AForms) -> V = 
+			\inf,mforms,impSg,impPl,presPart,sup,pastPartW,pastPartS -> 
+			let
+				presInd = mforms ! Indicative ! DPres ;
+				pastInd = mforms ! Indicative ! DPast ;
+				presSub = mforms ! Subjunctive ! DPres ;
+				pastSub = mforms ! Subjunctive ! DPast
+			in {
+			s = table {
+				VInf				=> inf ;
+				VPres v Indicative Sg p		=> persList (mkVoice v (presInd ! 0)) (mkVoice v (presInd ! 1)) (mkVoice v (presInd ! 2)) ! p;
+				VPres v Indicative Pl p 	=> persList (mkVoice v (presInd ! 3)) (mkVoice v (presInd ! 4)) (mkVoice v (presInd ! 5)) ! p;
+				VPast v Indicative Sg p		=> persList (mkVoice v (pastInd ! 0)) (mkVoice v (pastInd ! 1)) (mkVoice v (pastInd ! 2)) ! p;
+				VPast v Indicative Pl p 	=> persList (mkVoice v (presInd ! 3)) (mkVoice v (pastInd ! 4)) (mkVoice v (pastInd ! 5)) ! p;
+				VPres v Subjunctive Sg p	=> persList (mkVoice v (presSub ! 0)) (mkVoice v (presSub ! 1)) (mkVoice v (presSub ! 2)) ! p;
+				VPres v Subjunctive Pl p	=> persList (mkVoice v (presSub ! 3)) (mkVoice v (presSub ! 4)) (mkVoice v (presSub ! 5)) ! p;
+				VPast v Subjunctive Sg p	=> persList (mkVoice v (pastSub ! 0)) (mkVoice v (pastSub ! 1)) (mkVoice v (pastSub ! 2)) ! p;
+				VPast v Subjunctive Pl p	=> persList (mkVoice v (presSub ! 3)) (mkVoice v (pastSub ! 4)) (mkVoice v (pastSub ! 5)) ! p;
+				VImp v Sg			=> mkVoice v impSg ;
+				VImp v Pl			=> mkVoice v impPl ;
+				VPresPart			=> presPart ;
+				VSup v				=> mkVoice v sup
+			} ;
+			pp = table {
+				PWeak Sg Masc c		=> caseList (pastPartW ! Masc ! 0) (pastPartW ! Masc ! 1) (pastPartW ! Masc ! 2) (pastPartW ! Masc ! 3) ! c ;
+				PWeak Sg Fem c		=> caseList (pastPartW ! Fem ! 0) (pastPartW ! Fem ! 1) (pastPartW ! Fem ! 2) (pastPartW ! Fem ! 3) ! c ; 
+				PWeak Sg Neutr c	=> caseList (pastPartW ! Neutr ! 0) (pastPartW ! Neutr ! 1) (pastPartW ! Neutr ! 2) (pastPartW ! Neutr ! 3) ! c ;
+				PWeak Pl _ c		=> caseList (pastPartW ! Masc ! 4) (pastPartW ! Masc ! 5) (pastPartW ! Masc ! 6) (pastPartW ! Masc ! 7) ! c ;
+				PStrong Sg Masc c	=> caseList (pastPartS ! Masc ! 0) (pastPartS ! Masc ! 1) (pastPartS ! Masc ! 2) (pastPartS ! Masc ! 3) ! c ;
+				PStrong Sg Fem c	=> caseList (pastPartS ! Fem ! 0) (pastPartS ! Fem ! 1) (pastPartS ! Fem ! 2) (pastPartS ! Fem ! 3) ! c ;
+				PStrong Sg Neutr c	=> caseList (pastPartS ! Neutr ! 0) (pastPartS ! Neutr ! 1) (pastPartS ! Neutr ! 2) (pastPartS ! Neutr ! 3) ! c ;
+				PStrong Pl Masc c	=> caseList (pastPartS ! Masc ! 4) (pastPartS ! Masc ! 5) (pastPartS ! Masc ! 6) (pastPartS ! Masc ! 7) ! c ;
+				PStrong Pl Fem c	=> caseList (pastPartS ! Fem ! 4) (pastPartS ! Fem ! 5) (pastPartS ! Fem ! 6) (pastPartS ! Fem ! 7) ! c ;
+				PStrong Pl Neutr c	=> caseList (pastPartS ! Neutr ! 4) (pastPartS ! Neutr ! 5) (pastPartS ! Neutr ! 6) (pastPartS ! Neutr ! 7) ! c
+			}
+		} ;
+
+
+	----------------------
+	-- Noun Auxiliaries --
+	----------------------
 
 		vowel : pattern Str = #("a" | "á" | "e" | "é" | "i" | "í" | "o" | "ó" | "u" | "ú" | "y" | "ý" | "æ" | "ö" | "au" | "ei" | "ey") ;
 
@@ -711,7 +821,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		} ;
 
 		-- I am fairly certain it works the same way as a2ö
-		-- currently not used
+		-- currently not used - keep or trash?
 		ö2a : Str -> Str = \þökk -> case þökk of {
 			front + "ö" + back@(#consonant*)		=> front + "a" + back ;
 			_						=> þökk
@@ -732,9 +842,9 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				7	=> plGen
 			} ;
 
-	--------------------------
-	-- Adjective Auxilaries --
-	--------------------------
+	---------------------------
+	-- Adjective Auxiliaries --
+	---------------------------
 
 		-- Not to be confused with ResIce.AForm 
 		-- I find this name fitting but it can lead to confusions.
@@ -756,10 +866,84 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			_						=> nýa
 		} ;
 
+		-- read as d or ð, not d(eclension) orð...
 		dorð : Str -> Str = \tal -> case tal of {
 			_ + ("l" | "m" | "n") 	=> tal + "d" ;
 			_ + "r"			=> tal + "ð" ;
 			_			=> tal
 		} ;
 
+	----------------------
+	-- Verb Auxiliaries --
+	----------------------
+		
+		-- There are 12 word forms for both the Indicative, 
+		-- and Subjunctive moods, and there are 6 word forms 
+		-- for both the present and the past for each.
+
+		TForms : Type = Predef.Ints 5 => Str ;
+
+		MForms : Type = Mood => DTense => TForms ;
+
+		tForms6 : (x1,_,_,_,_,x6 : Str) -> TForms =
+			\sgP1,sgP2,sgP3,plP1,plP2,plP3 -> table {
+				0	=> sgP1 ;
+				1	=> sgP2 ;
+				2	=> sgP3 ;
+				3	=> plP1 ;
+				4	=> plP2 ;
+				5	=> plP3
+			} ;
+
+		tForms2MForms : (x1,_,_,x4 : TForms) -> MForms = 
+			\presInd,pastInd,presSub,pastSub -> table {
+				Indicative	=> table {
+							DPres => presInd ;
+							DPast => pastInd
+						} ;
+				Subjunctive	=> table {
+							DPres => presSub ;
+							DPast => pastSub
+						}
+			} ;
+
+		-- for past weak/regular verbs
+		ðiditi : Str -> Str = \stem -> case stem of {
+			-- ði
+			_ + #vowel				=> (sti stem) + "ði" ;
+			_ + ("f" | "j") 			=> (sti stem) + "ði" ; 
+			_ + #vowel + ("r" | "rf" | "rg")	=> (sti stem) + "ði" ; 
+			_ + "rr"				=> (sti stem) + "ði" ; -- somethimes - otherwise + "ti", e.g., sperra-sperrti
+			-- ti
+			_ + #consonant + "t"			=> (sti stem) + "i" ;
+			_ + ("p" | "t" | "k")			=> (sti stem) + "ti" ;
+			front@(_ + "r") + "ð"			=> (sti front) + "ti" ;
+			front@(_ + ("l" | "n")) + "d"		=> front + "ti" ; -- usually otherwise + "di", e.g., ýlda-ýldi, senda-sendi
+			_ + ("ll" | "nn")			=> (sti stem) + "ti" ; -- usually otherwise + "di", e.g, brenna-brenndi,fella felldi
+			-- di
+			front@(_ + #vowel) + "ð"		=> front + "ddi" ;
+			_ + "dd"				=> (sti stem) + "i" ;
+			_ + #vowel + ("n" | "fn" | "gn" | "ng")	=> (sti stem) + "di" ;
+			_ + #vowel + ("m" | "mm" | "lm" | "rm" | "mb")	=> (sti stem) + "di" ;
+			_ + ("lf" | "fl" | "lg" | "gl")		=> (sti stem) + "di" ;
+			_ + #vowel + "l"			=> (sti stem) + "di" ;-- usually...
+			_ + "rn"				=> (sti stem) + "di" -- sometimes..
+		} ;
+
+		-- additional stem alteration for ðiditi
+		-- merge with ðiditi ?
+		sti : Str -> Str = \stem -> case stem of {
+			front + ("j" | "v")		=> front ;
+			front@(_ + #consonant) + ("ð" | "d" | "t") => front
+		} ;
+		
+		-- get the past ending (of week verbs) - only used for cTelja patterns
+		getðiditi : Str -> Str = \s -> case s of {
+			_ + "ði"	=> "ði" ;
+			_ + "di"	=> "di" ;
+			_ + "ti"	=> "ti"
+		} ;
+
+	param
+		DTense = DPast | DPres ;
 } ;

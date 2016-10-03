@@ -235,7 +235,6 @@ resource ParadigmsIce = open
 		-- Adjectives are constructed by the function $mkA$, which takes a varying
 		-- number of arguments.
 
-
 		mkA = overload {
 
 			-- Given Sg.Masc.Nom of the positive comparision
@@ -345,8 +344,22 @@ resource ParadigmsIce = open
 		-- Verbs are constructed by the function $mkV$, which takes a varying
 		-- number of arguments.
 
+
 		mkV = overload {
 
+			-- Given the infinitive
+			mkV : Str -> V = \telja -> mk1V telja;
+
+			-- Given also the first person singular present tense indicative mood
+			mkV : (_,_ : Str) -> V = \telja,tel -> mk2V telja tel ;
+
+			-- Given also the first persons singular past tense indicative mood
+			mkV : (_,_,_ : Str) -> V = \telja,tel,taldi -> mk3V telja tel taldi ;
+
+			-- Given also the past participle (strong declension) in the singular masculine nominative.
+			mkV : (_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn -> mk4V telja tel taldi talinn ;
+
+			-- will be taken out, not to worry...
 			-- The theoretical worst case
 			mkV : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x59 : Str) -> V =
 				\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
@@ -362,6 +375,87 @@ resource ParadigmsIce = open
 				plFemNom plFemAcc plFemDat plFemGen plNeutNom plNeutAcc plNeutDat plNeutGen 
 				weakSgMascNom weakSgMascAccDatGen weakSgFemNom weakSgFemAccDatGen weakSgNeut weakPl flogið) ;
 		};
+
+		-- vForms2Verb : Str -> MForms -> (x5,x6,x7,x8 : Str) -> (x9,x10 : AForms) -> V = 
+		--	\inf, mforms, impSg,impPl,presPart,sup, pastPartW,pastPartS -> 
+
+		mk1V : Str -> V = \inf -> 
+			lin V (vForms2Verb inf (indsub1 inf) (impSg inf) (impPl inf) (inf + "andi") (sup inf) (strongPP inf) (weakPP inf)) ;
+
+		mk2V : (_,_ : Str) -> V = \telja,tel -> 
+			lin V (vForms2Verb telja (indsub2 telja tel) (impSg telja) (impPl telja) (telja + "andi") (sup telja) (strongPP telja) (weakPP telja)) ;
+
+		mk3V : (_,_,_ : Str) -> V = \telja,tel,taldi ->
+			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (telja + "andi") (sup telja) (strongPP telja) (weakPP telja)) ;
+		
+		mk4V : (_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn ->
+			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (telja + "andi") (sup telja) (strongPP talinn) (weakPP talinn));
+
+		indsub1 : Str -> MForms = \inf -> case inf of {
+			stem@(front + "e" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "a" + c)) ; 
+			stem@(front + "y" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "u" + c)) ; 
+			stem@(front + "ý" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "ú" + c)) ;
+			stem@(front + "æ" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "á" + c)) ; 
+			stem + "ja"			=> cTelja inf stem (ðiditi stem) ;
+			stem + "a"			=> cDæma inf (stem + "i") (ðiditi stem)
+		} ;
+
+		-- cTelja : (_,_,_,_ : Str) -> MForms = \telja,tel,taldi ->
+
+		-- dæma - dæmdi - dæmdur
+		-- duga - dugði - dugaður (does not contain the past participle)
+
+		-- cDæma : (_,_,_ : Str) -> MForms = \dæma,dæmi,dæmdi ->
+
+		-- kalla - kallaði - kallaður 
+		-- dKalla : (_,_ : Str) -> MForms = \kalla,kallaði ->
+
+		indsub2 : (_,_ : Str) -> MForms = \telja,tel -> case <telja,tel> of {
+			<_ + "a",stem + "i">	=> cDæma telja tel (ðiditi stem) ;
+			<_ + "a",_ + "a">	=> cKalla telja (ðiditi telja) ;
+			<_ + "ja",_>		=> cTelja telja tel (ðiditi tel)
+		} ;
+
+		indsub3 : (_,_,_ : Str) -> MForms = \telja,tel,taldi -> case <telja,tel,taldi> of {
+			<_ + "a",_ + "i",_>	=> cDæma telja tel taldi ;
+			<_ + "a",_ + "a",_>	=> cKalla telja taldi ;
+			<_ + "ja",_,_>		=> cTelja telja tel taldi
+		} ;
+
+		impSg : Str -> Str = \inf -> case inf of {
+			front + "ja"	=> (init (ðiditi front)) + "u"
+		} ;
+
+		impPl : Str -> Str = \inf -> case inf of {
+			front + "ja"	=> front + "jið"
+		} ;
+
+		sup : Str -> Str = \inf -> case inf of {
+			front + "e" + c + "ja"	=> front + "a" + c + "ið" ;
+			front + "y" + c + "ja"	=> front + "u" + c + "ið" ;
+			front + "ý" + c + "ja"	=> front + "ú" + c + "ið" ;
+			front + "æ" + c + "ja"	=> front + "á" + c + "ið"
+		} ;
+
+		strongPP : Str -> AForms = \inf -> case inf of {
+			front + "e" + c + "ja"	=> dTalinn (front + "a" + c + "inn") ;
+			front + "y" + c + "ja"	=> dTalinn (front + "u" + c + "inn") ;
+			front + "ý" + c + "ja"	=> dTalinn (front + "ú" + c + "inn") ;
+			front + "æ" + c + "ja"	=> dTalinn (front + "á" + c + "inn") ;
+			stem + "ja"		=> dTalinn (stem + "inn") ;
+			stem + "a"		=> dFalur (stem + "ur") (a2ö stem)
+		} ;
+
+		weakPP : Str -> AForms = \inf -> case inf of {
+			front + "e" + c + "ja"	=> dPositW (init (ðiditi (front + "a" + c))) ;
+			front + "y" + c + "ja"	=> dPositW (init (ðiditi (front + "u" + c))) ;
+			front + "ý" + c + "ja"	=> dPositW (init (ðiditi (front + "ú" + c))) ;
+			front + "æ" + c + "ja"	=> dPositW (init (ðiditi (front + "á" + c))) ;
+			stem + "a"		=> dPositW (init (ðiditi stem)) ;
+			stem + "inn"		=> dPositW stem ;
+			stem + "ur"		=> dPositW stem
+		} ;
+
 
 		--3 Two-place verbs
 

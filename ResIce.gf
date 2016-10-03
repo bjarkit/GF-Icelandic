@@ -85,6 +85,13 @@ resource ResIce = ParamX ** open Prelude in {
 				Gen => g
 			} ;
 
+		persList : (_,_,_ : Str) -> Person => Str =
+			\p1,p2,p3 -> table {
+				P1 => p1 ;
+				P2 => p2 ;
+				P3 => p3
+			} ;
+
 		npcaseToCase : NPCase -> Case = \npc	-> case npc of {
 				NCase c	=> c ;
 				NPPoss _ _ c => c
