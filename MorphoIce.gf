@@ -411,11 +411,14 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		--------------------------
 
 		-- takes in the stem - i.e. Sg.Fem.Nom - except in the case of an u-umlaut
-		dPositW : Str -> AForms = \góð ->
+		dPositW : Str -> AForms = \góð -> dPositWW (góð + "i") (addJ ((a2ö góð) + "u")) ;
+
+		-- takes in the Sg.Mas.Nom and Pl.Mas.Nom
+		dPositWW : (_,_ : Str) -> AForms = \góði,góðu ->
 			let
+				góð = init góði ;
 				góða = addJ (góð + "a") ;
-				góðu = addJ ((a2ö góð) + "u") ;
-				mas = nForms8 (góð + "i") góða góða góða góðu góðu góðu góðu ;
+				mas = nForms8 góði góða góða góða góðu góðu góðu góðu ;
 				fem = nForms8 góða góðu góðu góðu góðu góðu góðu góðu ;
 				neut = nForms8 góða góða góða góða góðu góðu góðu góðu
 			in nForms2AForms mas fem neut ;
@@ -910,34 +913,22 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		-- for past weak/regular verbs
 		ðiditi : Str -> Str = \stem -> case stem of {
 			-- ði
-			_ + #vowel				=> (sti stem) + "ði" ;
-			_ + ("f" | "j") 			=> (sti stem) + "ði" ; 
-			_ + #vowel + ("r" | "rf" | "rg")	=> (sti stem) + "ði" ; 
-			_ + "rr"				=> (sti stem) + "ði" ; -- somethimes - otherwise + "ti", e.g., sperra-sperrti
+			_ + #vowel				=> stem + "ði" ;
+			front + ("f" | "j") 			=> front + "ði" ; 
+			_ + #vowel + ("r" | "rf" | "rg")	=> stem + "ði" ; 
+			_ + "rr"				=> stem + "ði" ; -- somethimes - otherwise + "ti", e.g., sperra-sperrti
 			-- ti
-			_ + #consonant + "t"			=> (sti stem) + "i" ;
-			_ + ("p" | "t" | "k")			=> (sti stem) + "ti" ;
-			front@(_ + "r") + "ð"			=> (sti front) + "ti" ;
+			front@(_ + #consonant) + "t"		=> front + "i" ;
+			_ + ("p" | "t" | "k")			=> stem + "ti" ;
+			front@(_ + "r") + "ð"			=> front + "ti" ;
 			front@(_ + ("l" | "n")) + "d"		=> front + "ti" ; -- usually otherwise + "di", e.g., ýlda-ýldi, senda-sendi
-			_ + ("ll" | "nn")			=> (sti stem) + "ti" ; -- usually otherwise + "di", e.g, brenna-brenndi,fella felldi
+			_ + ("ll" | "nn")			=> stem + "ti" ; -- usually otherwise + "di", e.g, brenna-brenndi,fella felldi
 			-- di
 			front@(_ + #vowel) + "ð"		=> front + "ddi" ;
-			_ + "dd"				=> (sti stem) + "i" ;
-			_ + #vowel + ("n" | "fn" | "gn" | "ng")	=> (sti stem) + "di" ;
-			_ + #vowel + ("m" | "mm" | "lm" | "rm" | "mb")	=> (sti stem) + "di" ;
-			_ + ("lf" | "fl" | "lg" | "gl")		=> (sti stem) + "di" ;
-			_ + #vowel + "l"			=> (sti stem) + "di" ;-- usually...
-			_ + "rn"				=> (sti stem) + "di" -- sometimes..
+			_ + "dd"				=> stem + "i" ;
+			_ 					=> stem + "di"
 		} ;
 
-		-- additional stem alteration for ðiditi
-		-- merge with ðiditi ?
-		sti : Str -> Str = \stem -> case stem of {
-			front + ("j" | "v")		=> front ;
-			front@(_ + #consonant) + ("ð" | "d" | "t") => front ;
-			_	=> stem
-		} ;
-		
 		-- get the past ending (of week verbs) - only used for cTelja patterns
 		getðiditi : Str -> Str = \s -> case s of {
 			_ + "ði"	=> "ði" ;

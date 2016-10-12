@@ -376,20 +376,17 @@ resource ParadigmsIce = open
 				weakSgMascNom weakSgMascAccDatGen weakSgFemNom weakSgFemAccDatGen weakSgNeut weakPl flogið) ;
 		};
 
-		-- vForms2Verb : Str -> MForms -> (x5,x6,x7,x8 : Str) -> (x9,x10 : AForms) -> V = 
-		--	\inf, mforms, impSg,impPl,presPart,sup, pastPartW,pastPartS -> 
-
 		mk1V : Str -> V = \inf -> 
-			lin V (vForms2Verb inf (indsub1 inf) (impSg inf) (impPl inf) (inf + "andi") (sup inf) (strongPP inf) (weakPP inf)) ;
+			lin V (vForms2Verb inf (indsub1 inf) (impSg inf) (impPl inf) (presPart inf) (sup inf) (strongPP inf) (weakPP inf)) ;
 
 		mk2V : (_,_ : Str) -> V = \telja,tel -> 
-			lin V (vForms2Verb telja (indsub2 telja tel) (impSg telja) (impPl telja) (telja + "andi") (sup telja) (strongPP telja) (weakPP telja)) ;
+			lin V (vForms2Verb telja (indsub2 telja tel) (impSg telja) (impPl telja) (presPart telja) (sup telja) (strongPP telja) (weakPP telja)) ;
 
 		mk3V : (_,_,_ : Str) -> V = \telja,tel,taldi ->
-			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (telja + "andi") (sup telja) (strongPP telja) (weakPP telja)) ;
+			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (presPart telja) (sup telja) (strongPP telja) (weakPP telja)) ;
 		
 		mk4V : (_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn ->
-			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (telja + "andi") (sup telja) (strongPP talinn) (weakPP talinn));
+			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (presPart telja) (sup telja) (strongPP talinn) (weakPP talinn)) ;
 
 		indsub1 : Str -> MForms = \inf -> case inf of {
 			stem@(front + "e" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "a" + c)) ; 
@@ -413,21 +410,34 @@ resource ParadigmsIce = open
 		} ;
 
 		impSg : Str -> Str = \inf -> case inf of {
-			front + "ja"	=> (init (ðiditi front)) + "u"
+			front + "ja"	=> (init (ðiditi front)) + "u" ; 
+			front + "a"	=> (init (ðiditi front)) + "u"
 		} ;
 
 		impPl : Str -> Str = \inf -> case inf of {
-			front + "ja"	=> front + "jið"
+			front + "a"	=> front + "ið" ;
+			_ 		=> inf + "ið"
 		} ;
 
 		sup : Str -> Str = \inf -> case inf of {
 			front + "e" + c + "ja"	=> front + "a" + c + "ið" ;
 			front + "y" + c + "ja"	=> front + "u" + c + "ið" ;
 			front + "ý" + c + "ja"	=> front + "ú" + c + "ið" ;
-			front + "æ" + c + "ja"	=> front + "á" + c + "ið"
+			front + "æ" + c + "ja"	=> front + "á" + c + "ið" ;
+			front + "ja"		=> front + "ið" ;
+			front + "a"		=> front + "ið"
+		} ;
+
+		presPart : Str -> Str = \telja -> case telja of {
+			telj + "a"	=> telj + "andi" ;
+			_		=> telja + "andi"
 		} ;
 
 		strongPP : Str -> AForms = \inf -> case inf of {
+			-- first two cases are not in the inf, but the pp in cases
+			-- when it is needed to give it explicitly
+			front + "inn"		=> dTalinn inf ;
+			front + "aður"		=> dFalur inf ((a2ö front) + "uð") ;
 			front + "e" + c + "ja"	=> dTalinn (front + "a" + c + "inn") ;
 			front + "y" + c + "ja"	=> dTalinn (front + "u" + c + "inn") ;
 			front + "ý" + c + "ja"	=> dTalinn (front + "ú" + c + "inn") ;
@@ -437,13 +447,16 @@ resource ParadigmsIce = open
 		} ;
 
 		weakPP : Str -> AForms = \inf -> case inf of {
+			-- first three cases are not in the inf, but the pp in cases
+			-- when it is needed to give it explicitly
+			stem + "inn"		=> dPositW stem ;
+			front + "aður"		=> dPositWW (front + "aði") ((a2ö front) + "uðu") ;
+			stem + "ur"		=> dPositW stem ;
 			front + "e" + c + "ja"	=> dPositW (init (ðiditi (front + "a" + c))) ;
 			front + "y" + c + "ja"	=> dPositW (init (ðiditi (front + "u" + c))) ;
 			front + "ý" + c + "ja"	=> dPositW (init (ðiditi (front + "ú" + c))) ;
 			front + "æ" + c + "ja"	=> dPositW (init (ðiditi (front + "á" + c))) ;
-			stem + "a"		=> dPositW (init (ðiditi stem)) ;
-			stem + "inn"		=> dPositW stem ;
-			stem + "ur"		=> dPositW stem
+			stem + "a"		=> dPositW (init (ðiditi stem))
 		} ;
 
 
