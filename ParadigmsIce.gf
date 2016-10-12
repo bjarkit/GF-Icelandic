@@ -254,13 +254,13 @@ resource ParadigmsIce = open
 		} ;
 
 		mk1A : Str -> A = \s -> lin A (aForms2Adjective 
-			(strongPosit1 s) (weakPosit s []) (compar1 s) (weakSuperl s []) (strongSuperl1 s)) ;
+			(weakPosit s []) (strongPosit1 s) (compar1 s) (weakSuperl s []) (strongSuperl1 s)) ;
 
 		mk2A : (_,_ : Str) -> A = \mas,fem -> lin A (aForms2Adjective
-			(strongPosit2 mas fem) (weakPosit mas fem) (compar2 mas fem) (weakSuperl mas fem) (strongSuperl2 mas fem)) ;
+			(weakPosit mas fem) (strongPosit2 mas fem) (compar2 mas fem) (weakSuperl mas fem) (strongSuperl2 mas fem)) ;
 
 		mk3A : (_,_,_ : Str) -> A = \mas,fem,com -> lin A (aForms2Adjective
-			(strongPosit2 mas fem) (weakPosit mas fem) (compar1 com) (weakSuperl com []) (strongSuperl1 com)) ;
+			(weakPosit mas fem) (strongPosit2 mas fem) (compar1 com) (weakSuperl com []) (strongSuperl1 com)) ;
 
 		strongPosit1 : Str -> AForms = \s -> case s of {
 			#consonant* + "ei" + ("ll" | "nn")	=> dSeinn s ;
