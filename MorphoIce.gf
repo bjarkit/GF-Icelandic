@@ -234,6 +234,21 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				fótur fót (fæt + "i") (fót + "ar")
 				fætur fætur (fót + "um") (fót + "a") ;
 
+		dMaður : (_,_,_ : Str) -> NForms = \maður,manns,menn ->
+			let
+				mann = init manns
+			in nForms8
+				maður mann (mann + "i") (mann + "s")
+				menn menn ((a2ö mann) + "um") (mann + "a") ;
+
+		dFaðir : (_,_,_ : Str) -> NForms = \faðir,föður,feður ->
+			let
+				föð = init (init föður) ;
+				feð = init (init feður)
+			in nForms8
+				faðir föður föður föður
+				feður feður (feð + "rum") (feð + "ra") ;
+
 		dStóll : Str -> NForms = \stóll ->
 			let
 				stól = init stóll
@@ -423,12 +438,19 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				neut = nForms8 góða góða góða góða góðu góðu góðu góðu
 			in nForms2AForms mas fem neut ;
 
+		--  used in dFalur
 		-- -d+t = t, e.g., vondur - vond - vont (not vondt)
 		-- and similarily -ð+t = t, góður - góð - gott (not goðt) - also the ó goes to o for some reason here...
+		ðtdt : Str -> Str = \vondur -> case vondur of {
+			front + "ó" + ("dur" | "ður") => front + "o" + "t" ;
+			front + ("dur" | "ður")	=> front + "t" ;
+			front + "ur"		=> front
+		} ;
 
 		dFalur : (_,_ : Str) -> AForms = \falur,föl ->
 			let
 				fal = init (init falur) ;
+				falt = ðtdt falur ;
 				mas = nForms8
 					falur (fal + "an") (föl + "um") (fal + "s")
 					(fal + "ir") (fal + "a") (föl + "um") (fal + "ra") ;
@@ -436,7 +458,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 					föl (fal + "a") (föl + "ri") (fal + "rar")
 					(fal + "ar") (fal + "ar") (föl + "um") (fal + "ra") ;
 				neut = nForms8
-					(fal + "t") (fal + "t") (föl + "u") (fal + "s")
+					(falt + "t") (falt + "t") (föl + "u") (fal + "s")
 					föl föl (föl + "um") (fal + "ra") ;
 			in nForms2AForms mas fem neut ;
 
@@ -752,6 +774,16 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		-- the principal part for strong patterns is :
 		-- infinitive - first person singular past tense indicative mood - first person plural past tense indicative mood - past participle
 		-- the present participle is not used in these patterns..
+
+
+--		-- bíta - beit - bitum - bitið
+--		cBíta : (_,_,_ : Str) -> NForms = \bíta,beit,bitum ->
+--			let
+--				presInd
+--				pastInd
+--				presSub
+--				pastSub
+--			in tForms2MForms presInd pastInd presSub pastSub ;
 
 
 		----------------------------

@@ -15,9 +15,11 @@ concrete PhraseIce of Phrase = CatIce ** open Prelude, ResIce in {
 		-- Pol -> Imp -> Utt
 		UttImpPol pol imp = {s = imp.s ! pol.p ! Sg} ;
 
-		--    UttIP     : IP   -> Utt ;               -- who
+		-- IP -> Utt
+    		UttIP ip = {s = ip.s ! Masc ! Nom} ;
 
-		--    UttQS     : QS  -> Utt ;                -- is it good
+		-- QS  -> Utt
+		UttQS qs = {s = qs.s ! QDir} ;
 
 		-- IAdv -> Utt
 		UttIAdv adv = adv ;
@@ -37,7 +39,7 @@ concrete PhraseIce of Phrase = CatIce ** open Prelude, ResIce in {
 		--    UttCard   : Card -> Utt ;               -- five
 
 		-- AP -> Utt
-		UttAP ap = {s = ap.s ! Sg ! Masc ! Strong ! Nom} ;
+		UttAP ap = {s = ap.s ! Sg ! Neutr ! Strong ! Nom} ;
 
 		-- Interj -> Utt
 		UttInterj i = i ;

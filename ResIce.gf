@@ -104,6 +104,9 @@ resource ResIce = ParamX ** open Prelude in {
 			g : Gender
 		} ;
 
+		-- I think another field is needed, when it is just "hann", "það", or "hún"
+		-- because "ég ber hann ekki" but not "ég ber ekki hann"
+		-- and "ég las hana ekki but not "ég las ekki hana"
 		NP : Type = {
 			s : NPCase => Str ;
 			a : Agr
@@ -319,7 +322,8 @@ resource ResIce = ParamX ** open Prelude in {
 					verb = vp.s ! ten ! ant ! pol ! agr ;
 					obj = vp.obj ! agr
 				in case order of {
-					_	=> subj ++ verb.fin ++ verb.a1 ++ verb.inf ++ obj
+					ODir		=> subj ++ verb.fin ++ verb.a1 ++ verb.inf ++ obj ;
+					OQuestion	=> verb.fin ++ subj ++ verb.a1 ++ verb.inf ++ obj
 				} ;
 		} ;
 

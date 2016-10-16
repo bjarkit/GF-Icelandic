@@ -169,6 +169,8 @@ resource ParadigmsIce = open
 		} ;
 
 		mascNForms3 : (_,_,_ : Str) -> NForms =\nom,gen,pl -> case <nom,gen,pl> of {
+			<"faðir" | "bróðir",_,_>		=> dFaðir nom gen pl ;
+			<"maður",_,_>				=> dMaður nom gen pl ;
 			<_ + "ur", _ + "ar", _ + "ar">		=> dHöfundur nom pl ;
 			<_ + "ur", _ + "ar", _ + "ir">		=> dSöfnuður nom gen pl
 		} ;
@@ -229,6 +231,10 @@ resource ParadigmsIce = open
 				\name,g	-> regPN name g ;	
 
 		} ;
+
+		mkN2 : N -> Preposition -> N2 = \n,prep -> lin N2 (n ** {c2 = prep}) ;
+
+		mkN3 : N -> (_,_ : Preposition) -> N3 = \n,c2,c3 -> lin N3 (n ** {c2 = c2; c3 = c3}) ;
 
 		--2 Adjectives
 
@@ -339,6 +345,9 @@ resource ParadigmsIce = open
 			<_,_ + ("r" | "s" | (#consonant + "n"))>	=> dFalastur (fem + "astur") (fem + "ust")
 		} ;
 
+
+  		mkA2 : A -> Prep -> A2 = \adj,prep -> adj ** {c2 = prep} ;
+
 		--2 Verbs
 
 		-- Verbs are constructed by the function $mkV$, which takes a varying
@@ -377,16 +386,16 @@ resource ParadigmsIce = open
 		};
 
 		mk1V : Str -> V = \inf -> 
-			lin V (vForms2Verb inf (indsub1 inf) (impSg inf) (impPl inf) (presPart inf) (sup inf) (strongPP inf) (weakPP inf)) ;
+			lin V (vForms2Verb inf (indsub1 inf) (impSg inf) (impPl inf) (presPart inf) (sup inf) (weakPP inf) (strongPP inf)) ;
 
 		mk2V : (_,_ : Str) -> V = \telja,tel -> 
-			lin V (vForms2Verb telja (indsub2 telja tel) (impSg telja) (impPl telja) (presPart telja) (sup telja) (strongPP telja) (weakPP telja)) ;
+			lin V (vForms2Verb telja (indsub2 telja tel) (impSg telja) (impPl telja) (presPart telja) (sup telja) (weakPP telja) (strongPP telja)) ;
 
 		mk3V : (_,_,_ : Str) -> V = \telja,tel,taldi ->
-			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (presPart telja) (sup telja) (strongPP telja) (weakPP telja)) ;
+			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg taldi) (impPl telja) (presPart telja) (sup telja) (weakPP telja) (strongPP telja));
 		
 		mk4V : (_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn ->
-			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg telja) (impPl telja) (presPart telja) (sup telja) (strongPP talinn) (weakPP talinn)) ;
+			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg taldi) (impPl telja) (presPart telja) (sup telja) (weakPP talinn) (strongPP talinn)) ;
 
 		indsub1 : Str -> MForms = \inf -> case inf of {
 			stem@(front + "e" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "a" + c)) ; 
@@ -410,6 +419,9 @@ resource ParadigmsIce = open
 		} ;
 
 		impSg : Str -> Str = \inf -> case inf of {
+			-- first already given plural form ending
+			front + "i"	=> front + "u" ;
+
 			front + "ja"	=> (init (ðiditi front)) + "u" ; 
 			front + "a"	=> (init (ðiditi front)) + "u"
 		} ;
@@ -465,22 +477,39 @@ resource ParadigmsIce = open
 		-- Two-place verbs need a preposition, except the special case with direct object.
 		-- (transitive verbs). Notice that a particle comes from the $V$.
 
+		prepV2 : V -> Preposition -> V2 = \v,prep -> v  ** {c2 = prep} ;
+		
+		accPrep : Preposition = {s = []; c = Acc} ;
+
 		mkV2 = overload {
 
-			-- Theoretical worst case.
-			mkV2 : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x59 : Str) -> Case -> V =
-				\fljúga,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
-				fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
-				fljúgðu,fljúgið,fljúgandi,floginn,sgMascAcc,sgMascDat,sgMascGen,sgFemNom,sgFemAcc,sgFemDat,sgFemGen,
-				sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,plMascNom,plMascAcc,plMascDat,plMascGen,
-				plFemNom,plFemAcc,plFemDat,plFemGen,plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
-				weakSgMascNom,weakSgMascAccDatGen,weakSgFemNom,weakSgFemAccDatGen,weakSgNeut,weakPl,flogið,c -> 
-				lin V (mkVerb fljúga flýg flýgur2 flýgur3 fljúgum fljúgið fljúga flaug1 flaugst flaug2 flugum fluguð flugu 
-				fljúgi1 fljúgir fljúgi3 fljúgumS fljúgiðS fljúgi flygi1 flygir flygi2 flygjum flygjuð flygju 
-				fljúgðu fljúgið fljúgandi floginn sgMascAcc sgMascDat sgMascGen sgFemNom sgFemAcc sgFemDat sgFemGen 
-				sgNeutNom sgNeutAcc sgNeutDat sgNeutGen plMascNom plMascAcc plMascDat plMascGen 
-				plFemNom plFemAcc plFemDat plFemGen plNeutNom plNeutAcc plNeutDat plNeutGen 
-				weakSgMascNom weakSgMascAccDatGen weakSgFemNom weakSgFemAccDatGen weakSgNeut weakPl flogið) ** {c = c} ;
+			-- Two-place regular verbs with direct object (accusative, transitive verbs).
+
+			-- Given the infinitive
+			mkV2 : Str -> V2 = \telja -> prepV2 (mk1V telja) accPrep ;
+
+			-- Given also the first person singular present tense indicative mood
+			mkV2 : (_,_ : Str) -> V2 = \telja,tel -> prepV2 (mk2V telja tel) accPrep ;
+
+			-- Given also the first persons singular past tense indicative mood
+			mkV2 : (_,_,_ : Str) -> V2 = \telja,tel,taldi -> prepV2 (mk3V telja tel taldi) accPrep  ;
+
+			-- Given also the past participle (strong declension) in the singular masculine nominative.
+			mkV2 : (_,_,_,_ : Str) -> V2 = \telja,tel,taldi,talinn -> prepV2 (mk4V telja tel taldi talinn) accPrep ;
+
+			-- Two-place with a preposition or object in a given case
+
+			-- Given the infinitive
+			mkV2 : Str -> Preposition -> V2 = \telja,prep -> prepV2 (mk1V telja) prep ;
+
+			-- Given also the first person singular present tense indicative mood
+			mkV2 : (_,_ : Str) -> Preposition -> V2 = \telja,tel,prep -> prepV2 (mk2V telja tel) prep ;
+
+			-- Given also the first persons singular past tense indicative mood
+			mkV2 : (_,_,_ : Str) -> Preposition -> V2 = \telja,tel,taldi,prep -> prepV2 (mk3V telja tel taldi) prep  ;
+
+			-- Given also the past participle (strong declension) in the singular masculine nominative.
+			mkV2 : (_,_,_,_ : Str) -> Preposition -> V2 = \telja,tel,taldi,talinn,prep -> prepV2 (mk4V telja tel taldi talinn) prep ;
 		};
 
 		--2 Definitions of paradigms

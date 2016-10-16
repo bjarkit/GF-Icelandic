@@ -16,16 +16,26 @@ concrete IdiomIce of Idiom = CatIce ** open Prelude, ResIce in {
 			mkClause "það" (vp ** {obj = \\_ => ad.s ++ "sem" ++ s.s}) {g = Neutr ; n = Sg ; p = P3} ;
 
 		-- NP -> Cl
-		ExistNP np =  let vp = (predV verbBe) in
+		ExistNP np = let vp = (predV verbBe) in
 			mkClause "til" (vp ** {obj = \\_ => np.s ! NCase Nom}) np.a ;
 
---    ExistIP   : IP -> QCl ;       -- which houses are there
+		-- IP -> QCl
+		-- this is hardcoded in the masculine atm
+		ExistIP ip = let 
+				vp = (predV verbBe) ;
+				cl = mkClause (ip.s ! Masc ! Nom) vp {g = Masc ; n = ip.n ; p = P3}
+			in {s = \\ten,ant,pol,_ => cl.s ! ten ! ant ! pol ! ODir} ;
 
 		-- NP -> Adv -> Cl
 		ExistNPAdv np adv = let vp = (predV verbBe) in
 			mkClause "til" (vp ** {obj = \\_ => np.s ! NCase Nom ++ adv.s}) np.a ;
 
---    ExistIPAdv : IP -> Adv -> QCl ;   -- which houses are there in Paris
+		-- IP -> Adv -> QCl
+		-- this is hardcoded in the masculine atm
+		ExistIPAdv ip adv = let
+				vp = (predV verbBe) ;
+				cl = mkClause (ip.s ! Masc ! Nom) vp {g = Masc ; n = ip.n ; p = P3}
+			in {s = \\ten,ant,pol,_ => cl.s ! ten ! ant ! pol ! ODir ++ adv.s} ;
 
 		-- VP -> VP
 		-- For more complex cases than just "be sleeping" I think 

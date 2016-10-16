@@ -34,14 +34,16 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		QCl = {s : Tense => Anteriority => Polarity => QForm => Str} ; -- is Agr needed?
 
-		-- IP depend on gender, or should it be fixed and other things depending on them (i don think so)?
-		IP = {s : Str} ;
+		IP = {
+			s : Gender => Case => Str ; 
+			n : Number
+		} ;
 
-		IComp = {s : Str} ;
+		IComp = {s : Number => Gender => Case => Str} ;
 
-		IDet = {s : Str} ;	
+		IDet = {s : Gender => Case => Str ; n : Number} ;
 
-		IQuant = {s : Str} ;
+		IQuant = {s : Number => Gender => Case => Str} ;
 
 
 		--2 Relative clauses and pronouns
@@ -142,7 +144,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 		A2 = ResIce.A ** {c2 : Preposition} ;
 
 		N = ResIce.N ;
-		N2 = ResIce.N ** {c2 : Str} ;
-		N3 = ResIce.N ** {c2,c3 : Str} ;
+		N2 = ResIce.N ** {c2 : Preposition} ;
+		N3 = ResIce.N ** {c2,c3 : Preposition} ;
 		PN = {s : Case => Str ; g : Gender} ;
 }

@@ -143,7 +143,9 @@ concrete StructuralIce of Structural = CatIce **
 		if_Subj = ss "ef" ;
 		please_Voc = ss "vinsamlegast" ;
 		when_Subj = ss "þegar" ;
-		-- where_IAdv = ss "þar" ; þar, hvar, hvert?
+
+		where_IAdv = ss "hvar" ;
+
 		why_IAdv = ss "af hverju" ;
 		yes_Phr = ss "já" ;
 		i_Pron  = mkPronPers "ég" "mig" "mér" "mín" "minn" "minn" "mínum" "míns" "mín" "mína" "minni" "minnar" "mitt" "mitt" "mínu" "míns" "mínir" "mína" "mínum" "minna" "mínar" "mínar" "mín" "mín" Masc Sg P1 ;
@@ -153,18 +155,88 @@ concrete StructuralIce of Structural = CatIce **
 		-- of the sentence, otherwise the genitive of the personal pronoun 
 		-- (hans) is used.
 		-- dont be afraid to be awkward :)
-		--  he_Pron = mkPronPers "hann" "hann" "honum" "hans" Masc Sg P3 ;
-		--  she_Pron = mkPronPers "hún" "hana" "henni" "hennar" Fem Sg P3 ;
-		--  it_Pron = mkPronPers "það" "það" "því" "þess" Neutr Sg P3 ;
-		--  they_Pron = mkPronPers depends on gender,i.e. has 3x4 forms for personal pronouns and is complicated as a possessive
-		--  we_Pron = mkPronPers "við" "okkur" "okkur" "okkar" the possesive equivalent, vor, is mostly used in elevated style.
-		--  youPl_Pron = mkPronPers "þið" "ykkur" "ykkur" "ykkar" the possesive equivalent is complicated 
-		--  youPol_Pron = mkPron "you" "you" "your" "yours" singular P2 human ;
 
---  whatPl_IP = mkIP "what" "what" "what's" plural ;
---  whatSg_IP = mkIP "what" "what" "what's" singular ;
---  whoPl_IP = mkIP "who" "whom" "whose" plural ;
---  whoSg_IP = mkIP "who" "whom" "whose" singular ;
+		he_Pron = mkPronPers "hann" "hann" "honum" "hans"
+				"sinn" "sinn" "sínum" "síns"
+				"sín" "sína" "sinni" "sinnar"
+				"sitt" "sitt" "sínu" "síns"
+				"sínir" "sína" "sínum" "sinna"
+				"sínar" "sínar" "sín" "sín" Masc Sg P3 ;
+
+		she_Pron = mkPronPers "hún" "hana" "henni" "hennar" 
+				"sinn" "sinn" "sínum" "síns"
+				"sín" "sína" "sinni" "sinnar"
+				"sitt" "sitt" "sínu" "síns"
+				"sínir" "sína" "sínum" "sinna"
+				"sínar" "sínar" "sín" "sín" Fem Sg P3 ;
+
+		it_Pron = mkPronPers "það" "það" "því" "þess"
+				"sinn" "sinn" "sínum" "síns"
+				"sín" "sína" "sinni" "sinnar"
+				"sitt" "sitt" "sínu" "síns"
+				"sínir" "sína" "sínum" "sinna"
+				"sínar" "sínar" "sín" "sín" Neutr Sg P3 ;
+
+		-- "They" depends on gender,i.e. has 3x4 forms for personal pronouns
+		-- the neutr is given here, masculine and feminine are given in Extra
+		they_Pron = mkPronPers "þeir" "þá" "þeim" "þeirra"
+				"sinn" "sinn" "sínum" "síns"
+				"sín" "sína" "sinni" "sinnar"
+				"sitt" "sitt" "sínu" "síns"
+				"sínir" "sína" "sínum" "sinna"
+				"sínar" "sínar" "sín" "sín" Neutr Pl P3 ;
+
+		-- the possesive equivalent, vor, is mostly used in elevated style.
+		we_Pron = mkPronPers "við" "okkur" "okkur" "okkar" 
+				"vor" "vor" "vorum" "vors"
+				"vor" "vora" "vorri" "vorrar"
+				"vort" "vort" "voru" "vors"
+				"vorir" "vora" "vorum" "vorra"
+				"vorar" "vorar" "vor" "vor" Neutr Pl P1 ;
+		
+		-- this is a bit awkward - there is really no possessive term for this
+		-- the genative is always used...
+		youPl_Pron = mkPronPers "þið" "ykkur" "ykkur" "ykkar"
+				"ykkar" "ykkar" "ykkar" "ykkar"
+				"ykkar" "ykkar" "ykkar" "ykkar"
+				"ykkar" "ykkar" "ykkar" "ykkar"
+				"ykkar" "ykkar" "ykkar" "ykkar"
+				"ykkar" "ykkar" "ykkar" "ykkar" Neutr Pl P2 ;
+
+		youPol_Pron = mkPronPers "þú" "þig" "þér" "þín" "þinn" "þinn" "þínum" "þíns" "þín" "þína" "þinni" "þinnar" "þitt" "þitt" "þínu" "þíns" "þínir" "þína" "þínum" "þinna" "þínar" "þínar" "þín" "þín" Masc Sg P2 ;
+
+		-- Strictly speaking all these interrigative pronouns correspond to one interrigative pronoun
+		-- in Icelandic, "hver". But "hver", like other pronouns, exists in 3 genders and two numbers
+		-- hence, hver (masculine) corresponds to who (in a masculine context, also for feminie, but
+		-- only in the nominative), and hvert/hvað corresponds to what.
+		whatSg_IP = {
+			s = \\_ => caseList "hvað" "hvað" "hverju" "hvers" ;
+			n = Pl
+		} ;
+
+		whatPl_IP = {
+			s = \\_ => caseList "hver" "hver" "hverjum" "hverra" ;
+			n = Sg
+		} ;
+				
+		--  whoPl_IP = mkIP "who" "whom" "whose" plural ;
+		whoPl_IP = {
+			s = table {
+				Masc	=> caseList "hverjir" "hverja" "hverjum" "hverra" ;
+				Fem	=> caseList "hverjar" "hverjar" "hverjum" "hverra" ;
+				Neutr	=> caseList "hver" "hver" "hverjum" "hverra"
+			} ;
+			n = Pl
+		} ;
+
+		whoSg_IP = {
+			s = table {
+				Masc	=> caseList "hver" "hvern" "hverjum" "hvers" ;
+				Fem	=> caseList "hver" "hverja" "hverri" "hverjar" ;
+				Neutr	=> caseList "hvað" "hvað" "hverju" "hvers"
+			} ;
+			n = Sg
+		} ;
 
 		-- Note this is basically the superlative of the adjective margur (e. many)
 		-- a paradigm or make function will be made for Predet's.
@@ -198,12 +270,17 @@ concrete StructuralIce of Structural = CatIce **
 		} ;
 					
 		-- not sure atm how this will translate : aðeins is an adverb that does not inflect and eini is a weak form of the adjective einn (e. one)
-		-- only_Predet =
+	 	only_Predet = { s = \\_,_,_ => "aðeins"} ;
 		-- Same here : ekki is a sentence adverb that does not inflect
-		--not_Predet =
+		not_Predet = { s = \\_,_,_ => "ekki"} ;
 
 		less_CAdv = {s = "minna" ; p = "en"} ;
 		more_CAdv = {s = "meira" ; p = "en"} ;
 		as_CAdv = {s = "eins" ; p = "og"} ;
-
+		on_Prep = mkPrep "á" dative ;
+		with_Prep = mkPrep "með" dative ;
+		-- when using in the context of two objects "hvor" is used.
+		when_IAdv = ss "hvenær" ;
+		which_IQuant = {s = \\_,_,_ => "hvaða"} ;
+		under_Prep = mkPrep "undir" dative ;
 }

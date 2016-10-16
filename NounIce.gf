@@ -131,6 +131,10 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 			a = gennumperToAgr cn.g Sg P3
 		} ;
 
+		-- When making possesive noun magic it should be
+		-- the girls book (the girl owns the book) = bók stelpunnar/book girl-the
+		-- see more Höskuldur Þráinsson's The Icelandic Syntax p 91-92
+		-- not sure if this comment should be here or some place else, at least it is written down.
 		-- Pron -> Quant
 		PossPron p = {
 			s = \\n,g,c => p.s ! NPPoss n g c ;
@@ -149,13 +153,13 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- N2 -> NP -> CN
 		ComplN2 n2 np = {
-			s = \\n,s,_,c => n2.s ! n ! s ! c ++ np.s ! NCase Acc ;
+			s = \\n,s,_,c => n2.s ! n ! s ! c ++ n2.c2.s ++ np.s ! NCase n2.c2.c ;
 			g = n2.g
 		} ;
 
 		-- N3 -> NP -> N2
 		ComplN3 n3 np = {
-			s = \\n,s,c => n3.s ! n ! s ! c ++ n3.c2 ++ np.s ! NCase Dat ;
+			s = \\n,s,c => n3.s ! n ! s ! c ++ n3.c2.s ++ np.s ! NCase n3.c2.c ;
 			g = n3.g ;
 			c2 = n3.c3
 	
@@ -179,8 +183,8 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- When more than one adjective modifies the noun, their respective ordering 
 		-- is not entirely free,...
 		-- quality >	Size >	Shape	 >	colour >	origin
-		-- fallegur	hár	kringlóttur	dökkur	bandarískur
-		-- beautiful	high	round		dark	American
+		-- fallegur	hár	kringlóttur	dökkur		bandarískur
+		-- beautiful	high	round		dark		American
 
 		-- AP -> CN -> CN 
 		AdjCN ap cn = {

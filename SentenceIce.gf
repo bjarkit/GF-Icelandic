@@ -3,6 +3,13 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 	flags optimize=all_subs ;
 
 	lin
+
+
+		-- FIXME : ég skrifaði það niður
+		--	   I wrote it down
+		-- not     ég skrifaði niður það
+		--         I wrote down it
+
 		--NP -> VP -> Cl
 		PredVP np vp = mkClause (np.s ! NCase Nom) vp np.a ;
 
@@ -27,8 +34,8 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 		-- S -> SC
 		EmbedS ss = {s = "að" ++ ss.s} ;
 
-		--    EmbedQS   : QS -> SC ;               -- who goes
-		-- TODO
+		-- QS -> SC
+		EmbedQS qs = {s = qs.s ! QDir} ;
 
 		-- VP -> SC
 		EmbedVP vp = {s = infVP vp {g = Neutr;  n = Sg ; p = P3}} ;
@@ -46,14 +53,17 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 			c = NCase Nom
 		} ;
 
-		--    UseQCl   : Temp -> Pol -> QCl -> QS ;  -- who had not slept
-		-- TODO
+		-- Temp -> Pol -> QCl -> QS
+		UseQCl t p qcl = {
+			s = \\qf => t.s ++ p.s ++ qcl.s ! t.t ! t.a ! p.p ! qf
+		} ;
+
 		--    UseSlash : Temp -> Pol -> ClSlash -> SSlash ; -- (that) she had not seen
 		-- TODO
 
 		-- Adv -> S -> S
 		AdvS adv s = {s = adv.s ++ s.s} ;
-	
+
 		-- Adv -> S -> S
 		ExtAdvS adv s = {s = adv.s ++ "," ++ s.s} ;
 

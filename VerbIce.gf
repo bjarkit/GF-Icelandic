@@ -25,13 +25,13 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 				} ;
 
 		-- VQ  -> QS -> VP
---		ComplVQ vq qs =
---			let
---				vvq = predV vq
---			in
---				vvq ** {
---					obj = \\a => vvq.obj ! a ++ qs.s
---				} ;
+		ComplVQ vq qs =
+			let
+				vvq = predV vq
+			in
+				vvq ** {
+					obj = \\a => vvq.obj ! a ++ qs.s ! QDir
+				} ;
 
 		-- VA  -> AP -> VP
 		ComplVA va ap =
@@ -76,13 +76,13 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			c2 = v2s.c2
 		} ;
 
-		--    SlashV2Q : V2Q -> QS -> VPSlash ;  -- ask (him) who came
+		-- I wonder if the preposition will ever be in its wrong place like this?
 		-- V2Q -> QS -> VPSlash
---		SlashV2Q v2q qs = predV v2q ** {
---			n1 = \\_ => [] ;
---			n2 = \\_ => qs.s ;
---			c2 = v2q.c2
---		} ;
+		SlashV2Q v2q qs = predV v2q ** {
+			n1 = \\_ => [] ;
+			n2 = \\_ => qs.s ! QDir ;
+			c2 = v2q.c2
+		} ;
 
 		-- V2A -> AP -> VPSlash
 		SlashV2A v2a ap = predV v2a ** {
