@@ -9,23 +9,26 @@ concrete ConjunctionIce of Conjunction =
 		ConjRS conj ss = conjunctDistrTable Agr conj ss ** {c = ss.c} ;
 
 		-- Conj -> ListCN -> CN
-		ConjCN co ns = conjunctDistrTable4 Number Species Declension Case co ns ** {g = Neutr} ;
+		ConjCN co ns = conjunctDistrTable4 Number Species Declension Case co ns ** {comp = \\_ => [] ; g = Neutr} ;
 
 		-- Conj -> ListAP -> AP
 		ConjAP co as = conjunctDistrTable4 Number Gender Declension Case co as ;
 
+		-- In case of pronouns, it is possible(obligatory?) to form :
+		-- [] las hana,hann og það ekki
 		-- Conj -> ListNP -> NP
 		ConjNP co ns = conjunctDistrTable NPCase co ns ** {
-			a = {g = ns.a.g ; n = conjNumber co.n ns.a.n ; p = ns.a.p}
+			a = {g = ns.a.g ; n = conjNumber co.n ns.a.n ; p = ns.a.p} ;
+			isPron = False
 		} ;
 
 		-- Conj -> ListDAP -> Det
 		ConjDet co ds = let cds = (conjunctDistrTable2 Gender Case co ds).s in {
 			s = cds ;
+			pron = \\_,_ => [] ;
 			n = ds.n ;
 			b = ds.b ;
 			d = ds.d ;
-			isPre = True
 		} ;
 
 		-- Conj -> ListAdv -> Adv

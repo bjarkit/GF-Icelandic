@@ -31,12 +31,15 @@ concrete PhraseIce of Phrase = CatIce ** open Prelude, ResIce in {
 		UttAdv adv = adv ;
 
 		-- VP -> Utt
-		UttVP vp = {s = "að" ++ vp.verb ! VInf} ;
+		UttVP vp = 
+			let verb = vp.s ! VPInf ! Pos ! {g = Masc ; n = Sg ; p = P3} 
+			in {s = "að" ++ verb.inf} ;
 
 		-- CN -> Utt
 		UttCN cn = {s = cn.s ! Sg ! Free ! Strong ! Nom} ;
 
-		--    UttCard   : Card -> Utt ;               -- five
+		-- Card -> Utt ;               -- five
+		UttCard card = {s = card.s ! Masc ! Nom };
 
 		-- AP -> Utt
 		UttAP ap = {s = ap.s ! Sg ! Neutr ! Strong ! Nom} ;

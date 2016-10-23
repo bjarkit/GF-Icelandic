@@ -4,12 +4,6 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 
 	lin
 
-
-		-- FIXME : ég skrifaði það niður
-		--	   I wrote it down
-		-- not     ég skrifaði niður það
-		--         I wrote down it
-
 		--NP -> VP -> Cl
 		PredVP np vp = mkClause (np.s ! NCase Nom) vp np.a ;
 
@@ -17,17 +11,50 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 	 	PredSCVP sc vp = mkClause sc.s vp {g = Neutr;  n = Sg ; p = P3} ;
 
 		--2 Clauses missing object noun phrases
-		-- TODO
+
+		-- NP -> VPSlash -> ClSlash
+		SlashVP np vps = mkClause (np.s ! NCase Nom) vps np.a ** {
+			c2 = vps.c2 ;
+			n3 = \\a => vps.nn1 ! a ++ vps.nn2 ! a
+		} ;
+
+		-- ClSlash -> Adv -> ClSlash
+		AdvSlash cls adv = {
+			s =\\ten,ant,pol,ord => cls.s ! ten ! ant ! pol ! ord ++ adv.s ;
+			c2 = cls.c2 ;
+			n3 = cls.n3
+		} ;
+
+		-- Cl -> Prep -> ClSlash
+		SlashPrep cl prep = cl ** {
+			c2 = prep ;
+			n3 =\\_ => []
+		} ;
+
+		SlashVS np vs ssl = {
+			s = \\ten,ant,pol,ord => let
+				cl = mkClause (np.s ! NCase Nom) (predV vs) np.a
+			in
+				cl.s ! ten ! ant ! pol ! ord ++ ssl.s ! ord ;
+			c2 = ssl.c2 ;
+			n3 = ssl.n3
+		} ;
 
 		--2 Imperatives
 
 		-- VP -> Imp
-		ImpVP vp = {s = \\pol,num => case pol of {
-			Pos	=> vp.verb ! VImp Active num ++ vp.obj ! gennumperToAgr Masc num P2 ;
-			Neg	=> vp.verb ! VImp Active num  ++ "ekki" ++ vp.obj ! gennumperToAgr Masc num P2
+		ImpVP vp = {s =\\pol,num =>
+			let
+				agr = gennumperToAgr Masc num P2 ;
+				pron = vp.n1 ! agr ;
+				obj = vp.n2 ! agr ;
+				adv = vp.a2 ;
+				verb = vp.s ! VPImp ! pol ! agr
+			in case vp.en1p1 of {
+				False	=> verb.fin ++ verb.a1.p1 ++ verb.inf ++ obj ++ pron.p2 ++ verb.a1.p2 ++ adv ;
+				True	=> verb.fin ++ verb.a1.p1 ++ verb.inf ++ pron.p1 ++ pron.p2 ++ verb.a1.p2 ++ obj ++ adv
 			} ;
 		} ;
-
 
 		--2 Embedded sentences
 
@@ -58,8 +85,13 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 			s = \\qf => t.s ++ p.s ++ qcl.s ! t.t ! t.a ! p.p ! qf
 		} ;
 
-		--    UseSlash : Temp -> Pol -> ClSlash -> SSlash ; -- (that) she had not seen
-		-- TODO
+		-- Temp -> Pol -> ClSlash -> SSlash
+		UseSlash t p cls = {
+			s = \\o => cls.s ! t.t ! t.a ! p.p ! o ;
+			c2 = cls.c2 ;
+			n3 = cls.n3
+		} ;
+		
 
 		-- Adv -> S -> S
 		AdvS adv s = {s = adv.s ++ s.s} ;
@@ -74,9 +106,7 @@ concrete SentenceIce of Sentence = CatIce ** open Prelude, ResIce in {
 		-- TODO : Add Agr to S and Cl, otherwise RS will always 
 		-- have the same gender, person and number.
 		-- This is possible only a problem when numbers differ or is this
+		-- or just add another function in ExtraIce..
 		-- a problem at all?
 		RelS s rs = { s = s.s ++ rs.s ! gennumperToAgr Neutr Sg P3 } ;
-
-		-- S -> Subj -> S -> S
-		ModSubjS sx subj sy = {s = sx.s ++ "," ++ subj.s ++ sy.s} ;
 }

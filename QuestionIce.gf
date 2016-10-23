@@ -20,8 +20,11 @@ concrete QuestionIce of Question = CatIce ** open ResIce, Prelude in {
 
 			in {s = \\ten,ant,pol,_ => cl.s ! ten ! ant ! pol ! ODir} ;
 
-		--QuestSlash  : IP -> ClSlash -> QCl ; -- whom does John love
-		--missing ClSlash
+		-- need other extra functions to capture some agreement functionalities (like in QuestVP)
+		-- IP -> ClSlash -> QCl ; -- whom does John love
+		QuestSlash ip cls = {
+			s = \\ten,ant,pol,_ => ip.s ! Masc ! Nom ++ cls.s ! ten ! ant ! pol ! ODir ++ cls.c2.s ++ cls.n3 ! gennumperToAgr Neutr Sg P3 
+		} ;
 
 		-- IComp -> NP -> QCl
 		QuestIComp icomp np = 
@@ -89,17 +92,19 @@ concrete QuestionIce of Question = CatIce ** open ResIce, Prelude in {
 		-- VPSlash -> IP -> QVP
 		ComplSlashIP vps ip = {
 			s = vps.s ;
-			obj = \\a => vps.n1 ! a ++ ip.s ! a.g ! vps.c2.c ++ vps.n2 ! a ;
+			n1 = vps.n1 ;
+			n2 = \\a => vps.nn1 ! a ++ ip.s ! a.g ! vps.c2.c ++ vps.nn2 ! a ;
 			verb = vps.verb ;
-			pp = vps.pp ;
-			a2 = vps.a2
+			p = vps.p ;
+			a2 = vps.a2 ;
+			en1p1 = vps.en1p1
 		} ;
 
 		-- VP -> IAdv -> QVP
-		AdvQVP vp iadv = vp ** {obj = \\a => vp.obj ! a ++ iadv.s} ;
+		AdvQVP vp iadv = vp ** {n2 = \\a => vp.n2 ! a ++ iadv.s} ;
 
 		-- QVP -> IAdv -> QVP
-		AddAdvQVP qvp iadv = qvp ** {obj = \\a => qvp.obj ! a ++ iadv.s} ;
+		AddAdvQVP qvp iadv = qvp ** {n2 = \\a => qvp.n2 ! a ++ iadv.s} ;
 
 		-- IP -> QVP -> QCl
 		QuestQVP ip vp = 

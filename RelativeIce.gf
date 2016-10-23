@@ -15,7 +15,10 @@ concrete RelativeIce of Relative = CatIce ** open ResIce in {
 					cl.s ! t ! ant ! p ! o
 		} ;
 
-		--    RelSlash : RP -> ClSlash -> RCl ; -- whom John loves
+		-- RP -> CLSlash -> RCl
+		RelSlash rp cls = {
+			s = \\ten,ant,pol,ord,agr => rp.s ++ cls.s ! ten ! ant ! pol ! ord ++ cls.c2.s ++ cls.n3 ! agr 
+		} ;
 
 		-- There are two relative pronouns in Icelandic, "sem" and "er", and
 		-- are used in exactly the same way - "sem" is a lot more common. Both

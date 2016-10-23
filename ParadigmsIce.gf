@@ -84,6 +84,12 @@ resource ParadigmsIce = open
 
 		} ;
 
+		-- compound nouns - the last noun leads the inflexion, the rest stays the same
+		mkCompoundN : Str -> N -> N = \front,lead -> {
+			s = \\n,s,c	=> front + lead.s ! n ! s ! c ;
+			g = lead.g
+		} ;
+
 
 		-- Some weak declensions of neuter and feminine nouns differ in the Pl Gen
 		-- with a "-n-" in the ending but differ in no other way.
@@ -164,7 +170,7 @@ resource ParadigmsIce = open
 		mascNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
 			<_ + "i",_ + "ir">			=> dDani sg pl ;
 			<_ + "ur",_ + "rar">			=> dAkur sg pl ;
-			<_ + "ur",_ + "ar">			=> dArmur sg pl ; -- maybe not needed since stem + "ur" is already catched?
+			<_ + "ur",_ + "ar">			=> dArmur sg pl ;
 			<_ + ("a" | "i" | "u") + end@("nn" | "ll"), _ + "ar">	=> dHiminn sg pl -- for words like himinn that have a i-shift in the plural
 		} ;
 
@@ -318,6 +324,7 @@ resource ParadigmsIce = open
 			<front + "ni",_>		=> dSuperlW (front + "nst") (front + "nust") ;
 			<stem + "ari",_>		=> dSuperlW (stem + "ast") (stem + "ust") ;
 			<stem + "rri",_>		=> dSuperlW (stem + "st") (stem + "st") ;
+			<stem + "t" + "ri",_>		=> dSuperlW (stem + "st") (stem + "st") ;
 			<stem + "ri",_>			=> dSuperlW (stem + "st") (stem + "st") ;
 			<frontm + "ur",frontf + "ur">	=> dSuperlW (frontm + "rast") (frontf + "rust") ;
 			<front + "ur",_>		=> dSuperlW (front + "ast") (fem + "ust") ;
@@ -350,9 +357,8 @@ resource ParadigmsIce = open
 
 		--2 Verbs
 
-		-- Verbs are constructed by the function $mkV$, which takes a varying
+		-- Verbs are constructed by the functions $mkV$ and $irregV$ which take a varying
 		-- number of arguments.
-
 
 		mkV = overload {
 
@@ -471,46 +477,141 @@ resource ParadigmsIce = open
 			stem + "a"		=> dPositW (init (ðiditi stem))
 		} ;
 
+		-- Irregular verbs, made with irregV, are mostly kept in IrregIce.gf.
+		-- The name is a bit misleading, i.e. irregular. These verbs are regular
+		-- in the sense that they can be predicted and have patterns. The verbs that
+		-- are considered irregular here are : those that are consiederd to strong 
+		-- verbs, preterite presents and the so called -ri verbs. All these group
+		-- of verbs are countable and closed.
+
+		irregV = overload {
+			
+			-- given the infinitive
+			irregV : Str -> V = \bjóða -> irreg1V bjóða; 
+
+			-- given also the past participle (Strong.Sg.Masc.Nom)
+			irregV : (_,_ : Str) -> V = \bjóða,boðinn -> irreg2V bjóða boðinn;
+
+		};
+
+		-- todo fix imp and sup forms
+
+		irreg1V : Str -> V = \inf ->
+			lin V (vForms2Verb inf (irregindsub inf) (impSg inf) (impPl inf) (presPart inf) (sup inf) (weakPP inf) (strongPP inf)) ;
+
+		irreg2V : (_,_ : Str) -> V = \bjóða,boðinn -> 
+			lin V (vForms2Verb bjóða (irregindsub bjóða) (impSg bjóða) (impPl bjóða) (presPart bjóða) (sup bjóða) (weakPP boðinn) (strongPP boðinn)) ;
+
+		irregindsub : Str -> MForms = \inf -> case inf of {
+			-- All of these patterns are taken from Eiríkur Rögnvaldsson's book p. 193
+			{- colleciton of exceptions
+
+				svelgja bregða
+			-}
+
+			-- a) í - ei - 	i - i - 32 verbs
+			front + "í" + back + #vowel	=>  cBíta inf (front + "ei" + back) (front + "i" + back + "um") ;
+
+			-- b) jó - au - u - o - 34 verbs
+			front + ("jó" | "jú" | "ú") + back@(#consonant*) + #vowel => cBjóða inf 
+											(front + "ý" + back)
+											(front + "au" + back) 
+											(front + "u" + back + "um") 
+											(front + "y" + back + "i") ;
+
+			-- c) e - a - u - o  - 24 verbs, exceptions are "svelgja"(weak) "bregða"
+			-- c-1
+			-- verða verð varð urðum yrði orðið
+			front@(f + "v") + "e" + back@(#consonant + #consonant) + #vowel	=> cBresta inf 
+												(front + "a" + back) 
+												(f + "u" + back + "um") 
+												(f + "y" + back + "i") ;
+			-- c-2)
+			front + "e" + back@(#consonant + #consonant) + #vowel	=> cBresta inf 
+												(front + "a" + back) 
+												(front + "u" + back + "um") 
+												(front + "y" + back + "i") ;
+
+			-- d) e - a - á - o - 3 verbs, exceptions are "fela" and "nema"
+			-- bera bar bárum borið
+			-- front + "e" + one +hljómandi consonant + #vowel - what ever the fuck +hljómandi means 	=> c? inf (front + "a" + back) (front + "á" + back + "um") ;
+
+			-- e) e - a - á - e - 8 verbs, exceptions are "vefa" and "vega"
+			-- gefa gaf gáfum gefið
+			-- front + "e" + "one -hljómandi consonant + #vowel	=> c? inf (front + "a" + back) (front + "á" + back + "um") ;
+
+			-- f) e - ó - ó - a - 3 verbs
+			-- hefja hóf hófum hafið
+			-- front + "e" + back@("f" | "r") + "j" + #vowel	=> c? inf (front + "ó" + back) (front + "ó" + back + "um") ;
+
+			-- g) a - ó - ó - e - 4 verbs
+			-- taka tók tókum tekið 
+			-- front + "a" + gómhljóð + #vowel	=> c? inf (front + "ó" + back) (front + "ó" + back + "um") ;
+
+			-- h) a - ó - ó - a - 10 verbs
+			-- cFara : (_,_,_,_,_ : Str) -> MForms = \fara,fer,fór,fórum,færi ->
+			front + "a" + back@(#consonant + #vowel)	=> cFara inf 
+										(front + "e" + back)
+										(front + "ó" + back) 
+										(front + "ó" + back + "um")
+										(front + "æ" + back + "i") 
+
+			-- i) á - é - é - á - 4 verbs
+			-- gráta grét grétum grátið
+			-- front + "á" + tannhljóð + #vowel	=> c? inf (front + "é" + back) (front + "é" + back + "um") ;	
+
+			-- j) já (-e) - a - u - o - 4 verbs
+			-- skjálfa skelf skalf skulfum skolfið
+			-- front + ("já" | "ja") + "consonant* + #vowel => c? inf (front + "e" + "back") (front + "a" + back) (front + "u" + back + "um") ;
+
+			-- k) i - a - u - u : dBresta
+			-- vinna vann unnum unnið
+			
+			-- m) ö (-e) - ö - u - o
+			-- hrökkva hrekk hrökk hrukkum hrokkið
+			
+			-- n) au - jó - u - au
+			-- ausa jós usum ausið 
+		} ;
 
 		--3 Two-place verbs
 
 		-- Two-place verbs need a preposition, except the special case with direct object.
-		-- (transitive verbs). Notice that a particle comes from the $V$.
+		-- (transitive verbs).
 
 		prepV2 : V -> Preposition -> V2 = \v,prep -> v  ** {c2 = prep} ;
 		
 		accPrep : Preposition = {s = []; c = Acc} ;
 
 		mkV2 = overload {
+			-- also constructed like V2 are : VV, V2A, V2S, V2Q 
 
 			-- Two-place regular verbs with direct object (accusative, transitive verbs).
 
-			-- Given the infinitive
-			mkV2 : Str -> V2 = \telja -> prepV2 (mk1V telja) accPrep ;
-
-			-- Given also the first person singular present tense indicative mood
-			mkV2 : (_,_ : Str) -> V2 = \telja,tel -> prepV2 (mk2V telja tel) accPrep ;
-
-			-- Given also the first persons singular past tense indicative mood
-			mkV2 : (_,_,_ : Str) -> V2 = \telja,tel,taldi -> prepV2 (mk3V telja tel taldi) accPrep  ;
-
-			-- Given also the past participle (strong declension) in the singular masculine nominative.
-			mkV2 : (_,_,_,_ : Str) -> V2 = \telja,tel,taldi,talinn -> prepV2 (mk4V telja tel taldi talinn) accPrep ;
+			mkV2 : V -> V2 = \v -> prepV2 v accPrep ;
 
 			-- Two-place with a preposition or object in a given case
 
-			-- Given the infinitive
-			mkV2 : Str -> Preposition -> V2 = \telja,prep -> prepV2 (mk1V telja) prep ;
-
-			-- Given also the first person singular present tense indicative mood
-			mkV2 : (_,_ : Str) -> Preposition -> V2 = \telja,tel,prep -> prepV2 (mk2V telja tel) prep ;
-
-			-- Given also the first persons singular past tense indicative mood
-			mkV2 : (_,_,_ : Str) -> Preposition -> V2 = \telja,tel,taldi,prep -> prepV2 (mk3V telja tel taldi) prep  ;
-
-			-- Given also the past participle (strong declension) in the singular masculine nominative.
-			mkV2 : (_,_,_,_ : Str) -> Preposition -> V2 = \telja,tel,taldi,talinn,prep -> prepV2 (mk4V telja tel taldi talinn) prep ;
+			mkV2 : V -> Preposition -> V2 = \v,prep -> prepV2 v prep;
 		};
+
+
+		--3 Three-place verbs
+		
+		-- Three-place (ditransitive) verbs need two prepositions, of which
+		-- the first one or both can be absent.
+
+--		mkV3 : overload {
+			-- also constructedlike V3 is V2V
+--			-- ditransitive, e.g. give,_,_
+--			mkV3 : V -> V3 = \v -> prepV3 v ;                  
+--
+--			mkV3  : V -> Prep -> Prep -> V3 ;   -- two prepositions, e.g. speak, with, about
+--			mkV3  : V -> Prep -> V3 ;           -- give,_,to --%
+--			mkV3  : V -> Str -> V3 ;            -- give,_,to --%
+--			mkV3  : Str -> Str -> V3 ;          -- give,_,to --%
+--			mkV3  : Str -> V3 ;                 -- give,_,_ --%
+--		};
 
 		--2 Definitions of paradigms
 
@@ -554,6 +655,8 @@ resource ParadigmsIce = open
 
 		-- 3 Determiners and quantifiers
 
+{-
+		is this used or needed at all?
 		mkOrd : Str -> Ord = \sjötti -> 
 			let
 				sjött = init sjötti
@@ -566,6 +669,7 @@ resource ParadigmsIce = open
 				Pl	=> \\_,_	=> sjött + "u"
 			} 
 		} ;
+-}
 
 
 		-- 3 Adverbs

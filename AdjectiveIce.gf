@@ -36,9 +36,10 @@ concrete AdjectiveIce of Adjective = CatIce ** open ResIce, Prelude in {
 			s = \\n,g,d,c => cadv.s ++ ap.s ! n ! g ! d ! c ++ cadv.p ++ np.s ! NCase Nom
 		} ;
 
--- The superlative use is covered in $Ord$.
-
--- AdjOrd  : Ord -> AP ;       -- warmest
+		-- Ord -> AP
+		AdjOrd ord = {
+			s = \\n,g,d,c => ord.s ! d ! n ! g ! c
+		} ;
 
 		-- AP -> SC -> AP
 		SentAP ap sc = {

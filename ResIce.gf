@@ -36,18 +36,21 @@ resource ResIce = ParamX ** open Prelude in {
 
 		Mood = Indicative | Subjunctive ;
 
-		Voice = Active | Middle ;--| Passive -> just aux (að vera - to be) + past participle - to be added :D
+		Voice = Active | Middle ;
 
-		PForm = PWeak Number Gender Case | PStrong Number Gender Case ;
+		PForm = PWeak Number Gender Case | PStrong Number Gender Case | PPres ;
 
 		VForm =
 			VInf
 			| VPres Voice Mood Number Person
 			| VPast Voice Mood Number Person
 			| VImp Voice Number
-			| VPresPart -- It doesn really inflect, i.e. same form in all cases, genders and number
-			| VSup Voice
 			;
+
+		VPForm = VPInf
+			| VPImp
+			| VPMood Tense Anteriority -- is this a describing name ?
+		;
 
 	--2 For $Adjective$
 
@@ -57,13 +60,16 @@ resource ResIce = ParamX ** open Prelude in {
 			  APosit Declension Number Gender Case
 			| ACompar Number Gender Case
 			| ASuperl Declension Number Gender Case
-			--| AAdv
+			--| AAdv -- lexicon difficulities. its not always clear what the adverb equivalance of the adjective looks like.
 			;
 		
 	--2 For $Sentence$
 
-		-- This is a direct copy paste from english atm
 		Order = ODir | OQuestion ;
+
+	--2 For $Numerals$
+
+		CardOrd = NOrd Number Gender Case | NCard Number Gender Case ; -- only "einn" ("one") inflects for gender as a cardinal
 
 	--------------------------------------------
 	--TYPE DEFINITIONS + WORST-CASE CONSTRUCTORS
@@ -109,7 +115,8 @@ resource ResIce = ParamX ** open Prelude in {
 		-- and "ég las hana ekki but not "ég las ekki hana"
 		NP : Type = {
 			s : NPCase => Str ;
-			a : Agr
+			a : Agr ;
+			isPron : Bool
 		} ;
 
 		-- For $Adjectives$
@@ -122,7 +129,8 @@ resource ResIce = ParamX ** open Prelude in {
 
 		V : Type = {
 			s : VForm => Str ;
-			pp : PForm => Str
+			p : PForm => Str ;
+			sup : Voice => Str
 		} ;
 
 		mkVoice : Voice -> Str -> Str = \v,s ->
@@ -137,6 +145,7 @@ resource ResIce = ParamX ** open Prelude in {
 				}
 		} ;
 
+		-- is this needed for anything else but the auxiliary verbs below?
 		mkVerb : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x59 : Str) -> V =
 			\fljúga1,flýg,flýgur2,flýgur3,fljúgum,fljúgið,fljúga2,flaug1,flaugst,flaug2,flugum,fluguð,flugu,
 			fljúgi1,fljúgir,fljúgi3,fljúgumS,fljúgiðS,fljúgi,flygi1,flygir,flygi2,flygjum,flygjuð,flygju,
@@ -144,7 +153,7 @@ resource ResIce = ParamX ** open Prelude in {
 			sgNeutNom,sgNeutAcc,sgNeutDat,sgNeutGen,plMascNom,plMascAcc,plMascDat,plMascGen,
 			plFemNom,plFemAcc,plFemDat,plFemGen,plNeutNom,plNeutAcc,plNeutDat,plNeutGen,
 			weakSgMascNom,weakSgMascAccDatGen,weakSgFemNom,weakSgFemAccDatGen,weakSgNeut,weakPl,flogið -> {
-				s = table { -- This, along with pp, can and will be simplified much further in paradigms
+				s = table {
 					VInf				=> fljúga1 ;
 					VPres v Indicative Sg P1	=> mkVoice v flýg ;
 					VPres v Indicative Sg P2	=> mkVoice v flýgur2 ;
@@ -171,11 +180,9 @@ resource ResIce = ParamX ** open Prelude in {
 					VPast v Subjunctive Pl P2	=> mkVoice v flygjuð ;
 					VPast v Subjunctive Pl P3	=> mkVoice v flygju ;
 					VImp v Sg			=> mkVoice v fljúgðu ;
-					VImp v Pl			=> mkVoice v fljúgið ;
-					VPresPart 			=> fljúgandi ;
-					VSup v				=> mkVoice v flogið
+					VImp v Pl			=> mkVoice v fljúgið
 				} ;
-				pp = table {
+				p = table {
 					PWeak Sg Masc Nom	=> weakSgMascNom ;
 					PWeak Sg Masc _		=> weakSgMascAccDatGen ;
 					PWeak Sg Fem Nom	=> weakSgFemNom ;
@@ -187,84 +194,90 @@ resource ResIce = ParamX ** open Prelude in {
 					PStrong Sg Neutr c	=> caseList sgNeutNom sgNeutAcc sgNeutDat sgNeutGen ! c ;
 					PStrong Pl Masc c	=> caseList plMascNom plMascAcc plMascDat plMascGen ! c ;
 					PStrong Pl Fem c	=> caseList plFemNom plFemAcc plFemDat plFemGen ! c ;
-					PStrong Pl Neutr c	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ! c
-				}
+					PStrong Pl Neutr c	=> caseList plNeutNom plNeutAcc plNeutDat plNeutGen ! c ;
+					PPres 			=> fljúgandi
+				} ;
+				sup =\\v	=> mkVoice v flogið
 		} ;
 
-		-- New VP definition, work in progress...
 		VP : Type = {
-			s	: Tense => Anteriority => Polarity => Agr => {
+			s	: VPForm => Polarity => Agr => {
 				fin	: Str ;
 				inf	: Str ;
-				a1	: Str
+				a1	: Str * Str 	-- p1 : with inf - ég hef ekki elskað þig
+							-- p2 : without inf - ég elska þig ekki
 			} ;
-			verb	: VForm => Str ; -- raw verbforms
-			pp	: PForm => Str ; -- raw past participle
-			obj	: Agr => Str ; -- object of the verb phrase
+			p	: PForm => Str ; -- past and present participles
+			n1	: Agr => Str * Str; -- p1, p2 : Pron obj - hann/hún/það/ég/þú/sig - in case of ditransitive verbs we have two fields
+			n2	: Agr => Str ; -- General obj - e.g. þessi maður/stóra bókin/hestur
 			a2	: Str ;
+			en1p1	: Bool -- indicates if the p1 field in n1 exists or is empty..
 		} ;
 
-		infVP : VP -> Agr -> Str = \vp,agr -> infVPPlus vp Pres Simul Pos agr ;
+		infVP : VP -> Agr -> Str = \vp,agr -> infVPPlus vp (VPMood Pres Simul) Pos agr ;
 
-		infVPPlus : VP -> Tense -> Anteriority -> Polarity -> Agr -> Str = \vp,ten,ant,pol,ag -> 
+		infVPPlus : VP -> VPForm -> Polarity -> Agr -> Str = \vp,vpform,pol,ag -> 
 			let
-				s = vp.s ! ten ! ant ! pol ! ag ;
-			in
-				s.fin ++ s.a1 ++ s.inf ++ vp.obj ! ag ;
+				s = vp.s ! vpform ! pol ! ag ;
+				pron = vp.n1 ! ag
+			in case vp.en1p1 of {
+				False	=> s.fin ++ s.a1.p1 ++ s.inf ++ vp.n2 ! ag ++ pron.p2 ++ s.a1.p2 ++ vp.a2 ;
+				True	=> s.fin ++ s.a1.p1 ++ s.inf ++ pron.p1 ++ pron.p2 ++ s.a1.p2 ++ vp.n2 ! ag ++ vp.a2
+			} ;
 
-		-- negation ( not sure where to place this atm)
+		predV : V -> VP = \v -> {
+			s = \\vpform,pol,agr => case vpform of {
+				VPInf	=> vf (v.s ! VInf) [] (negation pol) False ;
+				VPImp	=> vf (v.s ! VImp Active agr.n) (negation pol) [] False ;
+				VPMood ten ant => vff v ten ant pol agr
+			} ;
+			verb = \\vform	=> v.s ! vform ;
+			p = \\pform => v.p ! pform ;
+			n1 = \\_ => <[],[]> ;
+			n2 = \\_ => [] ;
+			a2 = [] ;
+			en1p1 = False
+		} ;
+
 		negation : Polarity -> Str = \pol -> case pol of {
 			Pos	=> [] ;
 			Neg	=> "ekki"
 		} ;
 
-		-- helper funciton for predV
-		vf : Str -> Str -> Str -> { fin,inf,a1 : Str } =\fin,inf,a1 -> {
+		vf : Str -> Str -> Str -> Bool -> { fin,inf : Str ; a1 : Str * Str } =\fin,inf,a1,hasInf -> {
 				fin = fin ;
 				inf = inf ;
-				a1 = a1 ;
+				a1 = case hasInf of {
+					True	=> <a1,[]> ;
+					False	=> <[],a1>
+				} ;
 		} ;
 
---		-- FIXME : the verb needs to have an easy seperation of the first auxiliary verb and the rest, since that is where
---		--         the adverb should be placed [se p. 70ish in Höskuldurs book]
---		--         ex: jón mun -aldrei- hafa lesið ...
---		--             johsn will never have read
---		--	   ex: það munu -aldrei margir- hafa lesið
---		--	       it will never many have read
---		--	   ex: jón las hana ekki but not jón las ekki hana
---		--	       john read it not
+		vff : V -> Tense -> Anteriority -> Polarity -> Agr -> {fin,inf : Str ; a1 : Str * Str} 
+			=\v,ten,ant,pol,agr -> case <ten,ant> of {
+			-- hann sefur []/ekki - he []/doesn't sleep
+			<Pres,Simul>	=> vf (v.s ! VPres Active Indicative agr.n agr.p) [] (negation pol) False;
 
-		predV : V -> VP = \v -> {
-			-- Could I do this even better/more complex so the raw verb forms below are not needed? 
-			s = \\ten,ant,pol,agr => case <ten,ant> of {
-				-- hann sefur []/ekki - he []/doesn't sleep
-				<Pres,Simul>	=> vf (v.s ! VPres Active Indicative agr.n agr.p) [] (negation pol) ;
+			-- hann hefur []/ekki sofið - he has/hasn't slept
+			<Pres,Anter>	=> vf (verbHave.s ! VPres Active Indicative agr.n agr.p) (v.sup ! Active) (negation pol) True ;
 
-				-- hann hefur []/ekki sofið - he has/hasn't slept
-				<Pres,Anter>	=> vf (verbHave.s ! VPres Active Indicative agr.n agr.p) (v.s ! VSup Active) (negation pol) ;
+			-- hann svaf []/ekki - he []/didn't sleep
+			<Past,Simul> 	=> vf (v.s ! VPast Active Indicative agr.n agr.p) [] (negation pol) False ;
 
-				-- hann svaf []/ekki - he []/didn't sleep
-				<Past,Simul> 	=> vf (v.s ! VPast Active Indicative agr.n agr.p) [] (negation pol) ;
+			-- hann hafði []/ekki sofið - he had/hadn't slept
+			<Past,Anter> 	=> vf (verbHave.s ! VPast Active Indicative agr.n agr.p) (v.sup ! Active) (negation pol) True ;
 
-				-- hann hafði []/ekki sofið - he had/hadn't slept
-				<Past,Anter> 	=> vf (verbHave.s ! VPast Active Indicative agr.n agr.p) (v.s ! VSup Active) (negation pol) ;
+			-- hann mun []/ekki sofa - he will/won't sleep
+			<Fut,Simul>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (v.s ! VInf) (negation pol) True ;
 
-				-- hann mun []/ekki sofa - he will/won't sleep
-				<Fut,Simul>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (v.s ! VInf) (negation pol) ;
+			-- hann mun []/ekki hafa sofið - 'he will/won't have slept'	
+			<Fut,Anter>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (verbHave.s ! VInf ++ v.sup ! Active) (negation pol) True ;
 
-				-- hann mun []/ekki hafa sofið - 'he will/won't have slept'	
-				<Fut,Anter>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (verbHave.s ! VInf ++ v.s ! VSup Active) (negation pol) ;
+			-- hann myndi []/ekki sofa 'he would/wouldn't sleep'
+			<Cond,Simul>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (v.s ! VInf) (negation pol) True ;
 
-				-- hann myndi []/ekki sofa 'he would/wouldn't sleep'
-				<Cond,Simul>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (v.s ! VInf) (negation pol) ;
-
-				-- hann myndi []/ekki hafa sofið 'he would/wouldn't have slept'
-				<Cond,Anter>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (verbHave.s ! VInf ++ v.s ! VSup Active) (negation pol)
-			} ;
-			verb = \\vform	=> v.s ! vform ;
-			pp = \\pform => v.pp ! pform ;
-			obj = \\_ => [] ;
-			a2 = []
+			-- hann myndi []/ekki hafa sofið 'he would/wouldn't have slept'
+			<Cond,Anter>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (verbHave.s ! VInf ++ v.sup ! Active) (negation pol) True
 		} ;
 
 		-- Auxilary verbs --
@@ -300,7 +313,7 @@ resource ResIce = ParamX ** open Prelude in {
 					"munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" "munu" ;
 
 		-- Not really an axuilary verb but then again there is no exclusive club of axuilary verbs in Icelandic (or so have I been told).
-		-- verbLet is nevertheless needed in Idiom.
+		-- verbLet is nevertheless needed in Idiom. - or is it?
 		verbLet : V = mkVerb "láta" "læt" "lætur" "lætur" "látum" "látið" "láta" "lét" "lést" "lét" "létum" "létuð" "létu"
 					"láti" "látir" "láti" "látum" "látið" "láti" "léti" "létir" "léti" "létum" "létuð" "létu" "láttu" "látið"
 					"látandi" "látinn" "látinn" "látnum" "látins" "látin" "látna" "látinni" "látinnar" "látið" "látið"
@@ -319,13 +332,18 @@ resource ResIce = ParamX ** open Prelude in {
 		mkClause : Str -> VP -> Agr -> Cl = \subj,vp,agr -> {
 			s = \\ten,ant,pol,order =>
 				let
-					verb = vp.s ! ten ! ant ! pol ! agr ;
-					obj = vp.obj ! agr
-				in case order of {
-					ODir		=> subj ++ verb.fin ++ verb.a1 ++ verb.inf ++ obj ;
-					OQuestion	=> verb.fin ++ subj ++ verb.a1 ++ verb.inf ++ obj
+					verb = vp.s ! VPMood ten ant ! pol ! agr ;
+					pron = vp.n1 ! agr ;
+					obj = vp.n2 ! agr ;
+					adv = vp.a2
+				in case <order,vp.en1p1> of {
+					<ODir,False>		=> subj ++ verb.fin ++ verb.a1.p1 ++ verb.inf ++ obj ++ pron.p2 ++ verb.a1.p2 ++ adv ;
+					<ODir,True>		=> subj ++ verb.fin ++ verb.a1.p1 ++ verb.inf ++ pron.p1 ++ pron.p2 ++ verb.a1.p2 ++ obj ++ adv ;
+					<OQuestion,False>	=> verb.fin ++ subj ++ verb.a1.p1 ++ verb.inf ++ obj ++ pron.p2 ++ verb.a1.p2 ++ adv ;
+					<OQuestion,True>	=> verb.fin ++ subj ++ verb.a1.p1 ++ verb.inf ++ pron.p1 ++ pron.p2 ++ verb.a1.p2 ++ obj ++ adv
 				} ;
 		} ;
+
 
 		-- 2 Pronouns
 
@@ -334,7 +352,6 @@ resource ResIce = ParamX ** open Prelude in {
 			a : Agr
 		} ;
 
-		-- I guess it is inevitable to have personal and possessive pronouns under the same definition and mk function.
 		mkPronPers : (ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2 : Str) -> Gender -> Number -> Person -> Pron =
 			\ég,mig,mér,mín,minn1,minn2,mínum,míns,mínF,mína,minni,minnar,mitt1,mitt2,mínu,mínsN,mínir,mínaPl,mínumPl,minnaPl,mínar1,mínar2,mínPl1,mínPl2,g,n,p -> {
 			s = table {

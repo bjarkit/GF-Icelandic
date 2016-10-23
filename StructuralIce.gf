@@ -21,10 +21,10 @@ concrete StructuralIce of Structural = CatIce **
 				Fem	=> caseList "sérhver" "sérhverja" "sérhverri" "sérhverrar" ;
 				Neutr	=> caseList "sérhvert" "sérhvert" "sérhverju" "sérhvers"
 			} ;
+			pron = \\_,_ => [] ;
 			n = Sg ;
 			b = Free ;
-			d = Strong ;
-			isPre = True
+			d = Strong
 		} ;
 		everywhere_Adv = mkAdv "alls staðar" ;
 		few_Det = {
@@ -33,10 +33,10 @@ concrete StructuralIce of Structural = CatIce **
 				Fem	=> caseList "fáeinar" "fáeinar" "fáeinum" "fáeinna" ;
 				Neutr	=> caseList "fáein" "fáein" "fáeinum" "fáeinna"
 			} ;
+			pron = \\_,_ => [] ;
 			n = Pl ;
 			b = Free ;
-			d = Strong ;
-			isPre = True
+			d = Strong
 		} ;
 		for_Prep = mkPrep "fyrir" dative ;
 		from_Prep = mkPrep "frá" dative ;
@@ -54,10 +54,10 @@ concrete StructuralIce of Structural = CatIce **
 				Fem	=> caseList "nokkur" "nokkra" "nokkurri" "nokkurrar" ;
 				Neutr	=> caseList "nokkurt" "nokkurt" "nokkru" "nokkurs"
 			} ;
+			pron = \\_,_ => [] ;
 			n = Sg ;
 			b = Free ;
-			d = Strong ;
-			isPre = True
+			d = Strong
 		} ;
 		somePl_Det = {
 			s = table {
@@ -65,10 +65,10 @@ concrete StructuralIce of Structural = CatIce **
 				Fem	=> caseList "nokkrar" "nokkrar" "nokkrum" "nokkurra" ;
 				Neutr	=> caseList "nokkur" "nokkur" "nokkrum" "nokkurra"
 			} ;
+			pron = \\_,_ => [] ;
 			n = Pl ;
 			b = Free ;
-			d = Strong ;
-			isPre = True
+			d = Strong
 		} ;
 		through_Prep = mkPrep "gegnum" accusative ;
 		too_AdA = mkAdA "líka" ;
@@ -110,7 +110,7 @@ concrete StructuralIce of Structural = CatIce **
 			} ;
 			b = Free ;
 			d = Weak ;
-			isPre = True
+			isPron = False
 		} ;
 		that_Quant =  {
 			s = table {
@@ -127,7 +127,7 @@ concrete StructuralIce of Structural = CatIce **
 			} ;
 			b = Free ;
 			d = Weak ;
-			isPre = True
+			isPron = False
 		} ;
 		and_Conj = mkConj "og" ;
 		or_Conj = mkConj "eða" singular ;

@@ -390,6 +390,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 
 		-- hinir - hinar - hin
 		suffixPlNom : Str -> Gender -> Str = \s,g -> case <s,g> of {
+			<_ + "nn", Masc>			=> s + "irnir" ;
 			<_ , Masc>				=> s + "nir" ;
 			<_ , Fem>				=> s + "nar" ;
 			<_ + ("a" | "i" | "u" | "é"),Neutr>	=> s + "n" ;
@@ -399,6 +400,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 
 		-- hina - hinar - hin
 		suffixPlAcc : Str -> Gender -> Str = \s,g -> case <s,g> of {
+			<_ + "nn",Masc>				=> s + "ina" ;
 			<_,Masc>				=> s + "na" ;
 			<_,Fem>					=> s + "nar" ;
 			<_ + ("a" | "i" | "u" | "é"),Neutr>	=> s + "n" ;
@@ -775,21 +777,81 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		-- infinitive - first person singular past tense indicative mood - first person plural past tense indicative mood - past participle
 		-- the present participle is not used in these patterns..
 
+		-- bíta beit bitum
+		cBíta : (_,_,_ : Str) -> MForms = \bíta,beit,bitum ->
+			let
+				bít = init bíta ;
+				bei = init beit ;
+				bit = init (init bitum) ;
+				presInd = tForms6 bít (bít + "ur") (bít + "ur") (bít + "um") (bít + "ið") (bít + "a") ;
+				pastInd = tForms6 beit (bei + "st") beit bitum (bit + "uð") (bit + "u") ;
+				presSub = tForms6 (bít + "i") (bít + "ir") (bít + "i") (bít + "um") (bít + "ið") (bít + "i") ;
+				pastSub = tForms6 (bit + "i") (bit + "ir") (bit + "i") (bit + "um") (bit + "uð") (bit + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
 
---		-- bíta - beit - bitum - bitið
---		cBíta : (_,_,_ : Str) -> NForms = \bíta,beit,bitum ->
---			let
---				presInd
---				pastInd
---				presSub
---				pastSub
---			in tForms2MForms presInd pastInd presSub pastSub ;
+		-- bjóða býð bauð buðum byði
+		cBjóða : (_,_,_,_,_ : Str) -> MForms = \bjóða,býð,bauð,buðum,byði ->
+			let
+				bjóð = init bjóða ;
+				buð = init (init buðum) ;
+				byð = init byði ;
+				presInd = tForms6 býð (býð + "ur") (býð + "ur") (bjóð + "um") (bjóð + "ið") (bjóð + "a") ;
+				pastInd = tForms6 bauð (bauð + "st") bauð buðum (buð + "uð") (buð + "u") ;
+				presSub = tForms6 (bjóð + "i") (bjóð + "ir") (bjóð + "i") (bjóð + "um") (bjóð + "ið") (bjóð + "i") ;
+				pastSub = tForms6 byði (byð + "ir") byði (byð + "um") (byð + "uð") (byð + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+		-- bresta brast brustum brostið
+		cBresta : (_,_,_,_ : Str) -> MForms = \bresta,brast,brustum,brysti ->
+			let
+				brest = init bresta ;
+				brust = init (init brustum) ;
+				bra = init (init brast) ;
+				bryst = init brysti ;
+				presInd = tForms6 brest (brest + "ur") (brest + "ur") (brest + "um") (brest + "ið") (brest + "a") ;
+				pastInd = tForms6 brast (bra + "st") brast brustum (brust + "uð") (brust + "u") ;
+				presSub = tForms6 (brest + "i") (brest + "ir") (brest + "i") (brest + "um") (brest + "ið") (brest + "i") ;
+				pastSub = tForms6 brysti (bryst + "ir") brysti (bryst + "um") (bryst + "uð") (bryst + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+		-- fara fór fórum farið 
+		cFara : (_,_,_,_,_ : Str) -> MForms = \fara,fer,fór,fórum,færi ->
+			let
+				far = init (fara) ;
+				för = a2ö far ;
+				fær = init færi ;
+				presInd = tForms6 fer (fer + "ð") fer (för + "um") (far + "ið") (far + "a") ;
+				pastInd = tForms6 fór (fór + "st") fór fórum (fór + "uð") (fór + "u") ;
+				presSub = tForms6 (far + "i") (far + "ið") (far + "i") (för + "um") (far + "ið") (far + "i") ;
+				pastSub = tForms6 færi (fær + "ir") færi (fær + "um") (fær + "uð") (fær + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
 
 
-		----------------------------
-		-- Núþálegar og ri-sagnir --
-		----------------------------
+		-------------------------------------------
+		-- Preterite Present Verbs  and -ri verbs-- 
+		-------------------------------------------
 
+		cMuna : (_,_,_,_ : Str) -> MForms = \muna,man,mundi,myndi -> 
+			let
+				mun = init muna ;
+				mund = init mundi ;
+				mynd = init myndi ;
+				presInd = tForms6 man (p2End man) man (mun + "um") (mun + "ið") (mun + "a") ;
+				pastInd = tForms6 mundi (mund + "ir") (mund + "i") (mund + "um") (mund + "uð") (mund + "u") ;
+				presSub = tForms6 (mun + "i") (mun + "ir") (mun + "i") (mun + "um") (mun + "ið") (mun + "i") ;
+				pastSub = tForms6 myndi (mynd + "ir") (mynd + "i") (mynd + "um") (mynd + "ið") (mynd + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+		-- in the 2nd person singular present indicative
+		-- the case ending seems to be either -st or t. These
+		-- preterite present verbs are only so many 10 (or 11 countin vera)
+		-- so it can be easily pattern matched for all cases.
+		p2End : Str -> Str = \man -> case man of {
+			front + "an"	=> man + "st" ;
+			front + "á"	=> man + "tt" ;
+			front + "eit"	=> front + "eist" ;
+			_		=> man + "t"
+		} ;
 
 	-----------------------
 	-- Verb Construction -- 
@@ -814,11 +876,9 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				VPast v Subjunctive Sg p	=> persList (mkVoice v (pastSub ! 0)) (mkVoice v (pastSub ! 1)) (mkVoice v (pastSub ! 2)) ! p;
 				VPast v Subjunctive Pl p	=> persList (mkVoice v (presSub ! 3)) (mkVoice v (pastSub ! 4)) (mkVoice v (pastSub ! 5)) ! p;
 				VImp v Sg			=> mkVoice v impSg ;
-				VImp v Pl			=> mkVoice v impPl ;
-				VPresPart			=> presPart ;
-				VSup v				=> mkVoice v sup
+				VImp v Pl			=> mkVoice v impPl
 			} ;
-			pp = table {
+			p = table {
 				PWeak Sg Masc c		=> caseList (pastPartW ! Masc ! 0) (pastPartW ! Masc ! 1) (pastPartW ! Masc ! 2) (pastPartW ! Masc ! 3) ! c ;
 				PWeak Sg Fem c		=> caseList (pastPartW ! Fem ! 0) (pastPartW ! Fem ! 1) (pastPartW ! Fem ! 2) (pastPartW ! Fem ! 3) ! c ; 
 				PWeak Sg Neutr c	=> caseList (pastPartW ! Neutr ! 0) (pastPartW ! Neutr ! 1) (pastPartW ! Neutr ! 2) (pastPartW ! Neutr ! 3) ! c ;
@@ -828,8 +888,10 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				PStrong Sg Neutr c	=> caseList (pastPartS ! Neutr ! 0) (pastPartS ! Neutr ! 1) (pastPartS ! Neutr ! 2) (pastPartS ! Neutr ! 3) ! c ;
 				PStrong Pl Masc c	=> caseList (pastPartS ! Masc ! 4) (pastPartS ! Masc ! 5) (pastPartS ! Masc ! 6) (pastPartS ! Masc ! 7) ! c ;
 				PStrong Pl Fem c	=> caseList (pastPartS ! Fem ! 4) (pastPartS ! Fem ! 5) (pastPartS ! Fem ! 6) (pastPartS ! Fem ! 7) ! c ;
-				PStrong Pl Neutr c	=> caseList (pastPartS ! Neutr ! 4) (pastPartS ! Neutr ! 5) (pastPartS ! Neutr ! 6) (pastPartS ! Neutr ! 7) ! c
-			}
+				PStrong Pl Neutr c	=> caseList (pastPartS ! Neutr ! 4) (pastPartS ! Neutr ! 5) (pastPartS ! Neutr ! 6) (pastPartS ! Neutr ! 7) ! c ;
+				PPres			=> presPart
+			} ;
+			sup =\\v			=> mkVoice v sup
 		} ;
 
 
