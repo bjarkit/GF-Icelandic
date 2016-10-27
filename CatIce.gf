@@ -34,7 +34,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		--2 Questions and interrogatives
 
-		QCl = {s : Tense => Anteriority => Polarity => QForm => Str} ; -- is Agr needed?
+		QCl = {s : Tense => Anteriority => Polarity => QForm => Str} ;
 
 		IP = {
 			s : Gender => Case => Str ; 
@@ -63,8 +63,8 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		VPSlash = ResIce.VP ** {
 			c2 : Preposition ;
-			nn1 : Agr => Str ; -- maybe rename these into direct and indirect objects?
-			nn2 : Agr => Str -- or is a single field sufficent?
+			nn1 : Agr => Str ;
+			nn2 : Agr => Str
 		} ;	
 
 		--2 Adjectival phrases

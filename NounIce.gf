@@ -7,7 +7,10 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		--Det -> CN -> NP
 		DetCN det cn = {
-			s = \\c => cn.comp ! npcaseToCase c ++ det.s ! cn.g ! npcaseToCase c ++ cn.s ! det.n ! det.b ! det.d ! npcaseToCase c ++ det.pron ! cn.g ! npcaseToCase c ;
+			s = \\c => cn.comp ! npcaseToCase c
+				++ det.s ! cn.g ! npcaseToCase c
+				++ cn.s ! det.n ! det.b ! det.d ! npcaseToCase c
+				++ det.pron ! cn.g ! npcaseToCase c ;
 			a = gennumperToAgr cn.g det.n P3 ;
 			isPron = False
 		} ;
@@ -255,21 +258,20 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- 2 Possessive and partitive constructs
 
-		-- FIXME!!!!
-		-- When making possesive noun magic it should be
-		-- the girls book (the girl owns the book) = bók stelpunnar/book girl-the
-		-- see more Höskuldur Þráinsson's The Icelandic Syntax p 91-92
 		-- CN -> NP -> CN
 		PossNP cn np = {
-			-- FIXME !
-			-- The suffix (kona-an mín, hestur-inn minn) is always used 
-			-- for prossesive pronouns except when the subject is a member 
-			-- of the family, e.g., mother. However, I am not sure if this
-			-- is always the case when a possessive pronoun is not used, e.g.,
-			-- house of Paris.
 			s = \\n,s,d,c	=> case np.isPron of {
 				True => cn.s ! n ! Suffix ! d ! Nom ++ np.s ! NPPoss n cn.g c ;
-				Fasle => cn.s ! n ! Free ! d ! c ++ np.s ! NPPoss n cn.g c -- how is the possessive treated if its not a pronoun?
+				False => cn.s ! n ! Free ! d ! c ++ np.s ! NPPoss n cn.g Gen
+				-- This is tricky, if its not a pronoun then there are 3 possible constructions
+				-- bók stelpunnar - book the girl - the girls book
+				-- bók stelpu	-- book girls - girls book
+				-- bókin hennar stelpu -- the book her girl
+				-- in the last example the personal pronoun (corresponding to the gender in question)
+				-- is used as a propial article. The first two are used (depending on the NP), since
+				-- they can always work. The last example (with the propial article) is generally 
+				-- only used with personal pronouns. It must be noted that possessor/subject is 
+				-- always in the in the genative case.
 			} ;
 			comp = \\_ => [] ;
 			g = cn.g

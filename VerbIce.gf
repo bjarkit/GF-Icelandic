@@ -7,40 +7,20 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		UseV = predV ;
 
 		-- VV  -> VP -> VP
-		ComplVV vv vp =
-			let
-				vvp = predV vv
-			in
-				vvp ** {
-					n2 = \\a => vvp.n2 ! a ++ vv.c2.s ++ infVP vp a
-				} ;
+		ComplVV vv vp = let vvp = predV vv
+				in insertn2 vvp (\\a => vvp.n2 ! a ++ vv.c2.s ++ infVP vp a) ;
 
 		-- VS  -> S  -> VP
-		ComplVS vs s =
-			let
-				vvs = predV vs
-			in
-				vvs ** {
-					n2 = \\a => vvs.n2 ! a ++ s.s
-				} ;
+		ComplVS vs s = let vvs = predV vs
+				in insertn2 vvs (\\a => vvs.n2 ! a ++ s.s) ;
 
 		-- VQ  -> QS -> VP
-		ComplVQ vq qs =
-			let
-				vvq = predV vq
-			in
-				vvq ** {
-					n2 = \\a => vvq.n2 ! a ++ qs.s ! QDir
-				} ;
+		ComplVQ vq qs = let vvq = predV vq
+				in insertn2 vvq (\\a => vvq.n2 ! a ++ qs.s ! QDir) ;
 
 		-- VA  -> AP -> VP
-		ComplVA va ap =
-			let
-				vp = (predV va)
-			in
-				vp ** {
-					n2 = \\a => ap.s ! a.n ! a.g ! Weak ! Nom ++ vp.n2 ! a
-				} ;
+		ComplVA va ap = let vp = (predV va)
+				in insertn2 vp (\\a => ap.s ! a.n ! a.g ! Weak ! Nom ++ vp.n2 ! a) ;
 
 		-- V2 -> VPSlash
 		SlashV2a v = predV v ** {
@@ -95,7 +75,6 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 			c2 = v2s.c2
 		} ;
 
-		-- I wonder if the preposition will ever be in its wrong place like this?
 		-- V2Q -> QS -> VPSlash
 		SlashV2Q v2q qs = predV v2q ** {
 			nn1 = \\_ => [] ;
@@ -178,8 +157,7 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		-- VPSlash -> Adv -> VPSlash
 		AdvVPSlash vps adv = vps ** {a2 = vps.a2 ++ adv.s} ;
 
-		-- AdV -> VPSlash -> VPSlash -- what the hell was I smoking?
-		-- AdVVPSlash : AdV -> VPSlash -> VPSlash ;  -- always use (it)
+		-- AdV -> VPSlash -> VPSlash
 		AdVVPSlash adv vps = (insertAdV adv.s vps) ** {
 			c2 = vps.c2 ;
 			n1 = vps.n1 ;
@@ -211,7 +189,11 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		UseCopula = predV verbBe ;
 
 	oper
-		insertAdV  : Str -> VP -> VP = \adv,vp -> vp ** {
+		insertn2 : ResIce.VP -> (Agr => Str) -> ResIce.VP =\vp,obj -> vp ** {
+			n2 = obj
+		} ;
+			
+		insertAdV  : Str -> ResIce.VP -> ResIce.VP = \adv,vp -> vp ** {
 			s = \\vpform,pol,agr => 
 				let
 					vps = vp.s ! vpform ! pol ! agr
