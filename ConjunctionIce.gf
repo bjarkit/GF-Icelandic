@@ -9,7 +9,7 @@ concrete ConjunctionIce of Conjunction =
 		ConjRS conj ss = conjunctDistrTable Agr conj ss ** {c = ss.c} ;
 
 		-- Conj -> ListCN -> CN
-		ConjCN co ns = conjunctDistrTable4 Number Species Declension Case co ns ** {comp = \\_ => [] ; g = Neutr} ;
+		ConjCN co ns = conjunctDistrTable4 Number Species Declension Case co ns ** {comp = \\_,_ => [] ; g = Neutr} ;
 
 		-- Conj -> ListAP -> AP
 		ConjAP co as = conjunctDistrTable4 Number Gender Declension Case co as ;

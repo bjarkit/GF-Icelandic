@@ -7,10 +7,10 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		--Det -> CN -> NP
 		DetCN det cn = {
-			s = \\c => cn.comp ! npcaseToCase c
-				++ det.s ! cn.g ! npcaseToCase c
+			s = \\c => det.s ! cn.g ! npcaseToCase c
 				++ cn.s ! det.n ! det.b ! det.d ! npcaseToCase c
-				++ det.pron ! cn.g ! npcaseToCase c ;
+				++ det.pron ! cn.g ! npcaseToCase c
+				++ cn.comp ! det.n ! npcaseToCase c ;
 			a = gennumperToAgr cn.g det.n P3 ;
 			isPron = False
 		} ;
@@ -158,7 +158,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		-- CN -> NP
 		MassNP cn = {
-			s = \\c => cn.s ! Sg ! Free ! Strong ! npcaseToCase c ;
+			s = \\c => cn.s ! Sg ! Free ! Strong ! npcaseToCase c ++ cn.comp ! Sg ! npcaseToCase c;
 			a = gennumperToAgr cn.g Sg P3 ;
 			isPron = False
 		} ;
@@ -176,14 +176,14 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 
 		UseN, UseN2 = \noun -> {
 			s = \\n,s,_,c => noun.s ! n ! s ! c ;
-			comp = \\_ => [] ;
+			comp = \\_,_ => [] ;
 			g = noun.g
 		} ;
 
 		-- N2 -> NP -> CN
 		ComplN2 n2 np = {
 			s = \\n,s,_,c => n2.s ! n ! s ! c ++ n2.c2.s ++ np.s ! NCase n2.c2.c ;
-			comp = \\_ => [] ;
+			comp = \\_,_ => [] ;
 			g = n2.g
 		} ;
 
@@ -212,47 +212,35 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		-- AP -> CN -> CN 
 		AdjCN ap cn = {
 			s = \\n,s,d,c => ap.s ! n ! cn.g ! d ! c ++ cn.s ! n ! s ! d ! c ;
-			comp = \\_ => [] ;
+			comp = cn.comp ;
 			g = cn.g
 		} ;
 
 		-- CN -> RS -> CN
-		-- FIXME : not sure if this can be applyed more than once on each CN
-		-- FIXME : not sure if RS should always be in third person - might need to add person field to CN
-		RelCN cn rs = cn ** {s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ rs.s ! gennumperToAgr cn.g n P3} ;
+		RelCN cn rs = cn ** {
+			s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ rs.s ! gennumperToAgr cn.g n P3 ;
+			comp = \\n,c => cn.comp ! n ! c ++ rs.s ! gennumperToAgr cn.g n P3 
+		} ;
 
 		-- CN -> Adv -> CN
-		AdvCN cn adv = cn ** {s = \\n,s,d,c => cn.s ! n ! s ! d ! c ++ adv.s} ;
+		AdvCN cn adv = cn ** {
+			s = \\n,s,d,c => cn.s ! n ! s ! d ! c ;
+			comp = \\n,c => cn.comp ! n ! c ++ adv.s
+		} ;
 
 		-- CN -> SC -> CN
 		SentCN cn sc = {
-			s = \\n,s,d,c	=> cn.s ! n ! s ! d ! c ++ sc.s ;
-			comp = \\_ => [] ;
+			s = \\n,s,d,c	=> cn.s ! n ! s ! d ! c ;
+			comp = \\n,c => cn.comp ! n ! c ++ sc.s ;
 			g = cn.g
 		} ;
-{-
---2 Apposition
-
--- This is certainly overgenerating.
-
-    ApposCN : CN -> NP -> CN ;    -- city Paris (, numbers x and y)
-
---2 Possessive and partitive constructs
-
--- (New 13/3/2013 AR; Structural.possess_Prep and part_Prep should be deprecated in favour of these.)
-
-    PossNP  : CN -> NP -> CN ;     -- house of Paris, house of mine
-    PartNP  : CN -> NP -> CN ;     -- glass of wine
-
--- This is different from the partitive, as shown by many languages.
--}
 
 		-- 2 Apposition
 
 		-- CN -> NP -> CN
 		ApposCN cn np = {
 			s = \\n,s,d,c	=>  cn.s ! n ! s ! d ! Nom ; 
-			comp = \\c	=> np.s ! NCase c ;
+			comp = \\n,c	=> cn.comp ! n ! c ++ np.s ! NCase c ;
 			g = cn.g
 		} ;
 
@@ -273,14 +261,14 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 				-- only used with personal pronouns. It must be noted that possessor/subject is 
 				-- always in the in the genative case.
 			} ;
-			comp = \\_ => [] ;
+			comp = cn.comp ;
 			g = cn.g
 		} ;
 
 		-- CN -> NP -> CN
 		PartNP cn np = {
-			s = \\n,s,d,c	=> cn.s ! n ! s ! d ! Nom ++ "af" ++ np.s ! NCase Dat ;
-			comp = \\_ => [] ;
+			s = \\n,s,d,c	=> cn.s ! n ! s ! d ! Nom ;
+			comp = \\n,c => cn.comp ! n ! Nom ++ "af" ++ np.s ! NCase Dat ;
 			g = cn.g
 		} ;
 

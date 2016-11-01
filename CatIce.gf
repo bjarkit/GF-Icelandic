@@ -76,7 +76,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		CN = {
 			s : Number => Species => Declension => Case => Str ;
-			comp : Case => Str ; -- used for possessive appositions
+			comp : Number => Case => Str ; -- used to separate the head from its tail components in cases of possessive constructions.
 			g : Gender
 		} ;
 
