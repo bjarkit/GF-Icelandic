@@ -41,11 +41,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				sumar sumar (sum + "ri") (sumar + "s")
 				sumur sumur (sum + "rum") (sum + "ra") ;
 
-		-- Only two (three) words goe like this.
-		-- "tré" and "hné" (similarily goes fé, but 
-		-- it rarely takes "fés" in the genative singular 
-		-- generally has "fjár" and is debateble if 
-		-- it has plural or not). 
 		dTré : Str -> NForms = \tré ->
 			let tr = init tré
 			in nForms8
@@ -139,7 +134,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				nögl nögl nögl naglar
 				neglur neglur (nögl + "um") (nagl + "a") ;
 
-		-- FIXME - this and words like kýr and hönd are only remaining for feminine nouns
 		dMörk : (SgNom,PlNom,PlGen : Str) -> NForms = \mörk,merkur,marka ->
 			nForms8
 				mörk mörk mörk merkur
@@ -153,6 +147,13 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			in nForms8
 				móðir móður móður móður
 				mæður mæður (mæð + "rum") (mæð + "ra") ;
+
+		dKona : (_,PlGen : Str) -> NForms = \kona,kvenna ->
+			let
+				kon = init kona
+			in nForms8
+				kona (kon + "u") (kon + "u") (kon + "u")
+				(kon + "ur") (kon + "ur") (kon + "um") kvenna ;
 
 		dTá : (_,_ : Str) -> NForms = \tá,tær ->
 			nForms8
@@ -200,8 +201,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				dani dana dana dana
 				danir dana (udan + "um") dana ;
 
-		-- this is by far the most common type for masculine nouns. Maybe it should be 
-		-- pattern matched also as just "-ur" in paradigms? then catch the other cases?
 		dArmur : (_,_ : Str) -> NForms = \armur,armar ->
 			let
 				arm = init (init armur) ;
@@ -225,7 +224,6 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				akur akur (akr + "i") (akur + "s")
 				akrar (akr + "a") (ökr + "um") (akr + "a") ;
 
-		-- Not used atm
 		dFótur : (_,_ : Str) -> NForms = \fótur,fætur ->
 			let
 				fót = init (init fótur) ;
@@ -273,22 +271,14 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				himinn himin (himn + "i") (himin + "s")
 				himnar (himn + "a") (uhimn + "um") (himn + "a") ;
 
-		-- is this more of an exception for words ending in -ór?
-		-- "skór" does not go like this...
-		dMór : Str -> NForms = \mór ->
+		dMór : (_,_ : Str) -> NForms = \mór,móar ->
 			let
-				mó = init mór
+				mó = init mór ;
+				móa = init móar ;
+				móu = a2u móa
 			in nForms8
 				mór mó mó (mó + "s")
-				(mó + "ar") (mó + "a") (mó + "um") (mó + "a") ;
-
-		-- is this an exception from dalur?
-		dVinur : (_,_ : Str) -> NForms = \vinur,vinir ->
-			let
-				vin = init (init vinur)
-			in nForms8
-				vinur vin (vin + "i") (vin + "ar")
-				vinir (vin + "i") (vin + "um") (vin + "a") ;
+				móar móa (móu + "m") (mó + "a") ;
 
 		dDalur : (_,_ : Str) -> NForms = \dalur,dalir ->
 			let
@@ -297,6 +287,20 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			in nForms8
 				dalur dal dal (dal + "s")
 				dalir (dal + "i") (döl + "um") (dal + "a") ;
+
+		dBiskup : Str -> NForms = \biskup ->
+			nForms8
+				biskup biskup (biskup + "i") (doubleS biskup)
+				(biskup + "ar") (biskup + "ar") (biskup + "um") (biskup + "a") ;
+
+		dFjörður : (_,_,_ : Str) -> NForms =\fjörður,fjarðar,firðir ->
+			let
+				fjörð = init (init fjörður) ;
+				fjarð = init (init fjarðar) ;
+				firð = init (init firðir)
+			in nForms8
+				fjörður fjörð (firð + "i") (fjarð + "ar")
+				firðir (firð + "i") (fjörð + "um") (fjarð + "a") ;
 
 	-----------------------
 	-- Noun Construction -- 
@@ -410,7 +414,8 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 
 		-- hinum
 		suffixPlDat : Str -> Gender -> Str = \s,g -> case <s,g> of {
-			<stem + "m", _>		=> stem + "num"
+			<stem + "m", _>		=> stem + "num" ;
+			<_,_>			=> s + "unum"
 		} ;
 
 		-- hinna
@@ -687,7 +692,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 	-- Adjective Construction -- 
 	----------------------------
 
-		aForms2Adjective : (x1,_,_,_,x5 : AForms) -> A = \positw,posits,compar,superlw,superls -> {
+		aForms2Adjective : (x1,_,_,_,x5 : AForms) -> Str -> A = \positw,posits,compar,superlw,superls,aadv -> {
 				s = table {
 					APosit Weak Sg Masc c		=> caseList (positw ! Masc ! 0) (positw ! Masc ! 1) (positw ! Masc ! 2) (positw ! Masc ! 3) ! c ;
 					APosit Weak Sg Fem c		=> caseList (positw ! Fem ! 0) (positw ! Fem ! 1) (positw ! Fem ! 2) (positw ! Fem ! 3) ! c ;
@@ -714,6 +719,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 					ASuperl Strong Pl Fem c		=> caseList (superls ! Fem ! 4) (superls ! Fem ! 5) (superls ! Fem ! 6) (superls ! Fem ! 7) ! c ;
 					ASuperl Strong Pl Neutr c	=> caseList (superls ! Neutr ! 4) (superls ! Neutr ! 5) (superls ! Neutr ! 6) (superls ! Neutr ! 7) ! c
 				} ;
+				adv = aadv
 		} ;
 
 
@@ -831,16 +837,27 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		-- Preterite Present Verbs  and -ri verbs-- 
 		-------------------------------------------
 
-		cMuna : (_,_,_,_ : Str) -> MForms = \muna,man,mundi,myndi -> 
+		cVera : (_,_,_,_,_ : Str) -> MForms = \er,var,voru,sé,væri ->
+			let
+				vær = init væri ;
+				presInd = tForms6 er (er + "t") er (er + "um") (er + "uð") (er + "u") ;
+				pastInd = tForms6 var (var + "st") var (voru + "m") (voru + "ð") voru ;
+				presSub = tForms6 sé (sé + "rt") sé (sé + "um") (sé + "uð") (sé + "u") ;
+				pastSub = tForms6 væri (væri + "r") væri (vær + "um") (vær + "uð") (vær + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+		cMuna : (_,_,_,_,_ : Str) -> MForms = \muna,man,mundi,muni,myndi -> 
 			let
 				mun = init muna ;
+				munj = init muni ;
 				mund = init mundi ;
 				mynd = init myndi ;
 				presInd = tForms6 man (p2End man) man (mun + "um") (mun + "ið") (mun + "a") ;
 				pastInd = tForms6 mundi (mund + "ir") (mund + "i") (mund + "um") (mund + "uð") (mund + "u") ;
-				presSub = tForms6 (mun + "i") (mun + "ir") (mun + "i") (mun + "um") (mun + "ið") (mun + "i") ;
+				presSub = tForms6 muni (muni + "r") muni (munj + "um") (munj + "ið") (munj + "i") ;
 				pastSub = tForms6 myndi (mynd + "ir") (mynd + "i") (mynd + "um") (mynd + "ið") (mynd + "u")
 			in tForms2MForms presInd pastInd presSub pastSub ;
+
 
 		-- in the 2nd person singular present indicative
 		-- the case ending seems to be either -st or t. These
@@ -852,6 +869,16 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			front + "eit"	=> front + "eist" ;
 			_		=> man + "t"
 		} ;
+
+		cRóa : (_,_,_,_ : Str) -> MForms = \róa,ræ,reri,rói ->
+			let
+				ró = init róa ;
+				rer = init reri ;
+				presInd = tForms6 ræ (ræ + "rð") (ræ + "r") (ró + "um") (ró + "ið") róa ;
+				pastInd = tForms6 reri (reri + "r") reri (rer + "um") (rer + "uð") (rer + "u") ;
+				presSub = tForms6 rói (rói + "r") rói (ró + "um") (rói + "ð") rói ;
+				pastSub = tForms6 reri (reri + "r") reri (rer + "um") (rer + "uð") (rer + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
 
 	-----------------------
 	-- Verb Construction -- 
@@ -917,11 +944,21 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			_						=> barn
 		} ;
 
+		a2u : Str -> Str = \s -> case s of {
+			front + "a" + back@(#consonant*)		=> front + "u" + back ;
+			_						=> s
+		} ;
+
 		-- I am fairly certain it works the same way as a2ö
 		-- currently not used - keep or trash?
 		ö2a : Str -> Str = \þökk -> case þökk of {
 			front + "ö" + back@(#consonant*)		=> front + "a" + back ;
 			_						=> þökk
+		} ;
+
+		doubleS : Str -> Str = \s -> case s of {
+			front + "s"	=> s ;
+			_		=> s + "s"
 		} ;
 
 		NForms : Type = Predef.Ints 7 => Str ; 

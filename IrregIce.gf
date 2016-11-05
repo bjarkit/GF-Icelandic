@@ -6,40 +6,27 @@ flags optimize=values ;
 
 	lin
 
-	-- present preterie verbs
-	-- dMuna : (_,_,_,_ : Str) -> MForms = \muna,man,mundi,myndi -> 
 
-	-- eiga (own) á átti ætti 
-	-- eiga á átti ætti
-	
-	-- mega (may) má mátti mætti
-	
-	-- unna (love) ann unni ynni
+	-- present preterite verbs
+	-- technically they have no past participle..
 
-	-- kunna (know/know how to) kann kunni kynni
-
-	-- þurfa (need) þarf þurfti þyrfti
-
-	-- vita (know) veit vissi vissi 
-
-	-- vilja (want/will) vil vildi vildi
-	
-	-- muna (remember) man mundi myndi
-
-	-- munu (will/shall) mun _ myndi
-
-	-- skulu (shall) skal _ skyldi
-
-	-- (vera (to be) - gray area)
-		-- mkIrreg
-		--mk4V : (_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn ->
-		--	lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg taldi) (impPl telja) (presPart telja) (sup telja) (weakPP talinn) (strongPP talinn)) ;
+		eiga_V = irregV "eiga" "á" "átti" "eigi" "ætti" "áttinn" ;
+		mega_V = irregV "mega" "má" "mátti" "megi" "mætti" "máttinn" ;
+		unna_V = irregV "unna" "ann" "unni" "unni" "ynni" "unnaður" ;
+		kunna_V = irregV "kunna" "kann" "kunni" "kunni" "kynni" "kunnaður" ;
+		þurfa_V = irregV "þurfa" "þarf" "þurfti" "þurfi" "þyrfti" "þurfinn" ;
+		vita_V = irregV "vita" "veit" "vissi" "viti" "vissi" "vitaður";
+		vilja_V = irregV "vilja" "vil" "vildi" "vilji" "vildi" "viljaður" ;
+		muna_V = irregV "muna" "man" "mundi" "muni" "myndi" "muninn" ;
+		munu_V = irregV "munu" "mun" "mundi" "muni" "myndi" "muninn" ;
+		skulu_V = irregV "skulu" "skal" "skyldi" "skuli" "skyldi" "skulinn" ;
+		vera_V = irregV "vera" "er" "var" "sé" "væri" "verinn" ;
 
 	-- -ri verbs
-	-- róa (row) ræ reri - róinn
-	-- gróa (grow) græ greri - gróinn
-	-- núa (rub) ný neri - núinn 
-	-- snúa (turn/twist) sný sneri - snúinn
+		róa_V = irregV "róa" "ræ" "reri" "rói" "reri" "róinn" ;
+		gróa_V = irregV "gróa" "græ" "greri" "grói" "greri" "gróinn" ;
+		núa_V = irregV "núa" "ný" "neri" "núi" "neri" "núinn" ;
+		snúa_V = irregV "snúa" "sný" "sneri" "snúi" "sneri" "snúinn" ;
 
 	-- Strong verbs
 

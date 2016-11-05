@@ -60,7 +60,6 @@ resource ResIce = ParamX ** open Prelude in {
 			  APosit Declension Number Gender Case
 			| ACompar Number Gender Case
 			| ASuperl Declension Number Gender Case
-			--| AAdv -- lexicon difficulities. its not always clear what the adverb equivalance of the adjective looks like.
 			;
 		
 	--2 For $Sentence$
@@ -119,7 +118,8 @@ resource ResIce = ParamX ** open Prelude in {
 		-- For $Adjectives$
 
 		A : Type = {
-			s : AForm => Str
+			s : AForm => Str ;
+			adv : Str
 		} ;
 
 		-- For $Verb$.
@@ -278,6 +278,8 @@ resource ResIce = ParamX ** open Prelude in {
 		} ;
 
 		-- Auxilary verbs --
+
+		-- these have no all been defined in other places. I think its time for a move.
 
 		-- Auxilary verbs do not forma special group in Icelandic. But many of them do have or rather dont have 
 		-- the same forms as other verbs. As an example the verb "að vera" (e. to be) does not have the past 

@@ -126,6 +126,7 @@ resource ParadigmsIce = open
 		} ;
 
 		neutrNForms1 : Str -> NForms = \s -> case s of {
+			"tré" | "hné" | "fé"			=> dTré s ;
 			front + middle@("g" | "k") + "j" + "a"	=> dAuga s (front + middle + "na") ;
 			_ + ("r" | "s" | "n" | "j") + "a"	=> dAuga s s ;
 			stem + "a"				=> dAuga s (stem + "na") ;
@@ -163,11 +164,14 @@ resource ParadigmsIce = open
 			front + ("a" | "i" | "u") + end@("nn" | "ll")	=> dHiminn s (front + (init end) + "ar") ;
 			#consonant* + #vowel + ("ll" | "nn")		=> dStóll s ;
 			stem + "ur"					=> dArmur s (stem + "ar") ; -- the most common masc noun type
-			_ + "ór"					=> dMór s ; -- some words ending in "ór" do not behave like this, e.g., "kór"
-			_ + "i" 					=> dSími s
+			front@(_ + "ó") + "r"				=> dMór s (front + "ar") ;
+			_ + "i" 					=> dSími s ;
+			_						=> dBiskup s
 		} ;
 
 		mascNForms2 : (_,_ : Str) -> NForms = \sg,pl -> case <sg,pl> of {
+			<_ + "ó" + _ + "ur",_ + "æ" + _ + "ur">	=> dFótur sg pl ;
+			<_ + "ór",_>				=> dMór sg pl ;
 			<_ + "i",_ + "ir">			=> dDani sg pl ;
 			<_ + "ur",_ + "rar">			=> dAkur sg pl ;
 			<_ + "ur",_ + "ar">			=> dArmur sg pl ;
@@ -175,10 +179,13 @@ resource ParadigmsIce = open
 		} ;
 
 		mascNForms3 : (_,_,_ : Str) -> NForms =\nom,gen,pl -> case <nom,gen,pl> of {
+			<_ + "ö" + _,_ + "ar",_ + "ir">		=> dFjörður nom gen pl ;
 			<"faðir" | "bróðir",_,_>		=> dFaðir nom gen pl ;
 			<"maður",_,_>				=> dMaður nom gen pl ;
+			<_ + "ur", _ + "s", _ + "ir">		=> dDalur nom pl ;
 			<_ + "ur", _ + "ar", _ + "ar">		=> dHöfundur nom pl ;
-			<_ + "ur", _ + "ar", _ + "ir">		=> dSöfnuður nom gen pl
+			<_ + "ur", _ + "ar", _ + "ir">		=> dSöfnuður nom gen pl ;
+			<_ + "ur", _ + "s" , _ + "ar">		=> dArmur nom pl
 		} ;
 
 		mascNForms4 : (_,_,_,_ : Str) -> NForms = \sgNom,sgGen,plNom,plGen -> case <sgNom,sgGen,plNom,plGen> of {
@@ -224,6 +231,7 @@ resource ParadigmsIce = open
 		} ;
 
 		femNForms4 : (_,_,_,_ : Str) -> NForms = \sgNom,sgGen,plNom,plGen -> case <sgNom,sgGen,plNom,plGen> of {
+			<"kona",_,_,"kvenna">		=> dKona sgNom plGen ;
 			<_,_ + "ur",_ + "ur",_>		=> dMörk sgNom plNom plGen
 		} ;
 
@@ -233,6 +241,7 @@ resource ParadigmsIce = open
 
 		mkPN = overload {
 
+			-- this should be merged or swithced with N -> Gender
 			mkPN : Str -> Gender -> PN = 
 				\name,g	-> regPN name g ;	
 
@@ -250,13 +259,7 @@ resource ParadigmsIce = open
 		mkA = overload {
 
 			-- Given Sg.Masc.Nom of the positive comparision
-			-- FIXME - generic adverb operation - I havent really found much research on this matter. Therefore
-			-- I took it out in the whole resource grammar until I find something more than a couple of lines on
-			-- wikipedia.
 			mkA : Str -> A = mk1A ;
-
---			-- Given Sg.Masc.Nom of the positive comparision and the adverb derived from the adjective
---			mkA : Str -> Str -> A = mk1A ;
 
 			-- Given also the Sg.fem.Nom of the positive comparision
 			mkA : (_,_ : Str) -> A = mk2A ;
@@ -266,13 +269,13 @@ resource ParadigmsIce = open
 		} ;
 
 		mk1A : Str -> A = \s -> lin A (aForms2Adjective 
-			(weakPosit s []) (strongPosit1 s) (compar1 s) (weakSuperl s []) (strongSuperl1 s)) ;
+			(weakPosit s []) (strongPosit1 s) (compar1 s) (weakSuperl s []) (strongSuperl1 s) (regAAdv1 s)) ;
 
 		mk2A : (_,_ : Str) -> A = \mas,fem -> lin A (aForms2Adjective
-			(weakPosit mas fem) (strongPosit2 mas fem) (compar2 mas fem) (weakSuperl mas fem) (strongSuperl2 mas fem)) ;
+			(weakPosit mas fem) (strongPosit2 mas fem) (compar2 mas fem) (weakSuperl mas fem) (strongSuperl2 mas fem) (regAAdv2 mas fem)) ;
 
 		mk3A : (_,_,_ : Str) -> A = \mas,fem,com -> lin A (aForms2Adjective
-			(weakPosit mas fem) (strongPosit2 mas fem) (compar1 com) (weakSuperl com []) (strongSuperl1 com)) ;
+			(weakPosit mas fem) (strongPosit2 mas fem) (compar1 com) (weakSuperl com []) (strongSuperl1 com) (regAAdv2 mas fem)) ;
 
 		strongPosit1 : Str -> AForms = \s -> case s of {
 			#consonant* + "ei" + ("ll" | "nn")	=> dSeinn s ;
@@ -352,6 +355,29 @@ resource ParadigmsIce = open
 			<_,_ + ("r" | "s" | (#consonant + "n"))>	=> dFalastur (fem + "astur") (fem + "ust")
 		} ;
 
+		-- Adverb construction from adjectives. Below (regAAdv*) is used a regular way to 
+		-- form adverb from adjectives. That way suffixes -lega to the stem similarily to
+		-- -ly in english. Other ways, regular or irregular, are given via addAdv.
+
+		regAAdv1 : Str -> Str = \s -> case s of {
+			front + "einn"		=> front + "einlega" ;
+			front + "eill"		=> front + "eillega" ;
+			front + "inn"		=> front + "lega" ;
+			front + "ll"		=> front + "llega" ;
+			front + "nn"		=> front + "nlega" ;
+			front + "leg" + "ur"	=> front + "lega" ;
+			front + "ur"		=> front + "lega"
+		} ;
+
+		regAAdv2 : (_,_ : Str) -> Str = \mas,fem -> case <mas,fem> of {
+			<_,_ + ("á" | "ó" | "ú" | "ý" | "æ")>	=> fem + "lega" ;
+			<front + "ur",_ + "ur">		=> mas + "lega" ;
+			<front + "ur", _>		=> front + "lega" ;
+			<front + ("ll" | "nn"),_>	=> mas + "ega" ;
+			_				=> mas + "lega"
+		} ;
+
+		addAdv : A -> Str -> A = \a,adv -> a ** {adv = adv} ;
 
   		mkA2 : A -> Prep -> A2 = \adj,prep -> adj ** {c2 = prep} ;
 
@@ -429,7 +455,8 @@ resource ParadigmsIce = open
 			front + "i"	=> front + "u" ;
 
 			front + "ja"	=> (init (ðiditi front)) + "u" ; 
-			front + "a"	=> (init (ðiditi front)) + "u"
+			front + "a"	=> (init (ðiditi front)) + "u" ;
+			_		=> inf
 		} ;
 
 		impPl : Str -> Str = \inf -> case inf of {
@@ -443,7 +470,8 @@ resource ParadigmsIce = open
 			front + "ý" + c + "ja"	=> front + "ú" + c + "ið" ;
 			front + "æ" + c + "ja"	=> front + "á" + c + "ið" ;
 			front + "ja"		=> front + "ið" ;
-			front + "a"		=> front + "ið"
+			front + "a"		=> front + "ið" ;
+			front + "u"		=> front + "ið"
 		} ;
 
 		presPart : Str -> Str = \telja -> case telja of {
@@ -490,7 +518,9 @@ resource ParadigmsIce = open
 			irregV : Str -> V = \bjóða -> irreg1V bjóða; 
 
 			-- given also the past participle (Strong.Sg.Masc.Nom)
-			irregV : (_,_ : Str) -> V = \bjóða,boðinn -> irreg2V bjóða boðinn;
+			irregV : (_,_ : Str) -> V = \bjóða,boðinn -> irreg2V bjóða boðinn ;
+
+			irregV : (_,_,_,_,_,_ : Str) -> V = \vera,er,var,sé,væri,verinn -> irreg6V vera er var sé væri verinn ;
 
 		};
 
@@ -502,8 +532,10 @@ resource ParadigmsIce = open
 		irreg2V : (_,_ : Str) -> V = \bjóða,boðinn -> 
 			lin V (vForms2Verb bjóða (irregindsub bjóða) (impSg bjóða) (impPl bjóða) (presPart bjóða) (sup bjóða) (weakPP boðinn) (strongPP boðinn)) ;
 
+		irreg6V : (_,_,_,_,_,_ : Str) -> V = \vera,er,var,sé,væri,verinn ->
+			lin V (vForms2Verb vera (irregindsub5 vera er var sé væri) (impSg vera) (impPl vera) (presPart vera) (sup vera) (weakPP verinn) (strongPP verinn)) ;
+
 		irregindsub : Str -> MForms = \inf -> case inf of {
-			-- All of these patterns are taken from Eiríkur Rögnvaldsson's book p. 193
 			{- colleciton of exceptions
 
 				svelgja bregða
@@ -574,6 +606,12 @@ resource ParadigmsIce = open
 			-- ausa jós usum ausið 
 		} ;
 
+		irregindsub5 : (_,_,_,_,_ : Str) -> MForms = \vera,er,var,sé,væri -> case <vera,er,var,sé,væri> of {
+			<"vera",_,_,_,_>	=> cVera er var "voru" sé væri ;
+			<"róa"|"gróa"|"núa"|"snúa",_,_,_,_> => cRóa vera er var sé ;
+			_			=> cMuna vera er var sé væri 
+		} ;
+
 		--3 Two-place verbs
 
 		-- Two-place verbs need a preposition, except the special case with direct object.
@@ -639,18 +677,15 @@ resource ParadigmsIce = open
 
 		consonant : pattern Str = #("b" | "d" | "ð" | "f" | "g" | "h" | "j" | "k" | "l" | "m" | "n" | "p" | "r" | "s" | "t" | "v" | "x" | "þ") ;
 
-		-- For pattern matching nouns to suffix the definate article.
-		-- The suffix , "-inn","-in","-ið", loses the "-i-" when the noun ends with
-		-- "-a", "-i", "-u", and most cases of "-é".
-		noIVowel : pattern Str = #("a" | "i" | "u" | "é") ;
-
 		regPN : Str -> Gender -> PN = \name,g -> case <name,g> of {
 				<base + "i",Masc>	=> lin PN {s = caseList name (base + "a") (base + "a") (base + "a") ; g = Masc} ;
 				<base + "a",Masc>	=> lin PN {s = caseList name (base + "u") (base + "u") (base + "u") ; g = Masc} ;
 				<base + "ur",Masc>	=> lin PN {s = caseList name base (base + "i") (base + "s") ; g = Masc} ;
 				<base + "l",Masc>	=> lin PN {s = caseList name name name (name + "s") ; g = Masc} ;
 				<base + "s",Masc>	=> lin PN {s = caseList name name (name + "i") (name + "ar") ; g = Masc} ;
-				<base + #consonant,Masc>	=> lin PN {s = caseList name name (name + "i") (name + "s") ; g = Masc}
+				<base + #consonant,Masc>	=> lin PN {s = caseList name name (name + "i") (name + "s") ; g = Masc} ;
+				<base + #consonant,Fem>		=> lin PN {s = caseList name name name (name + "ar") ; g = Fem} ;
+				<base + #consonant,Neutr>	=> lin PN {s = caseList name name (name + "i") (name + "s") ; g = Neutr}
 		} ;
 
 		-- 3 Determiners and quantifiers

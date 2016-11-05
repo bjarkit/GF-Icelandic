@@ -1,5 +1,28 @@
 abstract IrregIceAbs = Cat ** {
 	fun
+
+	-- irregular/present preterite verbs
+		eiga_V : V ;
+		mega_V : V ;
+		unna_V : V ;
+		kunna_V : V ;
+		þurfa_V : V ;
+		vita_V : V ;
+		vilja_V : V ;
+		muna_V : V ;
+		munu_V : V ;
+		skulu_V : V ;
+
+	-- irregular/present preterite verb/special
+		vera_V : V ;
+
+	-- irregular/-ri verbs
+		róa_V : V ;
+		gróa_V : V ;
+		núa_V : V ;
+		snúa_V : V ;
+
+	-- irregular/strong verbs
 		biðja_V : V ;
 		binda_V : V ;
 		bíða_V : V ;
@@ -221,4 +244,5 @@ abstract IrregIceAbs = Cat ** {
 
 		höggva_V : V ;
 		vaxa_V : V ;
+
 }
