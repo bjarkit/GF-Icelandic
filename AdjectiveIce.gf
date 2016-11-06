@@ -18,7 +18,7 @@ concrete AdjectiveIce of Adjective = CatIce ** open ResIce, Prelude in {
 
 		-- A2 -> AP
 		ReflA2 a2 = {
-			s = \\n,g,d,c => a2.s ! APosit d n g c ++ a2.c2.s ++ reflPron n g a2.c2.c
+			s = \\n,g,d,c => a2.s ! APosit d n g c ++ a2.c2.s ++ reflPron P3 n g a2.c2.c
 		} ;
 
 		-- A2 -> AP

@@ -117,12 +117,13 @@ concrete VerbIce of Verb = CatIce ** open ResIce, Prelude in {
 		-- VPSlash -> VP
 		ReflVP vps = {
 			s = vps.s ;
-			n1 = \\a => vps.n1 ! a ;
-			n2 = \\a => vps.nn1 ! a ++ vps.c2.s ++ vps.nn2 ! a ++ reflPron a.n a.g vps.c2.c ;
+			n1 = \\a => let vpsn1 = vps.n1 ! a 
+				    in <vpsn1.p1 ++ vps.c2.s ++ reflPron a.p a.n a.g vps.c2.c, vpsn1.p2> ;
+			n2 = \\a => vps.nn1 ! a ++ vps.nn2 ! a ;
 			verb = vps.verb ;
 			p = vps.p ;
 			a2 = vps.a2 ;
-			en1p1 = vps.en1p1
+			en1p1 = True
 		} ;
 
 		-- Comp -> VP

@@ -365,20 +365,33 @@ resource ResIce = ParamX ** open Prelude in {
 			a = gennumperToAgr g n p ;
 		} ;
 
-		-- There is only one relfective pronoun in icelandic "sig". It is the same in all genders and numbers and 
-		-- does not technically exist in the nominative - the personal pronoun of the subject is then used (in the nominative)
-		-- (usually) along with pronoun sjálfur.
-		reflPron : Number -> Gender -> Case -> Str =
-			\n,g,c -> case <n,g,c> of {
-				<Sg,Masc,Nom>	=> "hann" ++ "sjálfur" ;
-				<Pl,Masc,Nom>	=> "þeir" ++ "sjálfir" ;
-				<Sg,Fem,Nom>	=> "hún" ++ "sjálf" ;
-				<Pl,Fem,Nom>	=> "þær" ++ "sjálfar" ;
-				<Sg,Neutr,Nom>	=> "það" ++ "sjálft" ;
-				<Pl,Neutr,Nom>	=> "þau" ++ "sjálf" ;
-				<_,_,Acc>	=> "sig" ;
-				<_,_,Dat>	=> "sér" ;
-				<_,_,Gen>	=> "sín"
+		reflPron : Person -> Number -> Gender -> Case -> Str =
+			\p,n,g,c -> case <p,n,g,c> of {
+				<P1,Sg,_,Nom>	=> "ég" ;
+				<P1,Sg,_,Acc>	=> "mig" ;
+				<P1,Sg,_,Dat>	=> "mér" ;
+				<P1,Sg,_,Gen>	=> "mín" ;
+				<P1,Pl,_,Nom>	=> "við" ;
+				<P1,Pl,_,Acc>	=> "okkur" ;
+				<P1,Pl,_,Dat>	=> "okkur" ;
+				<P1,Pl,_,Gen>	=> "okkar" ;
+				<P2,Sg,_,Nom>	=> "þú" ;
+				<P2,Sg,_,Acc>	=> "þig" ;
+				<P2,Sg,_,Dat>	=> "þér" ;
+				<P2,Sg,_,Gen>	=> "þín" ;
+				<P2,Pl,_,Nom>	=> "þið" ;
+				<P2,Pl,_,Acc>	=> "ykkur" ;
+				<P2,Pl,_,Dat>	=> "ykkur" ;
+				<P2,Pl,_,Gen>	=> "ykkar" ;
+				<_,Sg,Masc,Nom>	=> "hann" ++ "sjálfur" ;
+				<_,Pl,Masc,Nom>	=> "þeir" ++ "sjálfir" ;
+				<_,Sg,Fem,Nom>	=> "hún" ++ "sjálf" ;
+				<_,Pl,Fem,Nom>	=> "þær" ++ "sjálfar" ;
+				<_,Sg,Neutr,Nom>	=> "það" ++ "sjálft" ;
+				<_,Pl,Neutr,Nom>	=> "þau" ++ "sjálf" ;
+				<_,_,_,Acc>	=> "sig" ;
+				<_,_,_,Dat>	=> "sér" ;
+				<_,_,_,Gen>	=> "sín"
 			};
 
 		-- thoughts on "or" conjugation with agreement in gender

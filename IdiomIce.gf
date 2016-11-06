@@ -48,29 +48,22 @@ concrete IdiomIce of Idiom = CatIce ** open Prelude, ResIce in {
 
 {-
 		-- these are a bit tricky in icelandic. The imperative only exist in the 2nd person
-
 		-- VP -> Utt
 		ImpPl1 vp = {s = vp.verb ! VPres Active Subjunctive Pl P3 ++ vp.n2 ! {g = Neutr ; n = Pl ; p = P3}} ;
 
-		-- This is hardcoded in the present tense.
 		-- NP -> VP -> Utt
 		ImpP3 np vp = {s = verbLet.s ! VPres Active Indicative np.a.n np.a.p ++ np.s ! NCase Acc ++ vp.verb ! VInf} ;
 -}
-{-
-    SelfAdvVP : VP -> VP ;        -- is at home himself
-    SelfAdVVP : VP -> VP ;        -- is himself at home
-    SelfNP    : NP -> NP ;        -- the president himself (is at home)
--}
 
 		-- VP -> VP
-		SelfAdvVP vp = vp ** {obj = \\a => vp.obj ! a ++ reflPron a.n a.g Nom} ;
+		SelfAdvVP vp = vp ** {obj = \\a => vp.obj ! a ++ reflPron a.p a.n a.g Nom} ;
 
 		-- VP -> VP
-		SelfAdVVP vp = vp ** {obj = \\a => reflPron a.n a.g Nom ++ vp.obj ! a} ;
+		SelfAdVVP vp = vp ** {obj = \\a => reflPron a.p a.n a.g Nom ++ vp.obj ! a} ;
 
 		-- NP -> NP
 		SelfNP np = {
-			s = \\c => reflPron np.a.n np.a.g Nom ++ np.s ! c ;
+			s = \\c => reflPron np.a.p np.a.n np.a.g Nom ++ np.s ! c ;
 			a = np.a ;
 			isPron = False
 		} ;
