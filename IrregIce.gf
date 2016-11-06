@@ -1,6 +1,6 @@
 --# -path=.:prelude:../abstract:../common
 
-concrete IrregIce of IrregIceAbs = CatIce ** open ParadigmsIce in {
+concrete IrregIce of IrregIceAbs = CatIce ** open ParadigmsIce,MorphoIce in {
 
 flags optimize=values ;
 
@@ -90,37 +90,97 @@ flags optimize=values ;
 		spretta_V = irregV "spretta" "sprotinn" ;
 		verða_V = irregV "verða" "orðinn" ;
 		svelta_V = irregV "svelta" "soltinn" ;
+		hverfa_V = irregV "hverfa" "horfinn" ;
 		sverfa_V = irregV "sverfa" "sorfinn" ;
 		vella_V = irregV "vella" "ollinn" ;
 		velta_V = irregV "velta" "oltinn" ;
 		verpa_V = irregV "verpa" "orpinn" ;
 		þverra_V = irregV "þverra" "þorrinn" ;
-{-
-
-		spinna_V : V ;
-		finna_V : V ;
-		vinna_V : V ;
-		binda_V : V ;
-		vinda_V : V ;
-		hrinda_V : V ;
-
-		springa_V : V ; -- sprakk
-		stinga_V : V ; -- stakk
-
-		drekka_V : V ;
-		brenna_V : V ;
-		renna_V : V ;
-
-		gjalda_V : V ;
-		skjálfa_V : V ;
-
-		hrökkva_V : V ;
-		slökkva_V : V ;
-		stökkva_V : V ;
-		sökkva_V : V ;
-
-		syngja_V : V ;
-		tyggja_V : V ;
-
--}
+		spinna_V = irregV "spinna" "spunninn" ;
+		finna_V = irregV "finna" "fundinn" ;
+		vinna_V = irregV "vinna" "unninn" ;
+		drekka_V = irregV "drekka" "drukkinn" ;
+		brenna_V = irregV "brenna" "brunninn" ;
+		renna_V = irregV "renna" "runninn" ;
+		gjalda_V = irregV "gjalda" "goldinn" ;
+		skjálfa_V = irregV "skjálfa" "skolfinn" ;
+		gjalla_V = irregV "gjalla" "gollinn" ;
+		bjarga_V = irregV "bjarga" "borginn" ; -- has usuall a weak declension in modern speach
+		hrökkva_V = irregV "hrökkva" "hrokkinn" ;
+		slökkva_V = irregV "slökkva" "slokkinn" ;
+		stökkva_V = irregV "stökkva" "stokkinn" ;
+		sökkva_V = irregV "sökkva" "sokkinn" ;
+		bera_V = irregV "bera" "borinn" ;
+		skera_V = irregV "skera" "skorinn" ;
+		stela_V = irregV "stela" "stolinn" ;
+		fela_V = irregV "fela" "fólginn" ;
+		nema_V = irregV "nema" "numinn" ;
+		gefa_V = irregV "gefa" "gefinn" ;
+		drepa_V = irregV "drepa" "drepinn" ;
+		geta_V = irregV "geta" "getinn" ;
+		kveða_V = irregV "kveða" "kveðinn" ;
+		leka_V = irregV "leka" "lekinn" ;
+		lesa_V = irregV "lesa" "lesinn" ;
+		meta_V = irregV "meta" "metinn" ;
+		reka_V = irregV "reka" "rekinn" ;
+		biðja_V = irregV "biðja" "beðinn" ;
+		sitja_V = irregV "sitja" "setinn" ;
+		liggja_V = irregV "liggja" "leginn" ;
+		þiggja_V = irregV "þiggja" "þeginn" ;
+		fara_V = irregV "fara" "farinn" ;
+		ala_V = irregV "ala" "alinn" ;
+		gala_V = irregV "gala" "galinn" ;
+		grafa_V = irregV "grafa" "grafinn" ;
+		hlaða_V = irregV "hlaða" "hlaðinn" ;
+		kala_V = irregV "kala" "kalinn" ;
+		mala_V = irregV "mala" "malinn" ;
+		skafa_V = irregV "skafa" "skafinn" ;
+		skapa_V = irregV "skapa" "skapaður" ;
+		taka_V = irregV "taka" "tekinn" ;
+		aka_V = irregV "aka" "ekinn" ;
+		draga_V = irregV "draga" "dreginn" ;
+		skaka_V = irregV "skaka" "skekinn" ;
+		hefja_V = irregV "hefja" "hafinn" ;
+		kefja_V = irregV "kefja" "kafinn" ;
+		skekja_V = irregV "skekja" "skakinn" ;
+		sverja_V = irregV "sverja" "svarinn" ;
+		deyja_V = irregV "deyja" "dáinn" ;
+		geyja_V = irregV "geyja" "geyjaður" ;
+		hlæja_V = irregV "hlæja" "hleginn" ;
+		klæja_V = irregV "klæja" "klæjaður" ;
+		flá_V = irregV "flá" "fleginn" ;
+		slá_V = irregV "slá" "sleginn" ;
+		þvo_V = irregV "þvo" "þveginn" ;
+		auka_V = irregV "auka" "jók" "jukum" "aukinn" ;
+		ausa_V = irregV "ausa" "jós" "jusum" "ausinn" ;
+		hlaupa_V = irregV "hlaupa" "hljóp" "hlupum" "hlaupinn" ;
+		heita_V = irregV "heita" "hét" "hétum" "heitinn" ;
+		leika_V = irregV "leika" "lék" "lékum" "leikinn" ;
+		falla_V = irregV "falla" "féll" "féllum" "fallinn" ;
+		halda_V = irregV "halda" "hélt" "héldum" "haldinn" ;
+		hanga_V = irregV "hanga" "hékk" "héngum" "hanginn" ;
+		ganga_V = irregV "ganga" "gékk" "géngum" "genginn" ;
+		--standa_V = irregV "standa" "staðinn" ;
+		blása_V = irregV "blása" "blés" "blésum" "blásinn" ;
+		gráta_V = irregV "gráta" "grét" "grétum" "grátinn" ;
+		láta_V = irregV "láta" "lét" "létum" "látinn" ;
+		ráða_V = irregV "ráða" "réð" "réðum" "ráðinn" ;
+		syngja_V = irregV (cBresta "syngja" "syng" "söng" "sungum" "syngi") "syngja" "sunginn" ;
+		sjá_V = irregV (cFara "sjá" "sé" "sá" "sáum" "sæi") "sjá" "séður" ;
+		éta_V = irregV (cBresta "éta" "ét" "át" "átum" "æti") "éta" "étinn" ;
+		búa_V = irregV (cFara "búa" "bý" "bjó" "bjuggum" "byggi") "búa" "búinn" ;
+		spýja_V = irregV (cFara "spýja" "spý" "spjó" "spúðum" "spýði") "spúa" "spúinn" ;
+		fá_V = irregV (cFara "fá" "fæ" "fékk" "fengum" "fengi") "fá" "fenginn" ;
+		koma_V = irregV (cBresta "koma" "kem" "kom" "komum" "kæmi") "koma" "kominn" ;
+		sofa_V = irregV (cBresta "sofa" "sef" "svaf" "sváfum" "sæfi") "sofa" "sofinn" ;
+		troða_V = irregV (cBresta "troða" "treð" "tróð" "tróðum" "træði") "troða" "troðinn" ;
+		hrinda_V = irregV (cBresta "hrinda" "hrindi" "hratt" "hrundum" "hryndi") "hrinda" "hrundinn" ;
+		vinda_V = irregV (cBresta "vinda" "vindi" "vatt" "undum" "yndi") "vinda" "undinn" ;
+		binda_V = irregV (cBresta "binda" "bindi" "batt" "bundum" "byndi") "binda" "bundinn" ;
+		springa_V = irregV (cBresta "springa" "spring" "sprakk" "sprungum" "spryngi") "springa" "sprunginn" ;
+		stinga_V = irregV (cBresta "stinga" "sting" "stakk" "stungum" "styngi") "stinga" "stunginn" ;
+		höggva_V = irregV (cBresta "höggva" "hegg" "hjó" "hjuggum" "hyggi") "höggva" "höggvinn" ;
+		vaxa_V = irregV (cBresta "vaxa" "vex" "óx" "uxum" "yxi") "vaxa" "vaxinn" ;
+		vega_V = irregV (cBresta "vega" "veg" "vó" "vógum" "vægi") "vega" "veginn" ;
+		standa_V = irregV (cBresta "standa" "stend" "stóð" "stóðum" "stæði") "standa" "staðinn" ;
 }

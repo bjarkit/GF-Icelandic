@@ -64,7 +64,6 @@ abstract IrregIceAbs = Cat ** {
 		ljúga_V : V ;
 		ríða_V : V ;
 		rísa_V : V ;
-		sitja_V : V ;
 		síga_V : V ;
 		sjá_V : V ;
 		sjúga_V : V ;
@@ -73,10 +72,8 @@ abstract IrregIceAbs = Cat ** {
 		slíta_V : V ;
 		sníða_V : V ;
 		sofa_V : V ;
-		spyrja_V : V ;
 		standa_V : V ;
 		stíga_V : V ;
-		stinga_V : V ;
 		strjúka_V : V ;
 		svífa_V : V ;
 		svíkja_V : V ;
@@ -104,7 +101,7 @@ abstract IrregIceAbs = Cat ** {
 		ljúka_V : V ;
 		rjúfa_V : V ;
 		sjúga_V : V ;
-		súpa_V : V ; -- sýp sa_V : V ;up supum sopinn
+		súpa_V : V ;
 		lúka_V : V ;
 		lúta_V : V ;
 		fljúga_V : V ;
@@ -117,6 +114,7 @@ abstract IrregIceAbs = Cat ** {
 		snerta_V : V ;
 		spretta_V : V ;
 		verða_V : V ;
+		hverfa_V : V ;
 		svelgja_V : V ;
 		svelta_V : V ;
 		sverfa_V : V ;
@@ -124,46 +122,25 @@ abstract IrregIceAbs = Cat ** {
 		velta_V : V ;
 		verpa_V : V ;
 		þverra_V : V ;
-
-		-- like bresta
-		spinna_V : V ;
-		finna_V : V ;
-		vinna_V : V ;
-		binda_V : V ;
-		vinda_V : V ;
-		hrinda_V : V ;
-		springa_V : V ; -- sprakk
-		stinga_V : V ; -- stakk
-
 		drekka_V : V ;
 		brenna_V : V ;
 		renna_V : V ;
-
 		gjalda_V : V ;
 		skjálfa_V : V ;
-
+		gjalla_V : V ;
+		bjarga_V : V ;
+		spinna_V : V ;
+		finna_V : V ;
+		vinna_V : V ;
 		hrökkva_V : V ;
 		slökkva_V : V ;
 		stökkva_V : V ;
 		sökkva_V : V ;
-
-		syngja_V : V ;
-		tyggja_V : V ;
-
-		--like bera
-
 		bera_V : V ;
 		skera_V : V ;
 		stela_V : V ;
 		fela_V : V ;
 		nema_V : V ;
-
-		koma_V : V ; -- komum
-		sofa_V : V ; -- sváfum
-		troða_V : V ;  -- tróðum
-
-		--like gefa
-
 		gefa_V : V ;
 		drepa_V : V ;
 		geta_V : V ;
@@ -172,18 +149,21 @@ abstract IrregIceAbs = Cat ** {
 		lesa_V : V ;
 		meta_V : V ;
 		reka_V : V ;
-
-		-- j-present
 		biðja_V : V ;
-		sigja_V : V ;
+		sitja_V : V ;
 		liggja_V : V ;
 		þiggja_V : V ;
-
+		binda_V : V ;
+		vinda_V : V ;
+		hrinda_V : V ;
+		springa_V : V ;
+		stinga_V : V ;
+		syngja_V : V ;
+		koma_V : V ;
+		sofa_V : V ;
+		troða_V : V ;
 		sjá_V : V ;
 		éta_V : V ;
-
-		--like fara
-
 		fara_V : V ;
 		ala_V : V ;
 		gala_V : V ;
@@ -193,56 +173,41 @@ abstract IrregIceAbs = Cat ** {
 		mala_V : V ;
 		skafa_V : V ;
 		skapa_V : V ;
-
-
 		taka_V : V ;
 		aka_V : V ;
 		draga_V : V ;
 		skaka_V : V ;
-
 		hefja_V : V ;
 		kefja_V : V ;
 		skekja_V : V ;
 		sverja_V : V ;
-
 		deyja_V : V ;
 		geyja_V : V ;
 		hlæja_V : V ;
 		klæja_V : V ;
-
 		flá_V : V ;
 		slá_V : V ;
 		þvo_V : V ;
-
 		fela_V : V ;
 		troða_V : V ;
-		vefja_V : V ;
 		vega_V : V ;
-
-		-- like heita
-
 		heita_V : V ;
 		leika_V : V ;
-
 		falla_V : V ;
 		halda_V : V ;
 		hanga_V : V ;
 		fá_V : V ;
 		ganga_V : V ;
-
 		blása_V : V ;
 		gráta_V : V ;
 		láta_V : V ;
 		ráða_V : V ;
-
 		auka_V : V ;
 		ausa_V : V ;
 		hlaupa_V : V ;
-
 		búa_V : V ;
 		spýja_V : V ;
-
 		höggva_V : V ;
 		vaxa_V : V ;
-
+		standa_V : V ;
 }

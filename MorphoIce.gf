@@ -808,9 +808,8 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 			in tForms2MForms presInd pastInd presSub pastSub ;
 
 		-- bresta brast brustum brostið
-		cBresta : (_,_,_,_ : Str) -> MForms = \bresta,brast,brustum,brysti ->
+		cBresta : (_,_,_,_,_ : Str) -> MForms = \bresta,brest,brast,brustum,brysti ->
 			let
-				brest = init bresta ;
 				brust = init (init brustum) ;
 				bra = init (init brast) ;
 				bryst = init brysti ;
@@ -830,6 +829,18 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 				pastInd = tForms6 fór (fór + "st") fór fórum (fór + "uð") (fór + "u") ;
 				presSub = tForms6 (far + "i") (far + "ið") (far + "i") (för + "um") (far + "ið") (far + "i") ;
 				pastSub = tForms6 færi (fær + "ir") færi (fær + "um") (fær + "uð") (fær + "u")
+			in tForms2MForms presInd pastInd presSub pastSub ;
+
+
+		cAusa : (_,_,_,_,_ : Str) -> MForms = \ausa,eys,jós,jusum,ysi ->
+			let
+				aus = init ausa ;
+				jusu = init jusum ;
+				ys = init ysi ;
+				presInd = tForms6 eys (eys + "t") eys (aus + "um") (aus + "ið") ausa ;
+				pastInd = tForms6 jós (jós + "t") jós jusum (jusu + "ð") jusu ;
+				presSub = tForms6 (aus + "i") (aus + "ir") (aus + "i") (aus + "um") (aus + "ið") (aus + "i") ;
+				pastSub = tForms6 ysi (ysi + "r") ysi (ys + "um") (ys + "uð") (ys + "u")
 			in tForms2MForms presInd pastInd presSub pastSub ;
 
 

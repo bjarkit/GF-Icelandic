@@ -456,7 +456,7 @@ resource ParadigmsIce = open
 
 			front + "ja"	=> (init (ðiditi front)) + "u" ; 
 			front + "a"	=> (init (ðiditi front)) + "u" ;
-			_		=> inf
+			_		=> inf + "ðu"
 		} ;
 
 		impPl : Str -> Str = \inf -> case inf of {
@@ -469,9 +469,8 @@ resource ParadigmsIce = open
 			front + "y" + c + "ja"	=> front + "u" + c + "ið" ;
 			front + "ý" + c + "ja"	=> front + "ú" + c + "ið" ;
 			front + "æ" + c + "ja"	=> front + "á" + c + "ið" ;
-			front + "ja"		=> front + "ið" ;
-			front + "a"		=> front + "ið" ;
-			front + "u"		=> front + "ið"
+			front + ("a" | "ja" | "u")	=> front + "ið" ;
+			_		=> inf + "ð"
 		} ;
 
 		presPart : Str -> Str = \telja -> case telja of {
@@ -484,6 +483,7 @@ resource ParadigmsIce = open
 			-- when it is needed to give it explicitly
 			front + "inn"		=> dTalinn inf ;
 			front + "aður"		=> dFalur inf ((a2ö front) + "uð") ;
+			stem + "ur"		=> dFalur inf stem ;
 			front + "e" + c + "ja"	=> dTalinn (front + "a" + c + "inn") ;
 			front + "y" + c + "ja"	=> dTalinn (front + "u" + c + "inn") ;
 			front + "ý" + c + "ja"	=> dTalinn (front + "ú" + c + "inn") ;
@@ -520,11 +520,15 @@ resource ParadigmsIce = open
 			-- given also the past participle (Strong.Sg.Masc.Nom)
 			irregV : (_,_ : Str) -> V = \bjóða,boðinn -> irreg2V bjóða boðinn ;
 
+			-- given also the singular and plural past indicative
+			irregV : (_,_,_,_ : Str) -> V = \ausa,jós,jusum,ausinn -> irreg4V ausa jós jusum ausinn ;
+
 			irregV : (_,_,_,_,_,_ : Str) -> V = \vera,er,var,sé,væri,verinn -> irreg6V vera er var sé væri verinn ;
 
-		};
+			-- when the pattern is pretty rather unique - left over verbs
+			irregV : MForms -> (_,_ : Str) -> V = \mforms,éta,etinn -> irreg9V mforms éta etinn ;
 
-		-- todo fix imp and sup forms
+		};
 
 		irreg1V : Str -> V = \inf ->
 			lin V (vForms2Verb inf (irregindsub inf) (impSg inf) (impPl inf) (presPart inf) (sup inf) (weakPP inf) (strongPP inf)) ;
@@ -532,78 +536,148 @@ resource ParadigmsIce = open
 		irreg2V : (_,_ : Str) -> V = \bjóða,boðinn -> 
 			lin V (vForms2Verb bjóða (irregindsub bjóða) (impSg bjóða) (impPl bjóða) (presPart bjóða) (sup bjóða) (weakPP boðinn) (strongPP boðinn)) ;
 
+		irreg4V : (_,_,_,_ : Str) -> V = \ausa,jós,jusum,ausinn ->
+			lin V (vForms2Verb ausa (irregindsub3 ausa jós jusum) (impSg ausa) (impPl ausa) (presPart ausa) (sup ausa) (weakPP ausinn) (strongPP ausinn)) ;
+
 		irreg6V : (_,_,_,_,_,_ : Str) -> V = \vera,er,var,sé,væri,verinn ->
 			lin V (vForms2Verb vera (irregindsub5 vera er var sé væri) (impSg vera) (impPl vera) (presPart vera) (sup vera) (weakPP verinn) (strongPP verinn)) ;
 
+		irreg9V : MForms -> (_,_ : Str) -> V = \mforms,éta,etinn ->
+			lin V (vForms2Verb éta mforms (impSg éta) (impPl éta) (presPart éta) (sup éta) (weakPP etinn) (strongPP etinn)) ;
+
 		irregindsub : Str -> MForms = \inf -> case inf of {
-			{- colleciton of exceptions
-
-				svelgja bregða
-			-}
-
-			-- a) í - ei - 	i - i - 32 verbs
+			-- biðja, sitja..
+			front@("b" | "s") + "i" + back@("t"| "ð") + "j" + #vowel	=> cBresta inf
+												(front + "i" + back)
+											 	(front + "a" + back)
+												(front + "á" + back + "um")
+												(front + "æ" + back + "i") ;
+			-- þiggja, liggja..
+			front@("þ" | "l") + "i" + back@("gg") + "j" + #vowel	=> cBresta inf
+											(front + "i" + back)
+											(front + "á")
+											(front + "á" + back + "um")
+											(front + "æ" + back + "i") ;
+			-- flá, slá, þvo..
+			front@("fl" | "sl" | "þv") + middle@("á" | "o")	=> cFara inf
+										(front + "æ")
+										(front + "ó")
+										(front + "ógum")
+										(front + "ægi") ;
+			-- í - ei - i - i
 			front + "í" + back + #vowel	=>  cBíta inf (front + "ei" + back) (front + "i" + back + "um") ;
-
-			-- b) jó - au - u - o - 34 verbs
+			-- jó - au - u - o
 			front + ("jó" | "jú" | "ú") + back@(#consonant*) + #vowel => cBjóða inf 
 											(front + "ý" + back)
 											(front + "au" + back) 
 											(front + "u" + back + "um") 
 											(front + "y" + back + "i") ;
-
-			-- c) e - a - u - o  - 24 verbs, exceptions are "svelgja"(weak) "bregða"
-			-- c-1
-			-- verða verð varð urðum yrði orðið
+			-- (v)e - a - u - o
 			front@(f + "v") + "e" + back@(#consonant + #consonant) + #vowel	=> cBresta inf 
-												(front + "a" + back) 
-												(f + "u" + back + "um") 
-												(f + "y" + back + "i") ;
-			-- c-2)
+											(front + "e" + back)
+											(front + "a" + back) 
+											(f + "u" + back + "um") 
+											(f + "y" + back + "i") ;
+			-- e - a - u - o 
 			front + "e" + back@(#consonant + #consonant) + #vowel	=> cBresta inf 
-												(front + "a" + back) 
-												(front + "u" + back + "um") 
-												(front + "y" + back + "i") ;
+											(front + "e" + back)
+											(front + "a" + back) 
+											(front + "u" + back + "um") 
+											(front + "y" + back + "i") ;
 
-			-- d) e - a - á - o - 3 verbs, exceptions are "fela" and "nema"
-			-- bera bar bárum borið
-			-- front + "e" + one +hljómandi consonant + #vowel - what ever the fuck +hljómandi means 	=> c? inf (front + "a" + back) (front + "á" + back + "um") ;
-
-			-- e) e - a - á - e - 8 verbs, exceptions are "vefa" and "vega"
-			-- gefa gaf gáfum gefið
-			-- front + "e" + "one -hljómandi consonant + #vowel	=> c? inf (front + "a" + back) (front + "á" + back + "um") ;
-
-			-- f) e - ó - ó - a - 3 verbs
-			-- hefja hóf hófum hafið
-			-- front + "e" + back@("f" | "r") + "j" + #vowel	=> c? inf (front + "ó" + back) (front + "ó" + back + "um") ;
-
-			-- g) a - ó - ó - e - 4 verbs
-			-- taka tók tókum tekið 
-			-- front + "a" + gómhljóð + #vowel	=> c? inf (front + "ó" + back) (front + "ó" + back + "um") ;
-
-			-- h) a - ó - ó - a - 10 verbs
-			-- cFara : (_,_,_,_,_ : Str) -> MForms = \fara,fer,fór,fórum,færi ->
-			front + "a" + back@(#consonant + #vowel)	=> cFara inf 
+			-- e - a - á - o
+			front@("b" | "sk") + "e" + back@("r") + #vowel	=> cFara inf 
+										(front + "e" + back)
+										(front + "a" + back)
+										(front + "á" + back + "um") 
+										(front + "e" + back + "i") ;
+			-- e - a - á - o
+			front@("st" | "f" | "n") + "e" + back@("l" | "m") + #vowel	=> cBresta inf
+											(front + "e" + back)
+											(front + "a" + back)
+											(front + "á" + back + "um") 
+											(front + "e" + back + "i") ;
+			-- e - a - á - e
+			front + "e" + back@(#consonant) + #vowel	=> cBresta inf 
+										(front + "e" + back) 
+										(front + "a" + back) 
+										(front + "á" + back + "um")
+										(front + "e" + back + "i") ;
+			-- a - ó - ó - a
+			front + "a" + back@(#consonant) + #vowel	=> cFara inf 
 										(front + "e" + back)
 										(front + "ó" + back) 
 										(front + "ó" + back + "um")
-										(front + "æ" + back + "i") 
+										(front + "æ" + back + "i") ;
+			-- e + j - ó - ó - a
+			front + "e" + back@(#consonant) + "j" + #vowel	=> cFara inf
+										(front + "e" + back)
+										(front + "ó" + back) 
+										(front + "ó" + back + "um")
+										(front + "æ" + back + "i") ;
+			-- ey/æ + j - ó - ó - a
+			front + middle@("ey" | "æ") + "j" + #vowel	=> cFara inf
+									(front + middle)
+									(front + "ó" ) 
+									(front + "ó" + "um")
+									(front + "æ" + "i") ;
 
-			-- i) á - é - é - á - 4 verbs
+			-- já/ja -e - a - u - o
+			front + ("já" | "ja") + back@(#consonant*) + #vowel => cBresta inf 
+										(front + "e" + back) 
+										(front + "a" + back) 
+										(front + "u" + back + "um")
+										(front + "y" + back + "i") ;
+			-- i - a - u - u 
+			front@(f + "v") + "i" + back@("n" + #consonant) + #vowel	=> cBresta inf
+												(front + "e" + back) 
+												(front + "a" + back)
+												(f + "u" + back + "um")
+												(f + "y" + back + "i") ;
+			-- i - a - u - u
+			front + "i" + back@("n" + #consonant) + #vowel	=> cBresta inf
+										(front + "e" + back) 
+										(front + "a" + back)
+										(front + "u" + back + "um")
+										(front + "y" + back + "i") ;
+			--  e - a  - u - u
+			front + "e" + back@("kk" | "nn") + #vowel	=> cBresta inf
+										(front + "e" + back) 
+										(front + "a" + back)
+										(front + "u" + back + "um")
+										(front + "y" + back + "i") ;
+			-- ö (-e) - ö - u - o - cBresta
+			front + "ö" + back@("kk") + "v" + #vowel	=> cBresta inf
+										(front + "e" + back)
+										(front + "ö" + back)
+										(front + "u" + back + "um")
+			-- i) á - é - é - á
 			-- gráta grét grétum grátið
 			-- front + "á" + tannhljóð + #vowel	=> c? inf (front + "é" + back) (front + "é" + back + "um") ;	
+										(front + "y" + back + "i")
+		} ;
 
-			-- j) já (-e) - a - u - o - 4 verbs
-			-- skjálfa skelf skalf skulfum skolfið
-			-- front + ("já" | "ja") + "consonant* + #vowel => c? inf (front + "e" + "back") (front + "a" + back) (front + "u" + back + "um") ;
-
-			-- k) i - a - u - u : dBresta
-			-- vinna vann unnum unnið
-			
-			-- m) ö (-e) - ö - u - o
-			-- hrökkva hrekk hrökk hrukkum hrokkið
-			
-			-- n) au - jó - u - au
-			-- ausa jós usum ausið 
+		irregindsub3 : (_,_,_ : Str) -> MForms = \ausa,jós,jusum -> case <ausa,jós,jusum> of {
+			<front + "au" + back + #vowel,_ + "jó" + _, _ + "u" + _>	=> cAusa ausa
+												(front + "ey" + back)
+												jós
+												jusum
+												(front + "y" + back + "i") ;
+			<front + "ei" + back + #vowel, _ + "é" + _, _ + "é" + _>	=> cBresta ausa
+											(front + "ei" + back)
+											jós
+											jusum
+											(front + "é" + back + "i") ;
+			<front + "a" + back + #vowel, _ + "é" + _, _ + "é" + _>	=> cBresta ausa
+											(front + "e" + back)
+											jós
+											jusum
+											(front + "é" + back + "i") ;
+			<front + "á" + back + #vowel, _ + "é" + _, _ + "é" + _>	=> cBresta ausa
+											(front + "æ" + back)
+											jós
+											jusum
+											(front + "é" + back + "i")
 		} ;
 
 		irregindsub5 : (_,_,_,_,_ : Str) -> MForms = \vera,er,var,sé,væri -> case <vera,er,var,sé,væri> of {
@@ -618,6 +692,8 @@ resource ParadigmsIce = open
 		-- (transitive verbs).
 
 		prepV2 : V -> Preposition -> V2 = \v,prep -> v  ** {c2 = prep} ;
+
+		prepV3 : V -> Preposition -> Preposition -> V3 = \v,p1,p2 -> v ** {c2 = p1 ; c3 = p2} ;
 		
 		accPrep : Preposition = {s = []; c = Acc} ;
 
@@ -639,17 +715,19 @@ resource ParadigmsIce = open
 		-- Three-place (ditransitive) verbs need two prepositions, of which
 		-- the first one or both can be absent.
 
---		mkV3 : overload {
-			-- also constructedlike V3 is V2V
---			-- ditransitive, e.g. give,_,_
---			mkV3 : V -> V3 = \v -> prepV3 v ;                  
---
---			mkV3  : V -> Prep -> Prep -> V3 ;   -- two prepositions, e.g. speak, with, about
---			mkV3  : V -> Prep -> V3 ;           -- give,_,to --%
---			mkV3  : V -> Str -> V3 ;            -- give,_,to --%
---			mkV3  : Str -> Str -> V3 ;          -- give,_,to --%
---			mkV3  : Str -> V3 ;                 -- give,_,_ --%
---		};
+		mkV3 = overload {
+			-- also constructed like V3 is V2V
+
+			-- ditransitive, e.g. give,_,_
+			mkV3 : V -> V3 = \v -> prepV3 v (mkPrep "" dative) (mkPrep "" accusative) ;                  
+
+			-- ditransitive, e.g. give,_,to
+			mkV3 : V -> Prep -> V3 = \v,p2 -> prepV3 v (mkPrep "" dative) p2 ;
+
+			-- ditransitive, e.g. speak,with,about
+			mkV3 : V -> Prep -> Prep -> V3 = \v,p1,p2 -> prepV3 v p1 p2 ;
+
+		};
 
 		--2 Definitions of paradigms
 

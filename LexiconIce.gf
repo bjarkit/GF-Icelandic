@@ -274,7 +274,6 @@ concrete LexiconIce of Lexicon = CatIce **
 		vomit_V = mkV "æla" ;
 
 		love_V2 = mkV2 (mkV "elska" "elska" "elskaði" "elskaður") ;
-		--like_V2 = mkV2 (mkV "líka" "líkar
 		listen_V2 = mkV2 (mkV "hlusta" "hlusta" "hlustaði" "hlustaður") (mkPrep "á" accusative) ;
 		close_V2 = mkV2 (mkV "loka" "loka" "lokaði" "lokaður") ;
 		answer_V2S = mkV2 (mkV "svara" "svara" "svaraði" "svaraður") (mkPrep "" dative) ;
@@ -288,7 +287,7 @@ concrete LexiconIce of Lexicon = CatIce **
 		paint_V2A = mkV2 (mkV "mála" "mála" "málaði" "málaður") ;
 		speak_V2 = mkV2 (mkV "tala" "tala" "talaði" "talaður") ;
 		teach_V2 = mkV2 (mkV "kenna") ;
-		understand_V2 = mkV2 (mkV "telja") ;
+		understand_V2 = mkV2 (mkV "skilja") ;
 		watch_V2 = mkV2 (mkV "horfa") ;
 		write_V2 = mkV2 (mkV "skrifa" "skrifa" "skrifaði" "skrifaður") ;
 		do_V2 = mkV2 (mkV "gera") ;
@@ -320,45 +319,43 @@ concrete LexiconIce of Lexicon = CatIce **
 		seek_V2 = mkV2 (mkV "leita" "leita" "leitaði" "leitaður") ;
 		travel_V = mkV "ferða" "ferða" "ferðaði" "ferðaður" ; -- this verb only exists in the middle voice
 		know_V2 = mkV2 IrregIce.vita_V ;
-{-
-		switch8off_V2 = dirV2 (partV (regV "switch") "off") ;
-		switch8on_V2 = dirV2 (partV (regV "switch") "on") ;
-		fear_V2 = -- middle voice verb formation of ótti (a noun)
-		fight_V2 = -- middle voice of either berja(hit/beat) - berjast or slá (hit/beat) - slást
-
-		drink_V2 = mkV2 IrregIce.drekka_V ;
-
-		-- FIXME -  not irreg verb, but -ja- verb :)
-		ask_V2Q = mkV2 IrregIce.spyrja_V (mkprep "að" dative) ;
-
-		beg_V2V = mkV3 IrregIce.biðja_V noPrep (mkPrep "um" accusative) ;
-		buy_V2 = mkV2 IrregIce.kaupa_V ;
+		know_VQ = IrregIce.vita_V ;
+		know_VS = IrregIce.vita_V ;
+		ask_V2Q = mkV2 (mkV "spyrja" "spyr" "spurði" "spurður") (mkPrep "að" dative) ;
 		find_V2 = mkV2 IrregIce.finna_V ;
-		play_V2 = mkV2 IrregIce.leika_V ;
-		read_V2 = mkV2 IrregIce.lesa_V ;
-		see_V2 = mkV2 IrregIce.sjá ;
 		win_V2 = mkV2 IrregIce.vinna_V ;
-		put_V2 = mkV2 IrregIce.láta_V ;
-		hold_V2 = mkV2 IrregIce.halda_V ;
+		fall_V = IrregIce.detta_V ;
+		burn_V = IrregIce.brenna_V ;
+		drink_V2 = mkV2 IrregIce.drekka_V ;
+		add_V3 = mkV3 (mkV "bæta" "bæti" "bætti" "bættur") (mkPrep "" dative) (mkPrep "við" accusative) ;
+		beg_V2V = mkV3 IrregIce.biðja_V (mkPrep "" accusative) (mkPrep "um" accusative) ;
+		read_V2 = mkV2 IrregIce.lesa_V ;
 		kill_V2 = mkV2 IrregIce.drepa_V ;
-
+		give_V3 = mkV3 IrregIce.gefa_V ;
+		sit_V = IrregIce.sitja_V ;
+		hope_VS = mkV "vona" "vona" "vonaði" "vonaður" ;
+		wonder_VQ = mkV "velta" ;
+		play_V2 = mkV2 IrregIce.leika_V ;
+		laugh_V = IrregIce.hlæja_V ;
+		hold_V2 = mkV2 IrregIce.halda_V ;
+		die_V = IrregIce.deyja_V ;
+		run_V = IrregIce.hlaupa_V ;
+		walk_V = IrregIce.ganga_V ;
+		dig_V = IrregIce.grafa_V ;
+		see_V2 = mkV2 IrregIce.sjá_V ;
+		blow_V = IrregIce.blása_V ;
+		sleep_V = IrregIce.sofa_V ;
+		put_V2 = mkV2 IrregIce.láta_V ;
+		buy_V2 = mkV2 (mkV "kaupa") ;
 		tie_V2 = mkV2 IrregIce.binda_V ;
 		stab_V2 = mkV2 IrregIce.stinga_V ;
 		come_V = IrregIce.koma_V ;
-		die_V = IrregIce.deyja_V ;
-		run_V = IrregIce.hlaupa_V ;
-		sleep_V = IrregIce.sofa_V ;
-		walk_V = IrregIce.ganga_V ;
-		blow_V = IrregIce.blása_V ;
-		burn_V = IrregIce.brenna_V
-		dig_V = IrregIce.dig_V ;
-		fall_V = IrregIce.detta_V ;
-		fly_V = IrregIce.fljúga_V ;
-		give_V3 = mkV3 IrregIce.gefa_V ;
-		laugh_V = IrregIce.hlæja_V ;
 		play_V = IrregIce.leika_V ;
-		sing_V = IrregIce.syngj_V ;
-		sit_V = IrregIce.sitja_V ;
+		sing_V = IrregIce.syngja_V ;
 		stand_V = IrregIce.standa_V ;
--} 
+		become_VA = IrregIce.verða_V ;
+		talk_V3 = mkV3 (mkV "tala" "tala" "talaði" "talaður") (mkPrep "við" accusative) (mkPrep "um" accusative) ;
+		send_V3 = mkV3 (mkV "senda") (mkPrep "" accusative) (mkPrep "með" accusative) ;
+		say_VS = mkV "segja" ;
+		sell_V3 = mkV3 (mkV "selja") (mkPrep "" dative) (mkPrep "" dative) ;
 } ;
