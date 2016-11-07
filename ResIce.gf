@@ -254,25 +254,18 @@ resource ResIce = ParamX ** open Prelude in {
 			=\v,ten,ant,pol,agr -> case <ten,ant> of {
 			-- hann sefur []/ekki - he []/doesn't sleep
 			<Pres,Simul>	=> vf (v.s ! VPres Active Indicative agr.n agr.p) [] (negation pol) False;
-
 			-- hann hefur []/ekki sofið - he has/hasn't slept
 			<Pres,Anter>	=> vf (verbHave.s ! VPres Active Indicative agr.n agr.p) (v.sup ! Active) (negation pol) True ;
-
 			-- hann svaf []/ekki - he []/didn't sleep
 			<Past,Simul> 	=> vf (v.s ! VPast Active Indicative agr.n agr.p) [] (negation pol) False ;
-
 			-- hann hafði []/ekki sofið - he had/hadn't slept
 			<Past,Anter> 	=> vf (verbHave.s ! VPast Active Indicative agr.n agr.p) (v.sup ! Active) (negation pol) True ;
-
 			-- hann mun []/ekki sofa - he will/won't sleep
 			<Fut,Simul>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (v.s ! VInf) (negation pol) True ;
-
 			-- hann mun []/ekki hafa sofið - 'he will/won't have slept'	
 			<Fut,Anter>	=> vf (verbWill.s ! VPres Active Indicative agr.n agr.p) (verbHave.s ! VInf ++ v.sup ! Active) (negation pol) True ;
-
 			-- hann myndi []/ekki sofa 'he would/wouldn't sleep'
 			<Cond,Simul>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (v.s ! VInf) (negation pol) True ;
-
 			-- hann myndi []/ekki hafa sofið 'he would/wouldn't have slept'
 			<Cond,Anter>	=> vf (verbWill.s ! VPast Active Subjunctive agr.n agr.p) (verbHave.s ! VInf ++ v.sup ! Active) (negation pol) True
 		} ;

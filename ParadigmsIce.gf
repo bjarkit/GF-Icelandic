@@ -32,10 +32,6 @@ resource ParadigmsIce = open
 	--2 Parameters 
 
 	oper
-		N : Type ;
-		A : Type ;
-		V : Type ;
-
 		-- To abstract over gender names, we define the following identifiers.	
 
 		Gender : Type ; 
@@ -85,7 +81,7 @@ resource ParadigmsIce = open
 		} ;
 
 		-- compound nouns - the last noun leads the inflexion, the rest stays the same
-		mkCompoundN : Str -> N -> N = \front,lead -> {
+		mkCompoundN : Str -> N -> N = \front,lead -> lin N {
 			s = \\n,s,c	=> front + lead.s ! n ! s ! c ;
 			g = lead.g
 		} ;
@@ -747,9 +743,9 @@ resource ParadigmsIce = open
 		dative = Dat ;
 		genitive = Gen ;
 
-		N = ResIce.N ;
-		A = ResIce.A ;
-		V = ResIce.V ;
+		--N = ResIce.N ;
+		--A = ResIce.A ;
+		--V = ResIce.V ;
 
 		vowel : pattern Str = #("a" | "á" | "e" | "é" | "i" | "í" | "o" | "ó" | "u" | "ú" | "y" | "ý" | "æ" | "ö") ;
 
@@ -766,32 +762,13 @@ resource ParadigmsIce = open
 				<base + #consonant,Neutr>	=> lin PN {s = caseList name name (name + "i") (name + "s") ; g = Neutr}
 		} ;
 
-		-- 3 Determiners and quantifiers
-
-{-
-		is this used or needed at all?
-		mkOrd : Str -> Ord = \sjötti -> 
-			let
-				sjött = init sjötti
-			in lin Ord { s = table {
-				Sg	=> table {
-						Masc	=> caseList sjötti (sjött + "a") (sjött + "a") (sjött + "a") ;
-						Fem	=> caseList (sjött + "a") (sjött + "u") (sjött + "u") (sjött + "u") ;
-						Neutr	=> caseList (sjött + "a") (sjött + "a") (sjött + "a") (sjött + "a") 
-				} ;
-				Pl	=> \\_,_	=> sjött + "u"
-			} 
-		} ;
--}
-
-
 		-- 3 Adverbs
 
 		mkAdv : Str -> Adv = \x -> lin Adv (ss x) ;
 
 		mkAdA : Str -> AdA = \x -> lin AdA (ss x) ;
-		
-		mkAdN : Str -> AdN = \x -> lin AdN (ss x) ;
+
+		mkAdN : CAdv -> AdN = \cadv -> lin AdN {s = cadv.s ++ cadv.p } ;
 
 		mkAdV : Str -> AdV = \x -> lin AdV (ss x) ;
 

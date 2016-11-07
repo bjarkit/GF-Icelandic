@@ -31,29 +31,27 @@ concrete IdiomIce of Idiom = CatIce ** open Prelude, ResIce in {
 			mkClause "til" (vp ** {n2 = \\_ => np.s ! NCase Nom ++ adv.s}) np.a ;
 
 		-- IP -> Adv -> QCl
-		-- this is hardcoded in the masculine atm
 		ExistIPAdv ip adv = let
 				vp = (predV verbBe) ;
 				cl = mkClause (ip.s ! Masc ! Nom) vp {g = Masc ; n = ip.n ; p = P3}
 			in {s = \\ten,ant,pol,_ => cl.s ! ten ! ant ! pol ! ODir ++ adv.s} ;
 
 		-- VP -> VP
-		-- FIXME!
-		-- For more complex cases than just "be sleeping" I think 
-		-- VP needs to have special field for adverbs. Although
-		-- I am quite certain the adverb can be both between the verb
-		-- and the object or following the object.
 		ProgrVP vp = let vvp = predV verbBe in
 			vvp ** {n2 = \\a => vp.p ! PPres ++ vp.n2 ! a} ;
 
-{-
-		-- these are a bit tricky in icelandic. The imperative only exist in the 2nd person
 		-- VP -> Utt
-		ImpPl1 vp = {s = vp.verb ! VPres Active Subjunctive Pl P3 ++ vp.n2 ! {g = Neutr ; n = Pl ; p = P3}} ;
+			--| VPMood Tense Anteriority -- is this a describing name ?
+			--a = gennumperToAgr g n p ;
+		ImpPl1 vp = { s = let
+				agr = gennumperToAgr Masc Pl P1 ;
+				verb = vp.s ! VPMood Pres Simul ! Pos ! agr
+			in verb.inf ++ vp.n2 ! agr } ;
 
 		-- NP -> VP -> Utt
-		ImpP3 np vp = {s = verbLet.s ! VPres Active Indicative np.a.n np.a.p ++ np.s ! NCase Acc ++ vp.verb ! VInf} ;
--}
+		ImpP3 np vp = {s = let
+				verb = vp.s ! VPMood Pres Simul ! Pos ! np.a
+			in verbLet.s ! VPres Active Indicative np.a.n np.a.p ++ np.s ! NCase Acc ++ verb.inf} ;
 
 		-- VP -> VP
 		SelfAdvVP vp = vp ** {obj = \\a => vp.obj ! a ++ reflPron a.p a.n a.g Nom} ;

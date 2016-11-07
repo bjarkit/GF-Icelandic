@@ -3,6 +3,7 @@ concrete StructuralIce of Structural = CatIce **
 	(C = ConstructX), Prelude in {
 
 	lin
+		possess_Prep = mkPrep "af" dative ;
 		always_AdV = mkAdV "alltaf" ;
 		above_Prep = mkPrep "ofan" genitive ;
 		after_Prep = mkPrep "eftir" dative ;
@@ -10,7 +11,7 @@ concrete StructuralIce of Structural = CatIce **
 		before_Prep = mkPrep "fyrir" dative ;
 		behind_Prep = mkPrep "fyrir aftan" dative ;
 		between_Prep = mkPrep "á milli" genitive ;
-		almost_AdN = mkAdN "næstum" ;
+		almost_AdN = mkAdN (lin CAdv ({s = "næstum" ; p = "því" })) ;
 		although_Subj = ss "þó" ;
 		by8agent_Prep = mkPrep "hjá" dative ;
 		by8means_Prep = mkPrep "hjá" dative ;
@@ -76,8 +77,8 @@ concrete StructuralIce of Structural = CatIce **
 		very_AdA = mkAdA "mjög" ;
 		without_Prep = mkPrep "án" genitive ;
 		yes_Utt = ss "já" ;
-		at_least_AdN = mkAdN "að minnsta kosti" ;
-		at_most_AdN = mkAdN "í mesta lagi" ;
+		at_least_AdN = mkAdN (lin CAdv ({s = "að minnsta" ; p = "kosti"})) ;
+		at_most_AdN = mkAdN (lin CAdv ({s = "í mesta" ; p = "lagi"})) ;
 		except_Prep = mkPrep "nema" nominative;
 
 		so_AdA = mkAdA "svo" ;
