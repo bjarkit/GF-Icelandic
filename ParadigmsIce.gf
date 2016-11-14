@@ -326,7 +326,7 @@ resource ParadigmsIce = open
 			<stem + "t" + "ri",_>		=> dSuperlW (stem + "st") (stem + "st") ;
 			<stem + "ri",_>			=> dSuperlW (stem + "st") (stem + "st") ;
 			<frontm + "ur",frontf + "ur">	=> dSuperlW (frontm + "rast") (frontf + "rust") ;
-			<front + "ur",_>		=> dSuperlW (front + "ast") (fem + "ust") ;
+			<front + "ur",_>		=> dSuperlW (front + "ast") (front + "ust") ;
 			<front + end@("ll" | "nn"),_>	=> dSuperlW (front + (init end) + "ast") ((a2ö front) + (init end) + "ust") ;
 			<_,_ + ("ý" | "æ")>		=> dSuperlW (fem + "jast") (fem + "just") ;
 			_				=> dSuperlW (fem + "ast") (fem + "ust")
@@ -396,6 +396,9 @@ resource ParadigmsIce = open
 			-- Given also the past participle (strong declension) in the singular masculine nominative.
 			mkV : (_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn -> mk4V telja tel taldi talinn ;
 
+			-- Given also the supine
+			mkV : (_,_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn,talið -> mk5V telja tel taldi talinn talið ;
+
 			-- will be taken out, not to worry...
 			-- The theoretical worst case
 			mkV : (x1,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,_,x59 : Str) -> V =
@@ -425,6 +428,9 @@ resource ParadigmsIce = open
 		mk4V : (_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn ->
 			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg taldi) (impPl telja) (presPart telja) (sup telja) (weakPP talinn) (strongPP talinn)) ;
 
+		mk5V : (_,_,_,_,_ : Str) -> V = \telja,tel,taldi,talinn,talið ->
+			lin V (vForms2Verb telja (indsub3 telja tel taldi) (impSg taldi) (impPl telja) (presPart telja) talið (weakPP talinn) (strongPP talinn)) ;
+
 		indsub1 : Str -> MForms = \inf -> case inf of {
 			stem@(front + "e" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "a" + c)) ; 
 			stem@(front + "y" + c) + "ja"	=> cTelja inf stem (ðiditi (front + "u" + c)) ; 
@@ -443,13 +449,11 @@ resource ParadigmsIce = open
 		indsub3 : (_,_,_ : Str) -> MForms = \telja,tel,taldi -> case <telja,tel,taldi> of {
 			<_ + "a",_ + "i",_>	=> cDæma telja tel taldi ;
 			<_ + "a",_ + "a",_>	=> cKalla telja taldi ;
-			<_ + "ja",_,_>		=> cTelja telja tel taldi
+			<_ + "a",_,_>		=> cTelja telja tel taldi
 		} ;
 
 		impSg : Str -> Str = \inf -> case inf of {
-			-- first already given plural form ending
 			front + "i"	=> front + "u" ;
-
 			front + "ja"	=> (init (ðiditi front)) + "u" ; 
 			front + "a"	=> (init (ðiditi front)) + "u" ;
 			_		=> inf + "ðu"
@@ -521,25 +525,30 @@ resource ParadigmsIce = open
 
 			irregV : (_,_,_,_,_,_ : Str) -> V = \vera,er,var,sé,væri,verinn -> irreg6V vera er var sé væri verinn ;
 
-			-- when the pattern is pretty rather unique - left over verbs
+			-- when the pattern is pretty rather unique or hard to pattern match - left over verbs
 			irregV : MForms -> (_,_ : Str) -> V = \mforms,éta,etinn -> irreg9V mforms éta etinn ;
 
 		};
 
 		irreg1V : Str -> V = \inf ->
-			lin V (vForms2Verb inf (irregindsub inf) (impSg inf) (impPl inf) (presPart inf) (sup inf) (weakPP inf) (strongPP inf)) ;
+			lin V (vForms2Verb inf (irregindsub inf) (impIrregSg inf) (impPl inf) (presPart inf) (sup inf) (weakPP inf) (strongPP inf)) ;
 
 		irreg2V : (_,_ : Str) -> V = \bjóða,boðinn -> 
-			lin V (vForms2Verb bjóða (irregindsub bjóða) (impSg bjóða) (impPl bjóða) (presPart bjóða) (sup bjóða) (weakPP boðinn) (strongPP boðinn)) ;
+			lin V (vForms2Verb bjóða (irregindsub bjóða) (impIrregSg bjóða) (impPl bjóða) (presPart bjóða) (sup bjóða) (weakPP boðinn) (strongPP boðinn)) ;
 
 		irreg4V : (_,_,_,_ : Str) -> V = \ausa,jós,jusum,ausinn ->
-			lin V (vForms2Verb ausa (irregindsub3 ausa jós jusum) (impSg ausa) (impPl ausa) (presPart ausa) (sup ausa) (weakPP ausinn) (strongPP ausinn)) ;
+			lin V (vForms2Verb ausa (irregindsub3 ausa jós jusum) (impIrregSg ausa) (impPl ausa) (presPart ausa) (sup ausa) (weakPP ausinn) (strongPP ausinn)) ;
 
 		irreg6V : (_,_,_,_,_,_ : Str) -> V = \vera,er,var,sé,væri,verinn ->
-			lin V (vForms2Verb vera (irregindsub5 vera er var sé væri) (impSg vera) (impPl vera) (presPart vera) (sup vera) (weakPP verinn) (strongPP verinn)) ;
+			lin V (vForms2Verb vera (irregindsub5 vera er var sé væri) (impIrregSg vera) (impPl vera) (presPart vera) (sup vera) (weakPP verinn) (strongPP verinn)) ;
 
 		irreg9V : MForms -> (_,_ : Str) -> V = \mforms,éta,etinn ->
-			lin V (vForms2Verb éta mforms (impSg éta) (impPl éta) (presPart éta) (sup éta) (weakPP etinn) (strongPP etinn)) ;
+			lin V (vForms2Verb éta mforms (impIrregSg éta) (impPl éta) (presPart éta) (sup éta) (weakPP etinn) (strongPP etinn)) ;
+
+		impIrregSg : Str -> Str = \inf -> case inf of {
+			front + "a"	=> front + "ðu" ;
+			_		=> inf + "ðu"
+			} ;
 
 		irregindsub : Str -> MForms = \inf -> case inf of {
 			-- biðja, sitja..

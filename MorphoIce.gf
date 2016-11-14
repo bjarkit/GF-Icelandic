@@ -451,6 +451,7 @@ resource MorphoIce = ResIce ** open Prelude, (Predef=Predef), ResIce in {
 		ðtdt : Str -> Str = \vondur -> case vondur of {
 			front + "ó" + ("dur" | "ður") => front + "o" + "t" ;
 			front + ("dur" | "ður")	=> front + "t" ;
+			front@(_ + #consonant) + "tur"	=> front ;
 			front + "ur"		=> front
 		} ;
 

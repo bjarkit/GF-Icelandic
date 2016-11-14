@@ -201,40 +201,47 @@ resource ResIce = ParamX ** open Prelude in {
 			s	: VPForm => Polarity => Agr => {
 				fin	: Str ;
 				inf	: Str ;
-				a1	: Str * Str 	-- p1 : with inf - ég hef ekki elskað þig
-							-- p2 : without inf - ég elska þig ekki
+				a1	: Str * Str	-- p1 : with inf - ég hef ekki elskað þig
+							-- p2 : without inf - ég elska þig ekki (obj shift) or ég elska ekki Gunnu (no shift)
 			} ;
 			p	: PForm => Str ; -- past and present participles
-			n1	: Agr => Str * Str; -- p1, p2 : Pron obj - hann/hún/það/ég/þú/sig - in case of ditransitive verbs we have two fields
-			n2	: Agr => Str ; -- General obj - e.g. þessi maður/stóra bókin/hestur
-			a2	: Str ;
-			en1p1	: Bool -- indicates if the p1 field in n1 exists or is empty..
+			indObj	: Agr => Str ; -- Indirect object
+			dirObj  : Agr => Str ; -- Direct object
+			a2	: Str ; -- Bound adverbials
+			indShift : Bool ; -- indicates if the indirect object is shifted, e.g. if it is an unstressed pronoun (hann/hún/það/ég/þú/sig)
+			dirShift : Bool -- indicates if the direct object (and the indirect) is shifted, e.g. if its an unstressed pronoun
 		} ;
 
-		infVP : VP -> Agr -> Str = \vp,agr -> infVPPlus vp (VPMood Pres Simul) Pos agr ;
+		infVP : VP -> Str = \vp -> infVPPlus vp VPInf Pos {g = Neutr; n = Sg ; p = P3} ;
 
 		infVPPlus : VP -> VPForm -> Polarity -> Agr -> Str = \vp,vpform,pol,ag -> 
 			let
 				s = vp.s ! vpform ! pol ! ag ;
-				pron = vp.n1 ! ag
-			in case vp.en1p1 of {
-				False	=> s.fin ++ s.a1.p1 ++ s.inf ++ vp.n2 ! ag ++ pron.p2 ++ s.a1.p2 ++ vp.a2 ;
-				True	=> s.fin ++ s.a1.p1 ++ s.inf ++ pron.p1 ++ pron.p2 ++ s.a1.p2 ++ vp.n2 ! ag ++ vp.a2
+				ind = vp.indObj ! ag ;
+				dir = vp.dirObj ! ag
+			in case <vp.indShift,vp.dirShift> of {
+				<False,False>	=> s.fin ++ s.a1.p1 ++ s.inf ++ s.a1.p2 ++ ind ++ dir ++ vp.a2 ;
+				<True,False>	=> s.fin ++ s.a1.p1 ++ s.inf ++ ind ++ s.a1.p2 ++ dir ++ vp.a2 ;
+				<_,True>	=> s.fin ++ s.a1.p1 ++ s.inf ++ ind ++ dir ++ s.a1.p2 ++ vp.a2
 			} ;
 
 		predV : V -> VP = \v -> {
 			s = \\vpform,pol,agr => case vpform of {
 				VPInf	=> vf (v.s ! VInf) [] (negation pol) False ;
-				VPImp	=> vf (v.s ! VImp Active agr.n) (negation pol) [] False ;
+				VPImp	=> vf (v.s ! VImp Active agr.n) [] (negation pol) False ;
 				VPMood ten ant => vff v ten ant pol agr
 			} ;
-			verb = \\vform	=> v.s ! vform ;
 			p = \\pform => v.p ! pform ;
-			n1 = \\_ => <[],[]> ;
-			n2 = \\_ => [] ;
+			indObj = \\_ => [] ;
+			dirObj = \\_ => [] ;
 			a2 = [] ;
-			en1p1 = False
+			indShift = False ;
+			dirShift = False
 		} ;
+
+		predVV : { s : VForm => Str ; p : PForm => Str ; sup : Voice => Str ; c2 : Preposition } -> VP = \vv -> 
+			predV {s = vv.s ; p = vv.p ; sup = vv.sup} ;
+
 
 		negation : Polarity -> Str = \pol -> case pol of {
 			Pos	=> [] ;
@@ -272,7 +279,7 @@ resource ResIce = ParamX ** open Prelude in {
 
 		-- Auxilary verbs --
 
-		-- these have no all been defined in other places. I think its time for a move.
+		-- these have no all been defined in other places. I think they should be moved or redefined somehow..
 
 		-- Auxilary verbs do not forma special group in Icelandic. But many of them do have or rather dont have 
 		-- the same forms as other verbs. As an example the verb "að vera" (e. to be) does not have the past 
@@ -325,14 +332,18 @@ resource ResIce = ParamX ** open Prelude in {
 			s = \\ten,ant,pol,order =>
 				let
 					verb = vp.s ! VPMood ten ant ! pol ! agr ;
-					pron = vp.n1 ! agr ;
-					obj = vp.n2 ! agr ;
-					adv = vp.a2
-				in case <order,vp.en1p1> of {
-					<ODir,False>		=> subj ++ verb.fin ++ verb.a1.p1 ++ verb.inf ++ obj ++ pron.p2 ++ verb.a1.p2 ++ adv ;
-					<ODir,True>		=> subj ++ verb.fin ++ verb.a1.p1 ++ verb.inf ++ pron.p1 ++ pron.p2 ++ verb.a1.p2 ++ obj ++ adv ;
-					<OQuestion,False>	=> verb.fin ++ subj ++ verb.a1.p1 ++ verb.inf ++ obj ++ pron.p2 ++ verb.a1.p2 ++ adv ;
-					<OQuestion,True>	=> verb.fin ++ subj ++ verb.a1.p1 ++ verb.inf ++ pron.p1 ++ pron.p2 ++ verb.a1.p2 ++ obj ++ adv
+					ind = vp.indObj ! agr ;
+					dir = vp.dirObj ! agr ;
+					adv = vp.a2 ;
+					finInf = verb.fin ++ verb.a1.p1 ++ verb.inf ;
+					finSubjInf = verb.fin ++ subj ++ verb.a1.p1 ++ verb.inf
+				in case <order,vp.indShift,vp.dirShift> of {
+					<ODir,False,False>	=> subj ++ finInf ++ verb.a1.p2 ++ ind ++ dir ++ adv ;
+					<ODir,True,False>	=> subj ++ finInf ++ ind ++ verb.a1.p2 ++ dir ++ adv ;
+					<Odir,_,True>		=> subj ++ finInf ++ ind ++ dir ++ verb.a1.p2 ++ adv ;
+					<OQuestion,False,False>	=> finSubjInf ++ verb.a1.p2 ++ ind ++ dir ++ adv ;
+					<OQuestion,True,False>	=> finSubjInf ++ ind ++ verb.a1.p2 ++ dir ++ adv ;
+					<OQuestion,_,True>	=> finSubjInf ++ ind ++ dir ++ verb.a1.p2 ++ adv
 				} ;
 		} ;
 

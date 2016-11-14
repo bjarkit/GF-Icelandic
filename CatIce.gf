@@ -19,14 +19,12 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		ClSlash = {
 			s : Tense => Anteriority => Polarity => Order => Str ;
-			c2 : Preposition ;
-			n3 : Agr => Str
+			c2 : Preposition
 		} ;
 
 		SSlash = {
 			s : Order => Str ;
-			c2 : Preposition ;
-			n3 : Agr => Str
+			c2 : Preposition
 		} ;
 
 		Imp = {s : Polarity => Number => Str} ;
@@ -50,7 +48,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 
 		--2 Relative clauses and pronouns
 
-		RCl = {s : Tense => Anteriority => Polarity => Order => Agr => Str} ;
+		RCl = {s : Tense => Anteriority => Polarity => Agr => Str} ;
 
 		RP = {s : Str} ;
 
@@ -62,9 +60,7 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 		Comp = {s : Agr => Str} ; 
 
 		VPSlash = ResIce.VP ** {
-			c2 : Preposition ;
-			nn1 : Agr => Str ;
-			nn2 : Agr => Str
+			c2 : Preposition
 		} ;	
 
 		--2 Adjectival phrases
@@ -114,8 +110,6 @@ concrete CatIce of Cat = CommonX ** open ResIce, Prelude in {
 			n : Number
 		} ;
 
-		-- This needs to account for the weak and strong declensions of adjectives, since 
-		-- the superlative is used through Ord.
 		Ord = {
 			s : ResIce.Declension => Number => Gender => Case => Str
 		} ; 

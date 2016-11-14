@@ -1,33 +1,24 @@
 concrete RelativeIce of Relative = CatIce ** open ResIce in {
 
 	lin
-		-- Cl -> RCl
 		RelCl cl = {
-			s = \\t,ant,p,o,_ => "þannig að" ++ cl.s ! t ! ant ! p ! o
+			s = \\ten,ant,pol,_ => "þannig að" ++ cl.s ! ten ! ant ! pol ! ODir
 		} ;
 
-		-- RP -> VP -> RCl
 		RelVP rp vp = {
-			s = \\t,ant,p,o,agr => 
+			s = \\ten,ant,pol,agr => 
 				let 
 					cl = mkClause rp.s vp agr
 				in
-					cl.s ! t ! ant ! p ! o
+					cl.s ! ten ! ant ! pol ! ODir
 		} ;
 
-		-- RP -> CLSlash -> RCl
 		RelSlash rp cls = {
-			s = \\ten,ant,pol,ord,agr => rp.s ++ cls.s ! ten ! ant ! pol ! ord ++ cls.c2.s ++ cls.n3 ! agr 
+			s = \\ten,ant,pol,agr => rp.s ++ cls.s ! ten ! ant ! pol ! ODir ++ cls.c2.s
 		} ;
 
-		-- There are two relative pronouns in Icelandic, "sem" and "er", and
-		-- are used in exactly the same way - "sem" is a lot more common. Both
-		-- also appear as other types of words, e.g., "er" as a form of the verb
-		-- "að vera" (e. to be).
-		-- RP
 		IdRP = {s = "sem" } ;
 
-		-- Prep -> NP -> RP -> RP
 		FunRP prep np rp = {
 			s = prep.s ++ np.s ! NCase prep.c ++ rp.s
 		} ;

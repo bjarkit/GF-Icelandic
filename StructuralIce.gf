@@ -1,5 +1,5 @@
 concrete StructuralIce of Structural = CatIce ** 
-	open MorphoIce, ResIce, ParadigmsIce, MakeStructuralIce, 
+	open MorphoIce, ResIce, ParadigmsIce, MakeStructuralIce, IrregIce,
 	(C = ConstructX), Prelude in {
 
 	lin
@@ -179,13 +179,13 @@ concrete StructuralIce of Structural = CatIce **
 				"sínar" "sínar" "sín" "sín" Neutr Sg P3 ;
 
 		-- "They" depends on gender,i.e. has 3x4 forms for personal pronouns
-		-- the neutr is given here, masculine and feminine are given in Extra
+		-- the masculine is given here, neuter and feminine are given in Extra
 		they_Pron = mkPronPers "þeir" "þá" "þeim" "þeirra"
 				"sinn" "sinn" "sínum" "síns"
 				"sín" "sína" "sinni" "sinnar"
 				"sitt" "sitt" "sínu" "síns"
 				"sínir" "sína" "sínum" "sinna"
-				"sínar" "sínar" "sín" "sín" Neutr Pl P3 ;
+				"sínar" "sínar" "sín" "sín" Masc Pl P3 ;
 
 		-- the possesive equivalent, vor, is mostly used in elevated style.
 		we_Pron = mkPronPers "við" "okkur" "okkur" "okkar" 
@@ -269,6 +269,7 @@ concrete StructuralIce of Structural = CatIce **
 				}
 			} ;
 		} ;
+	
 					
 		-- not sure atm how this will translate : aðeins is an adverb that does not inflect and eini is a weak form of the adjective einn (e. one)
 	 	only_Predet = { s = \\_,_,_ => "aðeins"} ;
@@ -284,4 +285,8 @@ concrete StructuralIce of Structural = CatIce **
 		when_IAdv = ss "hvenær" ;
 		which_IQuant = {s = \\_,_,_ => "hvaða"} ;
 		under_Prep = mkPrep "undir" dative ;
+		want_VV = mkV2 IrregIce.vilja_V (mkPrep "" accusative) ;
+		must_VV = mkV2 IrregIce.verða_V (mkPrep "að" accusative) ;
+		can_VV, can8know_VV = mkV2 IrregIce.kunna_V (mkPrep "að" accusative) ;
+		have_V2 = mkV2 (mkV "hafa" "hef" "hafði" "hafður" "haft") (mkPrep "" accusative) ;
 }
