@@ -1,3 +1,3 @@
---# -path=.:../dutch:../common:../abstract:../prelude
+--# -path=.:alltenses:prelude
 
-resource TryIce = SyntaxIce, LexiconIce, ParadigmsIce - [mkAdN,mkAdv,mkOrd] ;
+resource TryIce = SyntaxIce, LexiconIce, ParadigmsIce - [mkAdv,mkOrd] ;
