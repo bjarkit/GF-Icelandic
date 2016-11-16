@@ -158,7 +158,7 @@ concrete NounIce of Noun = CatIce ** open MorphoIce, ResIce, Prelude in {
 		} ;
 
 		ComplN2 n2 np = {
-			s = \\n,s,_,c => n2.s ! n ! s ! c ++ n2.c2.s ++ np.s ! NCase n2.c2.c ;
+			s = \\n,s,_,c => n2.s ! n ! Free ! c ++ n2.c2.s ++ np.s ! NCase n2.c2.c ;
 			comp = \\_,_ => [] ;
 			g = n2.g
 		} ;
